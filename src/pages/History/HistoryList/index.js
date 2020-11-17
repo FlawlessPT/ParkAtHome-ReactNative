@@ -3,16 +3,14 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
-export default function Home({ navigation }) {
+export default function HistoryList({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text>Home{"\n"}</Text>
+      <Text>History{"\n"}</Text>
       <Button
-        title="Perfil"
-        onPress={() =>
-          navigation.navigate("Perfil", { nome: "João", idade: "19" })
-        }
+        title="Details"
+        onPress={() => navigation.navigate("History")}
       ></Button>
     </View>
   );
