@@ -1,12 +1,13 @@
+import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 
 export default function Home({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text>Home</Text>
+      <Text>Home{"\n"}</Text>
       <Button
         title="Perfil"
         onPress={() =>

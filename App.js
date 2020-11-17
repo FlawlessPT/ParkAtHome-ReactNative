@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Home from "./src/Home";
 import Sobre from "./src/Sobre";
+import Perfil from "./src/Perfil";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -12,7 +13,7 @@ const Tab = createBottomTabNavigator();
 function Tabs() {
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Feed" component={Home}></Tab.Screen>
+      <Tab.Screen name="Home" component={Home}></Tab.Screen>
       <Tab.Screen name="Sobre" component={Sobre}></Tab.Screen>
     </Tab.Navigator>
   );
@@ -33,7 +34,7 @@ export default function App() {
             headerTintColor: "white",
           }}
         />
-        <Stack.Screen name="Perfil" component={Sobre} />
+        <Stack.Screen name="Perfil" component={Perfil} />
       </Stack.Navigator>
     </NavigationContainer>
   );
