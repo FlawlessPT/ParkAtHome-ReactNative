@@ -15,14 +15,13 @@ import Infos from "./src/pages/Profile/Tabs/Infos";
 import Vehicules from "./src/pages/Profile/Tabs/Vehicules";
 import Payments from "./src/pages/Profile/Tabs/Payments";
 import History from "./src/pages/History/History";
+import InitialPage from "./src/pages/Initial/Initial";
+import Login from "./src/pages/Initial/Login";
+import Register from "./src/pages/Initial/Register";
 
 const ParkListStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const HistoryListStack = createStackNavigator();
-
-// const ParkStack = createStackNavigator();
-// const InfosStack = createStackNavigator();
-// const HistoryStack = createStackNavigator();
 
 const BottomTabs = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -35,11 +34,6 @@ function ParkListStackScreen() {
         component={ParkList}
         options={{ tabBarLabel: "Lista Parques" }}
       />
-      {/* <ParkListStack.Screen
-        name="ParkStack"
-        component={Park}
-        options={{ title: "Parque" }}
-      ></ParkListStack.Screen> */}
     </ParkListStack.Navigator>
   );
 }
@@ -52,11 +46,6 @@ function ProfileStackScreen() {
         component={Profile}
         options={{ tabBarLabel: "Perfil" }}
       />
-      {/* <ProfileStack.Screen
-        name="Infos"
-        component={Infos}
-        options={{ title: "Informações" }}
-      ></ProfileStack.Screen> */}
     </ProfileStack.Navigator>
   );
 }
@@ -69,11 +58,6 @@ function HistoryListStackScreen() {
         component={HistoryList}
         options={{ tabBarLabel: "Histórico" }}
       />
-      {/* <HistoryListStack.Screen
-        name="History"
-        component={History}
-        options={{ title: "Histórico" }}
-      ></HistoryListStack.Screen> */}
     </HistoryListStack.Navigator>
   );
 }
@@ -110,7 +94,28 @@ function getHeaderTitle(route) {
 export default function App() {
   return (
     <NavigationContainer>
-      <RootStack.Navigator initialRouteName="Main">
+      <RootStack.Navigator initialRouteName="Initial">
+        <RootStack.Screen
+          name="Inital"
+          component={InitialPage}
+          options={({ route }) => ({
+            headerShown: false,
+          })}
+        />
+        <RootStack.Screen
+          name="Login"
+          component={Login}
+          options={({ route }) => ({
+            headerShown: false,
+          })}
+        />
+        <RootStack.Screen
+          name="Register"
+          component={Register}
+          options={({ route }) => ({
+            headerShown: false,
+          })}
+        />
         <RootStack.Screen
           name="Main"
           component={Tabs}
@@ -136,17 +141,23 @@ export default function App() {
           name="Vehicules"
           component={Vehicules}
           options={({ route }) => ({
-            headerTitle: "Veículos",
+            headerTitle: "Lista Veículos",
           })}
         />
         <RootStack.Screen
           name="Payments"
           component={Payments}
           options={({ route }) => ({
-            headerTitle: "Pagamentos",
+            headerTitle: "Lista Pagamentos",
           })}
         />
-        <RootStack.Screen name="History" component={History} />
+        <RootStack.Screen
+          name="History"
+          component={History}
+          options={({ route }) => ({
+            headerTitle: "Historico",
+          })}
+        />
       </RootStack.Navigator>
     </NavigationContainer>
   );
