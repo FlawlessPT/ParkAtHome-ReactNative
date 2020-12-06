@@ -132,6 +132,7 @@ export default function App() {
           component={Tabs}
           options={({ route }) => ({
             headerTitle: getHeaderTitle(route),
+            headerLeft: null,
           })}
         />
         <RootStack.Screen
@@ -145,7 +146,7 @@ export default function App() {
           name="History"
           component={History}
           options={({ route }) => ({
-            headerTitle: "Historico",
+            headerTitle: "Detalhes Histórico",
           })}
         />
         {/* <RootStack.Screen
