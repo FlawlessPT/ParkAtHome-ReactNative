@@ -5,15 +5,15 @@ import {
 } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import ParkList from "./src/pages/Park/ParkList";
-import Profile from "./src/pages/Profile/Profile";
 import HistoryList from "./src/pages/History/HistoryList";
 
 import Park from "./src/pages/Park/Park";
-import Infos from "./src/pages/Profile/Tabs/Infos";
-import Vehicules from "./src/pages/Profile/Tabs/Vehicules";
-import Payments from "./src/pages/Profile/Tabs/Payments";
+import Infos from "./src/pages/Profile/TopTabs/Infos";
+import Vehicules from "./src/pages/Profile/TopTabs/Vehicules";
+import Payments from "./src/pages/Profile/TopTabs/Payments";
 import History from "./src/pages/History/History";
 import InitialPage from "./src/pages/Initial/Initial";
 import Login from "./src/pages/Initial/Login";
@@ -23,7 +23,8 @@ const ParkListStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const HistoryListStack = createStackNavigator();
 
-const BottomTabs = createBottomTabNavigator();
+const BottomTab = createBottomTabNavigator();
+const TopTab = createMaterialTopTabNavigator();
 const RootStack = createStackNavigator();
 
 function ParkListStackScreen() {
@@ -38,17 +39,27 @@ function ParkListStackScreen() {
   );
 }
 
-function ProfileStackScreen() {
+function ProfileTopTabNavigatorScreen() {
   return (
-    <ProfileStack.Navigator>
-      <ProfileStack.Screen
-        name="Profile"
-        component={Profile}
-        options={{ tabBarLabel: "Perfil" }}
-      />
-    </ProfileStack.Navigator>
+    <TopTab.Navigator>
+      <TopTab.Screen name="Infos" component={Infos} />
+      <TopTab.Screen name="Vehicules" component={Vehicules} />
+      <TopTab.Screen name="Payments" component={Payments} />
+    </TopTab.Navigator>
   );
 }
+
+// function ProfileStackScreen() {
+//   return (
+//     <ProfileStack.Navigator>
+//       <ProfileStack.Screen
+//         name="Profile"
+//         component={Profile}
+//         options={{ tabBarLabel: "Perfil" }}
+//       />
+//     </ProfileStack.Navigator>
+//   );
+// }
 
 function HistoryListStackScreen() {
   return (
@@ -64,14 +75,14 @@ function HistoryListStackScreen() {
 
 function Tabs() {
   return (
-    <BottomTabs.Navigator>
-      <BottomTabs.Screen name="ParkList" component={ParkListStackScreen} />
-      <BottomTabs.Screen name="Profile" component={ProfileStackScreen} />
-      <BottomTabs.Screen
-        name="HistoryList"
-        component={HistoryListStackScreen}
+    <BottomTab.Navigator>
+      <BottomTab.Screen name="ParkList" component={ParkListStackScreen} />
+      <BottomTab.Screen
+        name="Profile"
+        component={ProfileTopTabNavigatorScreen}
       />
-    </BottomTabs.Navigator>
+      <BottomTab.Screen name="HistoryList" component={HistoryListStackScreen} />
+    </BottomTab.Navigator>
   );
 }
 
@@ -131,6 +142,13 @@ export default function App() {
           })}
         />
         <RootStack.Screen
+          name="History"
+          component={History}
+          options={({ route }) => ({
+            headerTitle: "Historico",
+          })}
+        />
+        {/* <RootStack.Screen
           name="Infos"
           component={Infos}
           options={({ route }) => ({
@@ -150,14 +168,7 @@ export default function App() {
           options={({ route }) => ({
             headerTitle: "Lista Pagamentos",
           })}
-        />
-        <RootStack.Screen
-          name="History"
-          component={History}
-          options={({ route }) => ({
-            headerTitle: "Historico",
-          })}
-        />
+        /> */}
       </RootStack.Navigator>
     </NavigationContainer>
   );
