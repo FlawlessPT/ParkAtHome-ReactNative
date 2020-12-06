@@ -12,9 +12,8 @@ export default function Payments({ navigation }) {
       <Text>Home{"\n"}</Text>
       <FAB
         style={styles.fab}
-        small
         icon="plus"
-        onPress={() => console.log("Pressed")}
+        onPress={() => navigation.navigate("AddVehicule")}
       />
     </View>
   );

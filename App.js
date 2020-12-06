@@ -18,6 +18,8 @@ import History from "./src/pages/History/History";
 import InitialPage from "./src/pages/Initial/Initial";
 import Login from "./src/pages/Initial/Login";
 import Register from "./src/pages/Initial/Register";
+import AddVehicule from "./src/pages/Profile/TopTabs/Vehicules/Add";
+import AddPayment from "./src/pages/Profile/TopTabs/Payments/Add";
 
 const ParkListStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
@@ -26,6 +28,13 @@ const HistoryListStack = createStackNavigator();
 const BottomTab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 const RootStack = createStackNavigator();
+
+const tabBarOptions = {
+  style: {
+    backgroundColor: "#0063a1",
+  },
+  pressColor: "yellow",
+};
 
 function ParkListStackScreen() {
   return (
@@ -41,25 +50,45 @@ function ParkListStackScreen() {
 
 function ProfileTopTabNavigatorScreen() {
   return (
-    <TopTab.Navigator>
-      <TopTab.Screen name="Infos" component={Infos} />
-      <TopTab.Screen name="Vehicules" component={Vehicules} />
-      <TopTab.Screen name="Payments" component={Payments} />
+    <TopTab.Navigator
+      backBehavior="none"
+      tabBarOptions={{
+        style: {
+          backgroundColor: "#0063a1",
+        },
+        activeTintColor: "white",
+        pressColor: "white",
+        indicatorStyle: {
+          backgroundColor: "white",
+          padding: 2,
+        },
+        labelStyle: { fontSize: 13 },
+      }}
+    >
+      <TopTab.Screen
+        name="Infos"
+        component={Infos}
+        options={{
+          title: "Informações",
+        }}
+      />
+      <TopTab.Screen
+        name="Vehicules"
+        component={Vehicules}
+        options={{
+          title: "Veículos",
+        }}
+      />
+      <TopTab.Screen
+        name="Payments"
+        component={Payments}
+        options={{
+          title: "Pagamentos",
+        }}
+      />
     </TopTab.Navigator>
   );
 }
-
-// function ProfileStackScreen() {
-//   return (
-//     <ProfileStack.Navigator>
-//       <ProfileStack.Screen
-//         name="Profile"
-//         component={Profile}
-//         options={{ tabBarLabel: "Perfil" }}
-//       />
-//     </ProfileStack.Navigator>
-//   );
-// }
 
 function HistoryListStackScreen() {
   return (
@@ -133,6 +162,10 @@ export default function App() {
           options={({ route }) => ({
             headerTitle: getHeaderTitle(route),
             headerLeft: null,
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#0063a1",
+            },
           })}
         />
         <RootStack.Screen
@@ -149,27 +182,20 @@ export default function App() {
             headerTitle: "Detalhes Histórico",
           })}
         />
-        {/* <RootStack.Screen
-          name="Infos"
-          component={Infos}
+        <RootStack.Screen
+          name="AddVehicule"
+          component={AddVehicule}
           options={({ route }) => ({
-            headerTitle: "Infos",
+            headerTitle: "Add Vehicule",
           })}
         />
         <RootStack.Screen
-          name="Vehicules"
-          component={Vehicules}
+          name="Add Payments"
+          component={AddPayment}
           options={({ route }) => ({
-            headerTitle: "Lista Veículos",
+            headerTitle: "Add Payment",
           })}
         />
-        <RootStack.Screen
-          name="Payments"
-          component={Payments}
-          options={({ route }) => ({
-            headerTitle: "Lista Pagamentos",
-          })}
-        /> */}
       </RootStack.Navigator>
     </NavigationContainer>
   );

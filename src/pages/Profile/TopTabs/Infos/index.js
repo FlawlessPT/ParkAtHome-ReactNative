@@ -13,7 +13,7 @@ export default function Infos({ navigation }) {
       <FAB
         style={styles.fab}
         icon="square-edit-outline"
-        onPress={() => console.log("Pressed")}
+        onPress={() => alert("Edit")}
       />
     </View>
   );
