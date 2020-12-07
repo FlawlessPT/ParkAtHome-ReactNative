@@ -3,6 +3,7 @@ import {
   getFocusedRouteNameFromRoute,
   NavigationContainer,
 } from "@react-navigation/native";
+
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -15,11 +16,14 @@ import Infos from "./src/pages/Profile/TopTabs/Infos";
 import Vehicules from "./src/pages/Profile/TopTabs/Vehicules";
 import Payments from "./src/pages/Profile/TopTabs/Payments";
 import History from "./src/pages/History/History";
+
 import InitialPage from "./src/pages/Initial/Initial";
 import Login from "./src/pages/Initial/Login";
 import Register from "./src/pages/Initial/Register";
+
 import AddVehicule from "./src/pages/Profile/TopTabs/Vehicules/Add";
 import AddPayment from "./src/pages/Profile/TopTabs/Payments/Add";
+import { Button } from "react-native-paper";
 
 const ParkListStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
@@ -96,7 +100,9 @@ function HistoryListStackScreen() {
       <HistoryListStack.Screen
         name="HistoryList"
         component={HistoryList}
-        options={{ tabBarLabel: "Histórico" }}
+        options={{
+          tabBarLabel: "Histórico",
+        }}
       />
     </HistoryListStack.Navigator>
   );
@@ -173,6 +179,13 @@ export default function App() {
           component={Park}
           options={({ route }) => ({
             headerTitle: "Detalhes Parque",
+            headerRight: () => (
+              <Button
+                icon="trash-can"
+                mode="text"
+                onPress={() => alert("OI")}
+              />
+            ),
           })}
         />
         <RootStack.Screen
@@ -180,6 +193,13 @@ export default function App() {
           component={History}
           options={({ route }) => ({
             headerTitle: "Detalhes Histórico",
+            headerRight: () => (
+              <Button
+                icon="trash-can"
+                mode="text"
+                onPress={() => alert("OI")}
+              />
+            ),
           })}
         />
         <RootStack.Screen
@@ -187,10 +207,17 @@ export default function App() {
           component={AddVehicule}
           options={({ route }) => ({
             headerTitle: "Add Vehicule",
+            headerRight: () => (
+              <Button
+                icon="trash-can"
+                mode="text"
+                onPress={() => alert("OI")}
+              />
+            ),
           })}
         />
         <RootStack.Screen
-          name="Add Payments"
+          name="AddPayment"
           component={AddPayment}
           options={({ route }) => ({
             headerTitle: "Add Payment",

@@ -8,7 +8,7 @@ export default function AddVehicule({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text>Home{"\n"}</Text>
+      <Text>Add{"\n"}</Text>
     </View>
   );
 }

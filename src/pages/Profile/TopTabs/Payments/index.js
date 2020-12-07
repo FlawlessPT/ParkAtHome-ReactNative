@@ -13,7 +13,7 @@ export default function Payments({ navigation }) {
       <FAB
         style={styles.fab}
         icon="plus"
-        onPress={() => navigation.navigate("AddVehicule")}
+        onPress={() => navigation.navigate("AddPayment")}
       />
     </View>
   );
