@@ -12,18 +12,24 @@ import ParkList from "./src/pages/Park/ParkList";
 import HistoryList from "./src/pages/History/HistoryList";
 
 import Park from "./src/pages/Park/Park";
+import History from "./src/pages/History/History";
+
 import Infos from "./src/pages/Profile/TopTabs/Infos";
 import Vehicules from "./src/pages/Profile/TopTabs/Vehicules";
 import Payments from "./src/pages/Profile/TopTabs/Payments";
-import History from "./src/pages/History/History";
 
-import InitialPage from "./src/pages/Initial/Initial";
 import Login from "./src/pages/Initial/Login";
 import Register from "./src/pages/Initial/Register";
 
 import AddVehicule from "./src/pages/Profile/TopTabs/Vehicules/Add";
 import AddPayment from "./src/pages/Profile/TopTabs/Payments/Add";
+
 import { Button } from "react-native-paper";
+import IconsFA from "react-native-vector-icons/FontAwesome";
+import { colors } from "./src/constant/color";
+import { iconSize } from "./src/constant/size";
+import { headerTitles } from "./src/constant/text";
+import { tabBarTitles } from "./src/constant/text";
 
 const ParkListStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
@@ -33,21 +39,10 @@ const BottomTab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 const RootStack = createStackNavigator();
 
-const tabBarOptions = {
-  style: {
-    backgroundColor: "#0063a1",
-  },
-  pressColor: "yellow",
-};
-
 function ParkListStackScreen() {
   return (
     <ParkListStack.Navigator>
-      <ParkListStack.Screen
-        name="ParkList"
-        component={ParkList}
-        options={{ tabBarLabel: "Lista Parques" }}
-      />
+      <ParkListStack.Screen name="ParkList" component={ParkList} />
     </ParkListStack.Navigator>
   );
 }
@@ -58,12 +53,12 @@ function ProfileTopTabNavigatorScreen() {
       backBehavior="none"
       tabBarOptions={{
         style: {
-          backgroundColor: "#0063a1",
+          backgroundColor: colors.main,
         },
-        activeTintColor: "white",
-        pressColor: "white",
+        activeTintColor: colors.text,
+        pressColor: colors.text,
         indicatorStyle: {
-          backgroundColor: "white",
+          backgroundColor: colors.text,
           padding: 2,
         },
         labelStyle: { fontSize: 13 },
@@ -73,21 +68,21 @@ function ProfileTopTabNavigatorScreen() {
         name="Infos"
         component={Infos}
         options={{
-          title: "Informações",
+          title: tabBarTitles.infos,
         }}
       />
       <TopTab.Screen
         name="Vehicules"
         component={Vehicules}
         options={{
-          title: "Veículos",
+          title: tabBarTitles.vehicules,
         }}
       />
       <TopTab.Screen
         name="Payments"
         component={Payments}
         options={{
-          title: "Pagamentos",
+          title: tabBarTitles.payments,
         }}
       />
     </TopTab.Navigator>
@@ -97,13 +92,7 @@ function ProfileTopTabNavigatorScreen() {
 function HistoryListStackScreen() {
   return (
     <HistoryListStack.Navigator>
-      <HistoryListStack.Screen
-        name="HistoryList"
-        component={HistoryList}
-        options={{
-          tabBarLabel: "Histórico",
-        }}
-      />
+      <HistoryListStack.Screen name="HistoryList" component={HistoryList} />
     </HistoryListStack.Navigator>
   );
 }
@@ -129,25 +118,18 @@ function getHeaderTitle(route) {
 
   switch (routeName) {
     case "ParkList":
-      return "Lista Parques";
+      return headerTitles.parkList;
     case "Profile":
-      return "Perfil";
+      return headerTitles.profile;
     case "HistoryList":
-      return "Histórico";
+      return headerTitles.historyList;
   }
 }
 
 export default function App() {
   return (
     <NavigationContainer>
-      <RootStack.Navigator initialRouteName="Initial">
-        <RootStack.Screen
-          name="Inital"
-          component={InitialPage}
-          options={({ route }) => ({
-            headerShown: false,
-          })}
-        />
+      <RootStack.Navigator initialRouteName="Login">
         <RootStack.Screen
           name="Login"
           component={Login}
@@ -168,10 +150,19 @@ export default function App() {
           options={({ route }) => ({
             headerTitle: getHeaderTitle(route),
             headerLeft: null,
-            headerTintColor: "white",
+            headerTintColor: colors.text,
             headerStyle: {
-              backgroundColor: "#0063a1",
+              backgroundColor: colors.main,
             },
+            headerRight: () => (
+              <Button onPress={() => alert("OI")}>
+                <IconsFA
+                  name="sign-out"
+                  size={iconSize.delete}
+                  color={colors.text}
+                />
+              </Button>
+            ),
           })}
         />
         <RootStack.Screen
@@ -179,12 +170,18 @@ export default function App() {
           component={Park}
           options={({ route }) => ({
             headerTitle: "Detalhes Parque",
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
             headerRight: () => (
-              <Button
-                icon="trash-can"
-                mode="text"
-                onPress={() => alert("OI")}
-              />
+              <Button onPress={() => alert("OI")}>
+                <IconsFA
+                  name="trash"
+                  size={iconSize.delete}
+                  color={colors.text}
+                />
+              </Button>
             ),
           })}
         />
@@ -193,12 +190,18 @@ export default function App() {
           component={History}
           options={({ route }) => ({
             headerTitle: "Detalhes Histórico",
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
             headerRight: () => (
-              <Button
-                icon="trash-can"
-                mode="text"
-                onPress={() => alert("OI")}
-              />
+              <Button onPress={() => alert("OI")}>
+                <IconsFA
+                  name="trash"
+                  size={iconSize.delete}
+                  color={colors.text}
+                />
+              </Button>
             ),
           })}
         />
@@ -206,21 +209,22 @@ export default function App() {
           name="AddVehicule"
           component={AddVehicule}
           options={({ route }) => ({
-            headerTitle: "Add Vehicule",
-            headerRight: () => (
-              <Button
-                icon="trash-can"
-                mode="text"
-                onPress={() => alert("OI")}
-              />
-            ),
+            headerTitle: headerTitles.addVehicule,
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
           })}
         />
         <RootStack.Screen
           name="AddPayment"
           component={AddPayment}
           options={({ route }) => ({
-            headerTitle: "Add Payment",
+            headerTitle: headerTitles.addPayment,
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
           })}
         />
       </RootStack.Navigator>
