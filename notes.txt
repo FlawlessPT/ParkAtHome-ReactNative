@@ -1,2 +1,4 @@
 <Button icon="shopping" mode="outlined" onPress={() => console.log('Pressed')} style={styles.container} 
 labelStyle={{ color: theme.primary, fontSize: 22 }} color={theme.primary} > <Text style={textStyle.text}>Add To Cart</Text> </Button>
+
+TODO: AsyncStorage not loading on first screen load
