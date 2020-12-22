@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, BackHandler } from "react-native";
 import { Button } from "react-native-paper";
 import { connection } from "../../../constant/database";
 
@@ -15,23 +15,20 @@ export default function ParkList({ navigation }) {
 
   const url = connection.url + connection.directory;
 
-  const setSavedUser = async () => {
+  async function getAsyncUser() {
     try {
       let id = await AsyncStorage.getItem("user_id");
       id = JSON.parse(id);
 
       if (id != null) {
         setUserId(id);
-        // alert(userId);
-        loadPlates();
       }
     } catch (error) {
       alert(error);
     }
-  };
+  }
 
   function loadPlates() {
-    setPageTitle("Carregado!");
     fetch(url + "/Vehicules/GetPlatesUser.php", {
       method: "POST",
       headers: {
@@ -46,18 +43,26 @@ export default function ParkList({ navigation }) {
       .then((json) => {
         if (json.message == "success") {
           setPlates(json.plates);
-        } else {
-          alert("Sem matriculas associadas!");
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
   useEffect(() => {
-    setSavedUser();
+    BackHandler.addEventListener("hardwareBackPress", () => true);
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", () => true);
   }, []);
+
+  useEffect(() => {
+    getAsyncUser();
+  });
+
+  useEffect(() => {
+    loadPlates();
+  });
   // function loadParks() {
   //   fetch(url + "/Park/GetParks.php")
   //     .then((response) => response.json())
@@ -71,7 +76,7 @@ export default function ParkList({ navigation }) {
 
   // useEffect(() => {
   //   loadParks();
-  // }, []);
+  // });
 
   return (
     <View style={styles.container}>
@@ -90,10 +95,6 @@ export default function ParkList({ navigation }) {
           </View>
         )}
       />
-      <Text>
-        {pageTitle}
-        {"\n"}
-      </Text>
       <Button
         title="Details"
         onPress={() => navigation.navigate("Park")}
@@ -104,6 +105,7 @@ export default function ParkList({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },

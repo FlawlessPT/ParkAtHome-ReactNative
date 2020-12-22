@@ -27,6 +27,7 @@ import { colors } from "../constant/color";
 import { iconSize } from "../constant/size";
 import { headerTitles } from "../constant/text";
 import { tabBarTitles } from "../constant/text";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ParkListStack = createStackNavigator();
 const HistoryListStack = createStackNavigator();
@@ -158,6 +159,14 @@ function getHeaderTitle(route) {
   }
 }
 
+async function clearUserId() {
+  try {
+    await AsyncStorage.clear();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export default function MainBottomTab() {
   return (
     <RootStack.Navigator initialRouteName="Login">
@@ -178,7 +187,7 @@ export default function MainBottomTab() {
       <RootStack.Screen
         name="Main"
         component={Tabs}
-        options={({ route }) => ({
+        options={({ route, navigation }) => ({
           headerTitle: getHeaderTitle(route),
           headerLeft: null,
           headerTintColor: colors.text,
@@ -186,7 +195,12 @@ export default function MainBottomTab() {
             backgroundColor: colors.main,
           },
           headerRight: () => (
-            <Button onPress={() => alert("OI")}>
+            <Button
+              onPress={() => {
+                clearUserId();
+                navigation.navigate("Login");
+              }}
+            >
               <IconsFA
                 name="sign-out"
                 size={iconSize.delete}

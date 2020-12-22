@@ -2,3 +2,4 @@
 labelStyle={{ color: theme.primary, fontSize: 22 }} color={theme.primary} > <Text style={textStyle.text}>Add To Cart</Text> </Button>
 
 TODO: AsyncStorage not loading on first screen load
+TODO: Screen to show if user has a savedSpace somewhere

@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import * as Font from "expo-font";
-import { View } from "react-native";
+import { BackHandler, View } from "react-native";
 
 import Routes from "./navigation/";
 
@@ -11,8 +11,13 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+    // BackHandler.addEventListener("hardwareBackPress", this.handleBackButton);
     this.loadFonts();
   }
+
+  // componentWillUnmount() {
+  //   BackHandler.removeEventListener("hardwareBackPress", this.handleBackButton);
+  // }
 
   async loadFonts() {
     await Font.loadAsync({
