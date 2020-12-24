@@ -5,13 +5,11 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, FlatList, BackHandler } from "react-native";
 import { Button } from "react-native-paper";
 import { connection } from "../../../constant/database";
+import { colors } from "../../../constant/color";
 
 export default function ParkList({ navigation }) {
   const [userId, setUserId] = useState("");
   const [parks, setParks] = useState([]);
-  const [plates, setPlates] = useState([]);
-
-  const [pageTitle, setPageTitle] = useState("A carregar...");
 
   const url = connection.url + connection.directory;
 
@@ -28,26 +26,36 @@ export default function ParkList({ navigation }) {
     }
   }
 
-  function loadPlates() {
-    fetch(url + "/Vehicules/GetPlatesUser.php", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: userId,
-      }),
+  function loadParks() {
+    fetch(url + "/Parks/GetParks.php")
+    .then((response) => response.json())
+    .then((json) => {
+      if (json.message == "success") {
+        setParks(json.parks);
+      }
     })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.message == "success") {
-          setPlates(json.plates);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    .catch((error) => {
+      console.error(error);
+    });
+    // fetch(url + "/Vehicules/GetParks.php", {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     userId: userId,
+    //   }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((json) => {
+    //     if (json.message == "success") {
+    //       setParks(json.parks);
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   }
 
   useEffect(() => {
@@ -61,7 +69,7 @@ export default function ParkList({ navigation }) {
   });
 
   useEffect(() => {
-    loadPlates();
+    loadParks();
   });
   // function loadParks() {
   //   fetch(url + "/Park/GetParks.php")
@@ -82,16 +90,11 @@ export default function ParkList({ navigation }) {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <FlatList
-        data={plates}
+        data={parks}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <View style={{ flexDirection: "row" }}>
-            <View>
-              <Button mode="contained">{item.name}</Button>
-            </View>
-            <View>
-              <Button mode="contained">{item.plate}</Button>
-            </View>
+          <View style={{ flexDirection: "row", backgroundColor: colors.main, paddingHorizontal: 10, paddingVertical: 10, justifyContent: "center", alignContent: "center", borderRadius: 5, marginTop: 10 }}>
+            <Text style={{color: "white", fontSize: 20}}>{item.name}, {item.localization}</Text>
           </View>
         )}
       />

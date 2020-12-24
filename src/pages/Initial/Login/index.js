@@ -50,6 +50,7 @@ export default function Login({ navigation }) {
         .then((json) => {
           // alert(json.message + "\n" + json.user_id);
           saveUserId(json.user_id);
+          console.log(json.userId + "logou");
           navigation.navigate("Main");
         })
         .catch((error) => {
