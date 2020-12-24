@@ -1,5 +1,26 @@
 <Button icon="shopping" mode="outlined" onPress={() => console.log('Pressed')} style={styles.container} 
 labelStyle={{ color: theme.primary, fontSize: 22 }} color={theme.primary} > <Text style={textStyle.text}>Add To Cart</Text> </Button>
 
+exemplo flex-box:
+<View style={{
+      justifyContent: "center",
+      flexDirection: "row",
+      backgroundColor: "black"
+    }}>
+      <View style={{
+        width: "50%",
+        backgroundColor: "red"
+      }}>
+        <Text>Oláaa</Text>
+      </View>
+      <View style={{
+        width: "50%",
+        backgroundColor: "blue",
+        alignItems: "flex-end"
+      }}>
+        <Text>Oleee</Text>
+      </View>
+    </View>
+
 TODO: AsyncStorage not loading on first screen load
 TODO: Screen to show if user has a savedSpace somewhere

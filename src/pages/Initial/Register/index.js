@@ -3,6 +3,30 @@ import React from "react";
 import { Text, View, Button, StyleSheet } from "react-native";
 
 export default function Register({ navigation }) {
+  const url = connection.url + connection.directory;
+
+  // function register() {
+  //   fetch(url + "/Register.php", {
+  //     method: "POST",
+  //     headers: {
+  //       Accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       password: password,
+  //     }),
+  //   });
+  // }
+
+  const saveUserId = async (userId) => {
+    try {
+      const value = JSON.stringify(userId);
+      await AsyncStorage.setItem("user_id", value);
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
