@@ -3,11 +3,13 @@ import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
-export default function Park({ navigation }) {
+export default function Park({ route, navigation }) {
+  const { id } = route.params;
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Text>Home{"\n"}</Text>
+      <Text>{id}</Text>
     </View>
   );
 }

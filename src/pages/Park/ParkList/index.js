@@ -42,7 +42,7 @@ export default function ParkList({ navigation }) {
         data={parks}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <ParksList name={item.name}
+          <ParksList id={item.id} name={item.name}
             totalSpaces={item.totalSpaces}
             pricePerHour={item.pricePerHour}
             navigation={navigation}

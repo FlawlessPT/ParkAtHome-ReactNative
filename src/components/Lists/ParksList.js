@@ -9,7 +9,7 @@ export default (props) => {
     return (
         <View>
             <TouchableOpacity onPress={() => {
-                props.navigation.navigate("Park");//TODO: Pass param here
+                props.navigation.navigate("Park", { id: props.id });//TODO: Pass param here
             }} style={{ paddingHorizontal: 35, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                 <View style={{ width: "80%" }}>
                     <Text style={listStyles.itemTitle}>{props.name}</Text>
