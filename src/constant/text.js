@@ -3,11 +3,11 @@ export const headerTitles = {
   profile: "Perfil",
   historyList: "Histórico",
   addVehicule: "Adicionar Veículo",
-  addPayment: "Adicionar Pagamentos",
+  addMethod: "Adicionar Método",
 };
 
 export const tabBarTitles = {
   infos: "INFORMAÇÕES",
   vehicules: "VEÍCULOS",
-  payments: "PAGAMENTOS",
+  methods: "MÉTODOS",
 };

@@ -1,22 +1,21 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { Text, View, Button, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, SafeAreaView, Image, ScrollView, KeyboardAvoidingView } from "react-native";
+import { Button, TextInput, Text, Divider } from 'react-native-paper';
+
+import { colors } from "../../../constant/color";
+import { connection } from "../../../constant/database";
+import { generalStyles, theme } from '../../../constant/styles';
 
 export default function Register({ navigation }) {
-  const url = connection.url + connection.directory;
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [contact, setContact] = useState("");
+  const [email, setEmail] = useState("");
 
-  // function register() {
-  //   fetch(url + "/Register.php", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       password: password,
-  //     }),
-  //   });
-  // }
+  const url = connection.url + connection.directory;
 
   const saveUserId = async (userId) => {
     try {
@@ -27,29 +26,119 @@ export default function Register({ navigation }) {
     }
   };
 
+  function register() {
+    if (name != "" && username != "" && password != ""
+      && contact != "" && email != "") {
+      fetch(url + "/Register.php", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          username: username,
+          password: password,
+          contact: contact,
+          email: email,
+        }),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          switch (json.message) {
+            case "success":
+              saveUserId(json.user_id);
+              navigation.navigate("Main");
+              break;
+            case "user_already_exists":
+              alert("Utilizador já existente!")
+              break;
+            case "error":
+              alert("Erro de servidor!")
+              break;
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    } else {
+      alert("Preencha todos os campos!");
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Text>Register{"\n"}</Text>
-      <Button
-        title="Registar Conta"
-        onPress={() => navigation.navigate("Main")}
-      ></Button>
-      <Button
-        title="Login"
-        onPress={() => navigation.navigate("Login")}
-      ></Button>
+    <View style={generalStyles.container}>
+      <KeyboardAvoidingView>
+        <ScrollView>
+          <Image
+            style={generalStyles.logo}
+            source={require('../../../../assets/logo/logo-vertical.png')}
+          />
+          <TextInput
+            mode="flat"
+            underlineColor={colors.main}
+            selectionColor={colors.secondary}
+            dense={true}
+            onChangeText={(name) => setName(name)}
+            label="Nome"
+            style={generalStyles.input}
+            theme={theme}
+          />
+          <TextInput
+            mode="flat"
+            underlineColor={colors.main}
+            selectionColor={colors.secondary}
+            dense={true}
+            onChangeText={(username) => setUsername(username)}
+            label="Nome Utilizador"
+            style={generalStyles.input}
+            theme={theme}
+          />
+          <TextInput
+            mode="flat"
+            underlineColor={colors.main}
+            selectionColor={colors.secondary}
+            dense={true}
+            onChangeText={(password) => setPassword(password)}
+            secureTextEntry={true}
+            label="Password"
+            style={generalStyles.input}
+            theme={theme}
+          />
+          <TextInput
+            mode="flat"
+            underlineColor={colors.main}
+            selectionColor={colors.secondary}
+            dense={true}
+            onChangeText={(contact) => setContact(contact)}
+            label="Contacto"
+            style={generalStyles.input}
+            theme={theme}
+          />
+          <TextInput
+            mode="flat"
+            underlineColor={colors.main}
+            selectionColor={colors.secondary}
+            dense={true}
+            onChangeText={(email) => setEmail(email)}
+            label="Email"
+            style={generalStyles.input}
+            theme={theme}
+          />
+          <Button mode="contained" style={generalStyles.mainButton} title="Login" onPress={() => register()}>
+            <Text style={generalStyles.mainButtonText}>Criar Conta</Text>
+          </Button>
+          <Button
+            mode="text"
+            onPress={() => navigation.navigate("Login")}
+          >
+            <Text style={generalStyles.buttonRegisterOrLoginText}>Iniciar Sessão</Text>
+          </Button>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 // import React from "react";
 // import {

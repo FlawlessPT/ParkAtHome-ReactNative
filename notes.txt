@@ -22,5 +22,5 @@ exemplo flex-box:
       </View>
     </View>
 
-TODO: AsyncStorage not loading on first screen load
 TODO: Screen to show if user has a savedSpace somewhere
+TODO: Add save login checkbox on login screen

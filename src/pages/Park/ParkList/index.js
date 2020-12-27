@@ -1,11 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, FlatList, BackHandler } from "react-native";
-import { Button } from "react-native-paper";
+import { Text, View, FlatList, BackHandler, Image, TouchableOpacity } from "react-native";
+import { Button, Divider } from "react-native-paper";
+
 import { connection } from "../../../constant/database";
 import { colors } from "../../../constant/color";
+import { generalStyles } from "../../../constant/styles";
+import { styles } from "./styles";
+import ParksList from "../../../components/Lists/ParksList";
 
 export default function ParkList({ navigation }) {
   const [userId, setUserId] = useState("");
@@ -28,34 +31,15 @@ export default function ParkList({ navigation }) {
 
   function loadParks() {
     fetch(url + "/Parks/GetParks.php")
-    .then((response) => response.json())
-    .then((json) => {
-      if (json.message == "success") {
-        setParks(json.parks);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-    // fetch(url + "/Vehicules/GetParks.php", {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     userId: userId,
-    //   }),
-    // })
-    //   .then((response) => response.json())
-    //   .then((json) => {
-    //     if (json.message == "success") {
-    //       setParks(json.parks);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.message == "success") {
+          setParks(json.parks);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   useEffect(() => {
@@ -66,50 +50,26 @@ export default function ParkList({ navigation }) {
 
   useEffect(() => {
     getAsyncUser();
-  });
+  }, []);
 
   useEffect(() => {
     loadParks();
-  });
-  // function loadParks() {
-  //   fetch(url + "/Park/GetParks.php")
-  //     .then((response) => response.json())
-  //     .then((json) => {
-  //       setParks(json.parks);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
-
-  // useEffect(() => {
-  //   loadParks();
-  // });
+  }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.background}>
       <StatusBar style="auto" />
       <FlatList
         data={parks}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <View style={{ flexDirection: "row", backgroundColor: colors.main, paddingHorizontal: 10, paddingVertical: 10, justifyContent: "center", alignContent: "center", borderRadius: 5, marginTop: 10 }}>
-            <Text style={{color: "white", fontSize: 20}}>{item.name}, {item.localization}</Text>
-          </View>
+          <ParksList name={item.name}
+            totalSpaces={item.totalSpaces}
+            pricePerHour={item.pricePerHour}
+            navigation={navigation}
+          />
         )}
       />
-      <Button
-        title="Details"
-        onPress={() => navigation.navigate("Park")}
-      ></Button>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

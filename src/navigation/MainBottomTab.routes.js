@@ -16,12 +16,12 @@ import HistoryList from "../pages/History/HistoryList";
 import Park from "../pages/Park/Park";
 import Infos from "../pages/Profile/TopTabs/Infos";
 import Vehicules from "../pages/Profile/TopTabs/Vehicules";
-import Payments from "../pages/Profile/TopTabs/Payments";
+import Methods from "../pages/Profile/TopTabs/Methods";
 import History from "../pages/History/History";
 import Login from "../pages/Initial/Login";
 import Register from "../pages/Initial/Register";
 import AddVehicule from "../pages/Profile/TopTabs/Vehicules/Add";
-import AddPayment from "../pages/Profile/TopTabs/Payments/Add";
+import AddMethod from "../pages/Profile/TopTabs/Methods/Add";
 
 import { colors } from "../constant/color";
 import { iconSize } from "../constant/size";
@@ -76,10 +76,10 @@ function ProfileTopTabNavigatorScreen() {
         }}
       />
       <TopTab.Screen
-        name="Payments"
-        component={Payments}
+        name="Methods"
+        component={Methods}
         options={{
-          title: tabBarTitles.payments,
+          title: tabBarTitles.methods,
         }}
       />
     </TopTab.Navigator>
@@ -253,10 +253,10 @@ export default function MainBottomTab() {
         })}
       />
       <RootStack.Screen
-        name="AddPayment"
-        component={AddPayment}
+        name="AddMethod"
+        component={AddMethod}
         options={({ route }) => ({
-          headerTitle: headerTitles.addPayment,
+          headerTitle: headerTitles.addMethod,
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,

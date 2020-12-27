@@ -5,7 +5,7 @@ import { StyleSheet, Text, View, Button } from "react-native";
 import { FAB } from "react-native-paper";
 import styles from "./styles";
 
-export default function Payments({ navigation }) {
+export default function Methods({ navigation }) {
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
@@ -13,7 +13,7 @@ export default function Payments({ navigation }) {
       <FAB
         style={styles.fab}
         icon="plus"
-        onPress={() => navigation.navigate("AddPayment")}
+        onPress={() => navigation.navigate("AddMethod")}
       />
     </View>
   );
