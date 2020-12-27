@@ -4,11 +4,12 @@
     "slug": "TestNavigations",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon/icon-solid.png",
     "splash": {
-      "image": "./assets/logo-vertical.png",
+      "image": "./assets/logo/logo-vertical.png",
+      "width": "50%",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#68A9CA"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -20,7 +21,7 @@
       "supportsTablet": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon/icon-solid.png"
     },
     "description": ""
   }

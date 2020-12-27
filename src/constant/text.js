@@ -3,7 +3,7 @@ export const headerTitles = {
   profile: "Perfil",
   historyList: "Histórico",
   addVehicule: "Adicionar Veículo",
-  addMethod: "Adicionar Método",
+  addPaymentMethod: "Adicionar Método",
 };
 
 export const tabBarTitles = {

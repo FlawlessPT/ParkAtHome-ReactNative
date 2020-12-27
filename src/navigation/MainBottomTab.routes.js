@@ -1,33 +1,35 @@
 import React from "react";
-
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-paper";
 import IconsFA from "react-native-vector-icons/FontAwesome";
 
 import TabBarIcon from "../components/TabBarIcon";
 
 import ParkList from "../pages/Park/ParkList";
+import Infos from "../pages/Profile/TopTabs/Infos";
+import VehiculeList from "../pages/Profile/TopTabs/Vehicules/VehiculeList";
+import PaymentMethodList from "../pages/Profile/TopTabs/PaymentMethods/PaymentMethodList";
 import HistoryList from "../pages/History/HistoryList";
 
 import Park from "../pages/Park/Park";
-import Infos from "../pages/Profile/TopTabs/Infos";
-import Vehicules from "../pages/Profile/TopTabs/Vehicules";
-import Methods from "../pages/Profile/TopTabs/Methods";
+import Vehicule from "../pages/Profile/TopTabs/Vehicules/Vehicule";
+import PaymentMethod from "../pages/Profile/TopTabs/PaymentMethods/PaymentMethod";
 import History from "../pages/History/History";
+
+import AddVehicule from "../pages/Profile/TopTabs/Vehicules/VehiculeAdd";
+import AddPaymentMethod from "../pages/Profile/TopTabs/PaymentMethods/PaymentMethodAdd";
+
 import Login from "../pages/Initial/Login";
 import Register from "../pages/Initial/Register";
-import AddVehicule from "../pages/Profile/TopTabs/Vehicules/Add";
-import AddMethod from "../pages/Profile/TopTabs/Methods/Add";
 
 import { colors } from "../constant/color";
 import { iconSize } from "../constant/size";
 import { headerTitles } from "../constant/text";
 import { tabBarTitles } from "../constant/text";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ParkListStack = createStackNavigator();
 const HistoryListStack = createStackNavigator();
@@ -69,15 +71,15 @@ function ProfileTopTabNavigatorScreen() {
         }}
       />
       <TopTab.Screen
-        name="Vehicules"
-        component={Vehicules}
+        name="VehiculeList"
+        component={VehiculeList}
         options={{
           title: tabBarTitles.vehicules,
         }}
       />
       <TopTab.Screen
-        name="Methods"
-        component={Methods}
+        name="PaymentMethodList"
+        component={PaymentMethodList}
         options={{
           title: tabBarTitles.methods,
         }}
@@ -222,6 +224,46 @@ export default function MainBottomTab() {
         })}
       />
       <RootStack.Screen
+        name="Vehicule"
+        component={Vehicule}
+        options={({ route }) => ({
+          headerTitle: "(Insert Vehicule Here)",
+          headerTintColor: colors.text,
+          headerStyle: {
+            backgroundColor: colors.main,
+          },
+          headerRight: () => (
+            <Button onPress={() => alert("Delete")}>
+              <IconsFA
+                name="trash"
+                size={iconSize.delete}
+                color={colors.text}
+              />
+            </Button>
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="PaymentMethod"
+        component={PaymentMethod}
+        options={({ route }) => ({
+          headerTitle: "(Insert Method Here)",
+          headerTintColor: colors.text,
+          headerStyle: {
+            backgroundColor: colors.main,
+          },
+          headerRight: () => (
+            <Button onPress={() => alert("Delete")}>
+              <IconsFA
+                name="trash"
+                size={iconSize.delete}
+                color={colors.text}
+              />
+            </Button>
+          ),
+        })}
+      />
+      <RootStack.Screen
         name="History"
         component={History}
         options={({ route }) => ({
@@ -231,7 +273,7 @@ export default function MainBottomTab() {
             backgroundColor: colors.main,
           },
           headerRight: () => (
-            <Button onPress={() => alert("OI")}>
+            <Button onPress={() => alert("Delete")}>
               <IconsFA
                 name="trash"
                 size={iconSize.delete}
@@ -253,10 +295,10 @@ export default function MainBottomTab() {
         })}
       />
       <RootStack.Screen
-        name="AddMethod"
-        component={AddMethod}
+        name="AddPaymentMethod"
+        component={AddPaymentMethod}
         options={({ route }) => ({
-          headerTitle: headerTitles.addMethod,
+          headerTitle: headerTitles.addPaymentMethod,
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,

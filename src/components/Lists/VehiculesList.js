@@ -8,17 +8,12 @@ export default (props) => {
     return (
         <View>
             <TouchableOpacity onPress={() => {
-                props.navigation.navigate("Park");//TODO: Pass param here
-            }} style={{ paddingHorizontal: 20, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                props.navigation.navigate("Vehicule");//TODO: Pass param here
+            }} style={{ paddingHorizontal: 20 }}>
                 <View style={{ width: "70%" }}>
-                    <Text style={listStyles.itemTitle}>{props.name}</Text>
-                    <Text style={listStyles.itemSubtitle1}>Número de Vagas: {props.totalSpaces}</Text>
-                    <Text style={listStyles.itemSubtitle2}>Valor p/hora: {props.pricePerHour} €</Text>
+                    <Text style={listStyles.itemTitle}>{props.plate}</Text>
+                    <Text style={listStyles.itemSubtitle}>{props.name}</Text>
                 </View>
-                <Image
-                    style={styles.parkImage}
-                    source={require('../../../assets/parque_01.jpg')}
-                />
             </TouchableOpacity>
             <Divider style={{ height: 2, backgroundColor: "black" }} />
         </View>

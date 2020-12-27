@@ -2,14 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View, FlatList, BackHandler } from "react-native";
+import { FAB } from "react-native-paper";
 
-import { connection } from "../../../constant/database";
+import PaymentMethodsList from "../../../../../components/Lists/PaymentMethodsList";
+
+import { connection } from "../../../../../constant/database";
 import { styles } from "./styles";
-import ParksList from "../../../components/Lists/ParksList";
+import { generalStyles } from "../../../../../constant/styles";
 
-export default function HistoryList({ navigation }) {
+export default function PaymentMethodList({ navigation }) {
   const [userId, setUserId] = useState("");
-  const [history, setHistory] = useState([]);
+  const [paymentMethods, setPaymentMethods] = useState([]);
 
   const url = connection.url + connection.directory;
 
@@ -26,16 +29,25 @@ export default function HistoryList({ navigation }) {
     }
   }
 
-  function loadParks() {
-    fetch(url + "/History/GetHistoryUser.php")
+  function loadPaymentMethods() {
+    fetch(url + "/PaymentMethods/GetPaymentMethodsUser.php", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userId,
+      }),
+    })
       .then((response) => response.json())
       .then((json) => {
         if (json.message == "success") {
-          setHistory(json.history);
+          setPaymentMethods(json.paymentMethods);
         }
       })
       .catch((error) => {
-        console.error(error);
+        alert(error);
       });
   }
 
@@ -50,22 +62,26 @@ export default function HistoryList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    loadParks();
+    loadPaymentMethods();
   }, []);
 
   return (
     <View style={styles.background}>
       <StatusBar style="auto" />
       <FlatList
-        data={history}
+        data={paymentMethods}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <ParksList name={item.name}
-            totalSpaces={item.totalSpaces}
-            pricePerHour={item.pricePerHour}
+          <PaymentMethodsList name={item.name}
+            description={item.description}
             navigation={navigation}
           />
         )}
+      />
+      <FAB
+        style={generalStyles.fab}
+        icon="plus"
+        onPress={() => navigation.navigate("AddPaymentMethod")}
       />
     </View>
   );

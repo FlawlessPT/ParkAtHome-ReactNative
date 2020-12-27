@@ -3,6 +3,10 @@ import { configureFonts } from "react-native-paper";
 import { colors } from './color'
 
 export const generalStyles = StyleSheet.create({
+    background: {
+        backgroundColor: "white",
+        flexGrow: 1,
+    },
     container: {
         justifyContent: "center",
         paddingHorizontal: "10%",
@@ -35,7 +39,14 @@ export const generalStyles = StyleSheet.create({
         fontSize: 16,
         fontFamily: "Aldrich_Regular",
         color: colors.main
-    }
+    },
+    fab: {
+        backgroundColor: "#0063a1",
+        position: "absolute",
+        margin: 16,
+        right: 0,
+        bottom: 0,
+    },
 });
 
 export const theme = {

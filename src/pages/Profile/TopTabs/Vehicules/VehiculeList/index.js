@@ -2,14 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View, FlatList, BackHandler } from "react-native";
+import { FAB } from "react-native-paper";
 
-import { connection } from "../../../constant/database";
+import VehiculesList from "../../../../../components/Lists/VehiculesList";
+
+import { connection } from "../../../../../constant/database";
 import { styles } from "./styles";
-import ParksList from "../../../components/Lists/ParksList";
+import { generalStyles } from "../../../../../constant/styles";
 
-export default function HistoryList({ navigation }) {
+export default function VehiculeList({ navigation }) {
   const [userId, setUserId] = useState("");
-  const [history, setHistory] = useState([]);
+  const [vehicules, setVehicules] = useState([]);
 
   const url = connection.url + connection.directory;
 
@@ -26,16 +29,25 @@ export default function HistoryList({ navigation }) {
     }
   }
 
-  function loadParks() {
-    fetch(url + "/History/GetHistoryUser.php")
+  function loadVehicules() {
+    fetch(url + "/Vehicules/GetVehiculesUser.php", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: userId,
+      }),
+    })
       .then((response) => response.json())
       .then((json) => {
         if (json.message == "success") {
-          setHistory(json.history);
+          setVehicules(json.vehicules);
         }
       })
       .catch((error) => {
-        console.error(error);
+        alert(error);
       });
   }
 
@@ -50,22 +62,26 @@ export default function HistoryList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    loadParks();
+    loadVehicules();
   }, []);
 
   return (
     <View style={styles.background}>
       <StatusBar style="auto" />
       <FlatList
-        data={history}
+        data={vehicules}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <ParksList name={item.name}
-            totalSpaces={item.totalSpaces}
-            pricePerHour={item.pricePerHour}
+          <VehiculesList name={item.name}
+            plate={item.plate}
             navigation={navigation}
           />
         )}
+      />
+      <FAB
+        style={generalStyles.fab}
+        icon="plus"
+        onPress={() => navigation.navigate("AddVehicule")}
       />
     </View>
   );
