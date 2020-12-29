@@ -25,6 +25,7 @@ export const generalStyles = StyleSheet.create({
         fontSize: 18,
     },
     mainButton: {
+        borderRadius: 2,
         marginVertical: 10,
         backgroundColor: colors.main
     },

@@ -30,6 +30,7 @@ import { colors } from "../constant/color";
 import { iconSize } from "../constant/size";
 import { headerTitles } from "../constant/text";
 import { tabBarTitles } from "../constant/text";
+import { Text } from "react-native";
 
 const ParkListStack = createStackNavigator();
 const HistoryListStack = createStackNavigator();
@@ -60,14 +61,14 @@ function ProfileTopTabNavigatorScreen() {
           backgroundColor: colors.text,
           padding: 2,
         },
-        labelStyle: { fontSize: 13 },
+        labelStyle: { fontFamily: "Aldrich_Regular", fontSize: 11 },
       }}
     >
       <TopTab.Screen
         name="Infos"
         component={Infos}
         options={{
-          title: tabBarTitles.infos,
+          title: tabBarTitles.infos
         }}
       />
       <TopTab.Screen
@@ -114,7 +115,7 @@ function Tabs() {
           elevation: 0,
           shadowOpacity: 0,
         },
-        labelStyle: { fontSize: 12 },
+        labelStyle: { fontFamily: "Aldrich_Regular", fontSize: 12 },
       }}
       screenOptions={({ route }) => ({
         tabBarIcon: (props) => <TabBarIcon {...props} route={route.name} />,
@@ -190,7 +191,7 @@ export default function MainBottomTab() {
         name="Main"
         component={Tabs}
         options={({ route, navigation }) => ({
-          headerTitle: getHeaderTitle(route),
+          headerTitle: <Text style={{ fontFamily: "Aldrich_Regular" }}>{getHeaderTitle(route)}</Text>,
           headerLeft: null,
           headerTintColor: colors.text,
           headerStyle: {

@@ -6,6 +6,7 @@ import { View, FlatList, BackHandler } from "react-native";
 import { connection } from "../../../constant/database";
 import { styles } from "./styles";
 import ParksList from "../../../components/Lists/ParksList";
+import { generalStyles } from "../../../constant/styles";
 
 export default function ParkList({ navigation }) {
   const [parks, setParks] = useState([]);
@@ -36,7 +37,7 @@ export default function ParkList({ navigation }) {
   }, []);
 
   return (
-    <View style={styles.background}>
+    <View style={generalStyles.background}>
       <StatusBar style="auto" />
       <FlatList
         data={parks}
