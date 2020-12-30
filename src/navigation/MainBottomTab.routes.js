@@ -221,6 +221,7 @@ export default function MainBottomTab() {
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
+            fontFamily: "Aldrich_Regular",
           },
         })}
       />
@@ -232,6 +233,7 @@ export default function MainBottomTab() {
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
+            fontFamily: "Aldrich_Regular",
           },
           headerRight: () => (
             <Button onPress={() => alert("Delete")}>
@@ -252,6 +254,7 @@ export default function MainBottomTab() {
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
+            fontFamily: "Aldrich_Regular",
           },
           headerRight: () => (
             <Button onPress={() => alert("Delete")}>
@@ -272,6 +275,7 @@ export default function MainBottomTab() {
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
+            fontFamily: "Aldrich_Regular",
           },
           headerRight: () => (
             <Button onPress={() => alert("Delete")}>
@@ -292,6 +296,7 @@ export default function MainBottomTab() {
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
+            fontFamily: "Aldrich_Regular",
           },
         })}
       />
@@ -302,7 +307,8 @@ export default function MainBottomTab() {
           headerTitle: headerTitles.addPaymentMethod,
           headerTintColor: colors.text,
           headerStyle: {
-            backgroundColor: colors.main,
+            backgroundColor: colors.secondary,
+            fontFamily: "Aldrich_Regular",
           },
         })}
       />

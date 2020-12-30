@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
@@ -197,7 +198,7 @@ export default function Park({ route, navigation }) {
           }}>
             Preço: <Text style={{ color: colors.secondary }}>{pricePerHour}</Text> €
           </Text>
-          <Button style={generalStyles.mainButton} onPress={saveSpace()}>
+          <Button style={generalStyles.mainButton} onPress={() => alert("oi")}>
             <Text style={generalStyles.mainButtonText}>Reservar</Text>
           </Button>
         </View>

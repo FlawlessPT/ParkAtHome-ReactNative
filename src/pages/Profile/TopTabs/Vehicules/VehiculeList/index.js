@@ -14,6 +14,8 @@ export default function VehiculeList({ navigation }) {
   const [userId, setUserId] = useState("");
   const [vehicules, setVehicules] = useState([]);
 
+  const [reRender, setReRender] = useState(false);
+
   const url = connection.url + connection.directory;
 
   async function getAsyncUser() {
@@ -47,7 +49,7 @@ export default function VehiculeList({ navigation }) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.error(error);
       });
   }
 
@@ -59,10 +61,6 @@ export default function VehiculeList({ navigation }) {
 
   useEffect(() => {
     getAsyncUser();
-  }, []);
-
-  useEffect(() => {
-    loadVehicules();
   }, []);
 
   return (
@@ -77,6 +75,7 @@ export default function VehiculeList({ navigation }) {
             navigation={navigation}
           />
         )}
+        extraData={loadVehicules()}
       />
       <FAB
         style={generalStyles.fab}

@@ -47,7 +47,7 @@ export default function PaymentMethodList({ navigation }) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.error(error);
       });
   }
 
@@ -59,10 +59,6 @@ export default function PaymentMethodList({ navigation }) {
 
   useEffect(() => {
     getAsyncUser();
-  }, []);
-
-  useEffect(() => {
-    loadPaymentMethods();
   }, []);
 
   return (
@@ -77,6 +73,7 @@ export default function PaymentMethodList({ navigation }) {
             navigation={navigation}
           />
         )}
+        extraData={loadPaymentMethods()}
       />
       <FAB
         style={generalStyles.fab}

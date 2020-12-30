@@ -24,6 +24,12 @@ export const generalStyles = StyleSheet.create({
         backgroundColor: "white",
         fontSize: 18,
     },
+    inputDisabled: {
+        padding: -10,
+        marginBottom: 10,
+        backgroundColor: "#DCDCDC",
+        fontSize: 18,
+    },
     mainButton: {
         borderRadius: 2,
         marginVertical: 10,

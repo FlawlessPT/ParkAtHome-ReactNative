@@ -1,16 +1,10 @@
 import { StyleSheet } from "react-native";
 
-export default StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  fab: {
-    backgroundColor: "#0063a1",
-    position: "absolute",
-    margin: 16,
-    right: 0,
-    bottom: 0,
+export const styles = StyleSheet.create({
+  logo: {
+    marginTop: 20,
+    width: "100%",
+    height: 130,
+    resizeMode: "contain"
   },
 });

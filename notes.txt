@@ -22,6 +22,14 @@ exemplo flex-box:
       </View>
     </View>
 
+  useEffect(() => {
+     const unsubscribe = navigation.addListener('tabPress', e => {
+       loadVehicules();
+     });
+
+     return unsubscribe;
+   }, [navigation]);
+
 TODO: Screen to show if user has a savedSpace somewhere
 TODO: Add save login checkbox on login screen
 TODO: Develop History System 
