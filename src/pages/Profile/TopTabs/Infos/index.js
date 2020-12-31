@@ -68,13 +68,13 @@ export default function Infos({ navigation }) {
           />
           <TextInput
             mode="flat"
-            underlineColor={colors.main}
+            underlineColor={colors.main}//TODO: FIX INPUT STYLES
             selectionColor={colors.secondary}
             dense={true}
             onChangeText={(email) => setEmail(email)}
             label="Email"
             editable={editable}
-            style={inputStyle}
+            style={generalStyles.input}
             theme={theme}
           />
           <TextInput

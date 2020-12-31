@@ -33,3 +33,6 @@ exemplo flex-box:
 TODO: Screen to show if user has a savedSpace somewhere
 TODO: Add save login checkbox on login screen
 TODO: Develop History System 
+
+TODO: Check this link later
+https://medium.com/javascript-in-plain-english/how-to-use-async-function-in-react-hook-useeffect-typescript-js-6204a788a435

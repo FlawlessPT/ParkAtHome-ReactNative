@@ -70,8 +70,9 @@ export default function VehiculeList({ navigation }) {
         data={vehicules}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <VehiculesList name={item.name}
+          <VehiculesList id={item.id} name={item.name}
             plate={item.plate}
+            vehicule={item}
             navigation={navigation}
           />
         )}

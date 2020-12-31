@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -30,6 +30,8 @@ import { colors } from "../constant/color";
 import { iconSize } from "../constant/size";
 import { headerTitles } from "../constant/text";
 import { tabBarTitles } from "../constant/text";
+import { storage } from "../constant/storage";
+
 import { Text } from "react-native";
 
 const ParkListStack = createStackNavigator();
@@ -162,7 +164,7 @@ function getHeaderTitle(route) {
   }
 }
 
-async function clearUserId() {
+async function clearAsyncStorage() {
   try {
     await AsyncStorage.clear();
   } catch (error) {
@@ -171,6 +173,51 @@ async function clearUserId() {
 }
 
 export default function MainBottomTab() {
+  const [park, setPark] = useState("");
+  const [vehicule, setVehicule] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+
+  async function getVehicule() {
+    try {
+      let id = await AsyncStorage.getItem(storage.vehicule);
+      id = JSON.parse(id);
+
+      if (id != null) {
+        setVehicule(id);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  async function getPaymentMethod() {
+    try {
+      let id = await AsyncStorage.getItem(storage.paymentMethod);
+      id = JSON.parse(id);
+
+      if (id != null) {
+        setPaymentMethod(id);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  function setVehiculeTitle() {
+    getVehicule();
+    return vehicule.name;
+  }
+
+  function setPaymentMethodTitle() {
+    getPaymentMethod();
+    return paymentMethod.name;
+  }
+
+  async function deleteVehicule() {
+    getVehicule();
+    alert(vehicule.id);
+  }
+
   return (
     <RootStack.Navigator initialRouteName="Login">
       <RootStack.Screen
@@ -192,6 +239,7 @@ export default function MainBottomTab() {
         component={Tabs}
         options={({ route, navigation }) => ({
           headerTitle: <Text style={{ fontFamily: "Aldrich_Regular" }}>{getHeaderTitle(route)}</Text>,
+          // headerTitle: "Parques",
           headerLeft: null,
           headerTintColor: colors.text,
           headerStyle: {
@@ -200,7 +248,7 @@ export default function MainBottomTab() {
           headerRight: () => (
             <Button
               onPress={() => {
-                clearUserId();
+                clearAsyncStorage();
                 navigation.navigate("Login");
               }}
             >
@@ -229,14 +277,14 @@ export default function MainBottomTab() {
         name="Vehicule"
         component={Vehicule}
         options={({ route }) => ({
-          headerTitle: "(Insert Vehicule Here)",
+          headerTitle: setVehiculeTitle(),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
             fontFamily: "Aldrich_Regular",
           },
           headerRight: () => (
-            <Button onPress={() => alert("Delete")}>
+            <Button onPress={() => deleteVehicule()}>
               <IconsFA
                 name="trash"
                 size={iconSize.delete}
@@ -250,7 +298,7 @@ export default function MainBottomTab() {
         name="PaymentMethod"
         component={PaymentMethod}
         options={({ route }) => ({
-          headerTitle: "(Insert Method Here)",
+          headerTitle: setPaymentMethodTitle(),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,

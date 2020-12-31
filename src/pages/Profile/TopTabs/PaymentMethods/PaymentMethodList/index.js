@@ -68,8 +68,11 @@ export default function PaymentMethodList({ navigation }) {
         data={paymentMethods}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <PaymentMethodsList name={item.name}
+          <PaymentMethodsList
+            id={item.id}
+            name={item.name}
             description={item.description}
+            paymentMethod={item}
             navigation={navigation}
           />
         )}
