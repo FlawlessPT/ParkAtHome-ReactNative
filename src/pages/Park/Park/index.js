@@ -12,7 +12,7 @@ import { connection } from "../../../constant/database";
 import { generalStyles } from "../../../constant/styles";
 
 export default function Park({ route, navigation }) {
-  const { id } = route.params;
+  const { park } = route.params;
 
   const url = connection.url + connection.directory;
 
@@ -50,7 +50,7 @@ export default function Park({ route, navigation }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        id: park.id,
       }),
     })
       .then((response) => response.json())

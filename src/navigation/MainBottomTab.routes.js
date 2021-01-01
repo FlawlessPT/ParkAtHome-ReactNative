@@ -27,6 +27,7 @@ import Login from "../pages/Initial/Login";
 import Register from "../pages/Initial/Register";
 
 import { colors } from "../constant/color";
+import { fonts } from "../constant/fonts";
 import { iconSize } from "../constant/size";
 import { headerTitles } from "../constant/text";
 import { tabBarTitles } from "../constant/text";
@@ -177,6 +178,19 @@ export default function MainBottomTab() {
   const [vehicule, setVehicule] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
 
+  async function getPark() {
+    try {
+      let id = await AsyncStorage.getItem(storage.park);
+      id = JSON.parse(id);
+
+      if (id != null) {
+        setPark(id);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   async function getVehicule() {
     try {
       let id = await AsyncStorage.getItem(storage.vehicule);
@@ -203,14 +217,19 @@ export default function MainBottomTab() {
     }
   }
 
+  function setParkTitle() {
+    getPark();
+    return <Text style={{ fontFamily: fonts.main }}>{park.name}</Text>;
+  }
+
   function setVehiculeTitle() {
     getVehicule();
-    return vehicule.name;
+    return <Text style={{ fontFamily: fonts.main }}>{vehicule.plate}</Text>;
   }
 
   function setPaymentMethodTitle() {
     getPaymentMethod();
-    return paymentMethod.name;
+    return <Text style={{ fontFamily: fonts.main }}>{paymentMethod.name}</Text>;
   }
 
   async function deleteVehicule() {
@@ -238,7 +257,7 @@ export default function MainBottomTab() {
         name="Main"
         component={Tabs}
         options={({ route, navigation }) => ({
-          headerTitle: <Text style={{ fontFamily: "Aldrich_Regular" }}>{getHeaderTitle(route)}</Text>,
+          headerTitle: <Text style={{ fontFamily: fonts.main }}>{getHeaderTitle(route)}</Text>,
           // headerTitle: "Parques",
           headerLeft: null,
           headerTintColor: colors.text,
@@ -265,11 +284,10 @@ export default function MainBottomTab() {
         name="Park"
         component={Park}
         options={({ route }) => ({
-          headerTitle: "Detalhes Parque",
+          headerTitle: setParkTitle(),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
-            fontFamily: "Aldrich_Regular",
           },
         })}
       />
@@ -281,7 +299,6 @@ export default function MainBottomTab() {
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
-            fontFamily: "Aldrich_Regular",
           },
           headerRight: () => (
             <Button onPress={() => deleteVehicule()}>
@@ -302,7 +319,6 @@ export default function MainBottomTab() {
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
-            fontFamily: "Aldrich_Regular",
           },
           headerRight: () => (
             <Button onPress={() => alert("Delete")}>
@@ -340,11 +356,10 @@ export default function MainBottomTab() {
         name="AddVehicule"
         component={AddVehicule}
         options={({ route }) => ({
-          headerTitle: headerTitles.addVehicule,
+          headerTitle: <Text style={{ fontFamily: fonts.main }}>{headerTitles.addVehicule}</Text>,
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
-            fontFamily: "Aldrich_Regular",
           },
         })}
       />
@@ -352,11 +367,10 @@ export default function MainBottomTab() {
         name="AddPaymentMethod"
         component={AddPaymentMethod}
         options={({ route }) => ({
-          headerTitle: headerTitles.addPaymentMethod,
+          headerTitle: <Text style={{ fontFamily: fonts.main }}>{headerTitles.addPaymentMethod}</Text>,
           headerTintColor: colors.text,
           headerStyle: {
-            backgroundColor: colors.secondary,
-            fontFamily: "Aldrich_Regular",
+            backgroundColor: colors.main,
           },
         })}
       />

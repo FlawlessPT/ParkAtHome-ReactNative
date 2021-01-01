@@ -1,6 +1,7 @@
 export const storage = {
+    user: "user",
     userId: "user_id",
-    parkId: "park",
+    park: "park",
     vehicule: "vehicule",
     paymentMethod: "paymentMethod",
 };

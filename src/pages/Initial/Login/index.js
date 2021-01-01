@@ -6,6 +6,7 @@ import { Button, TextInput, Text } from 'react-native-paper';
 
 import { colors } from "../../../constant/color";
 import { connection } from "../../../constant/database";
+import { storage } from "../../../constant/storage";
 import { generalStyles, theme } from '../../../constant/styles';
 
 
@@ -15,10 +16,27 @@ export default function Login({ navigation }) {
 
   const url = connection.url + connection.directory;
 
-  const saveUserId = async (userId) => {
+  const saveUserId = async (userId, user) => {
     try {
+      // console.log("nada nada");
+      // console.log("............")
+      await AsyncStorage.clear();
+      // console.log(await AsyncStorage.getItem(storage.userId))
+      // console.log(await AsyncStorage.getItem(storage.user));
+
       const value = JSON.stringify(userId);
-      await AsyncStorage.setItem("user_id", value);
+      const userObject = JSON.stringify(user);
+
+      // console.log("-----------")
+      await AsyncStorage.setItem(storage.userId, value);
+      await AsyncStorage.setItem(storage.user, userObject);
+
+      // console.log(await AsyncStorage.getItem(storage.userId))
+      // console.log(await AsyncStorage.getItem(storage.user));
+
+      if (value != null) {
+        navigation.navigate("Main");
+      }
     } catch (error) {
       alert(error);
     }
@@ -41,8 +59,7 @@ export default function Login({ navigation }) {
         .then((json) => {
           switch (json.message) {
             case "success":
-              saveUserId(json.user_id);
-              navigation.navigate("Main");
+              saveUserId(json.user_id, json.user);
               break;
             case "login_failed":
               alert("Dados incorretos!")

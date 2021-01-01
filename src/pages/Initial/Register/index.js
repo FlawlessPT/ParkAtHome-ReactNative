@@ -48,7 +48,7 @@ export default function Register({ navigation }) {
           switch (json.message) {
             case "success":
               saveUserId(json.user_id);
-              navigation.navigate("Main");
+              navigation.navigate("Login");
               break;
             case "user_already_exists":
               alert("Utilizador já existente!")
@@ -70,6 +70,7 @@ export default function Register({ navigation }) {
     <View style={generalStyles.container}>
       <KeyboardAvoidingView>
         <ScrollView>
+          <StatusBar style="auto" />
           <Image
             style={generalStyles.logo}
             source={require('../../../../assets/logo/logo-vertical.png')}
@@ -81,6 +82,26 @@ export default function Register({ navigation }) {
             dense={true}
             onChangeText={(name) => setName(name)}
             label="Nome"
+            style={generalStyles.input}
+            theme={theme}
+          />
+          <TextInput
+            mode="flat"
+            underlineColor={colors.main}
+            selectionColor={colors.secondary}
+            dense={true}
+            onChangeText={(contact) => setContact(contact)}
+            label="Contacto"
+            style={generalStyles.input}
+            theme={theme}
+          />
+          <TextInput
+            mode="flat"
+            underlineColor={colors.main}
+            selectionColor={colors.secondary}
+            dense={true}
+            onChangeText={(email) => setEmail(email)}
+            label="Email"
             style={generalStyles.input}
             theme={theme}
           />
@@ -102,26 +123,6 @@ export default function Register({ navigation }) {
             onChangeText={(password) => setPassword(password)}
             secureTextEntry={true}
             label="Password"
-            style={generalStyles.input}
-            theme={theme}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(contact) => setContact(contact)}
-            label="Contacto"
-            style={generalStyles.input}
-            theme={theme}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(email) => setEmail(email)}
-            label="Email"
             style={generalStyles.input}
             theme={theme}
           />

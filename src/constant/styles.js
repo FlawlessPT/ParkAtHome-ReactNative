@@ -19,15 +19,9 @@ export const generalStyles = StyleSheet.create({
         resizeMode: "contain"
     },
     input: {
-        padding: -10,
+        paddingBottom: 0,
         marginBottom: 10,
         backgroundColor: "white",
-        fontSize: 18,
-    },
-    inputDisabled: {
-        padding: -10,
-        marginBottom: 10,
-        backgroundColor: "#DCDCDC",
         fontSize: 18,
     },
     mainButton: {
@@ -56,6 +50,37 @@ export const generalStyles = StyleSheet.create({
     },
 });
 
+// export const themeEnabled = {
+//     fonts: configureFonts({
+//         default: {
+//             regular: {
+//                 fontFamily: "Aldrich_Regular",
+//             }
+//         }
+//     }),
+//     colors: {
+//         primary: colors.main,
+//         placeholder: colors.secondary,
+//         text: colors.main,
+//     },
+// };
+
+// export const themeDisabled = {
+//     fonts: configureFonts({
+//         default: {
+//             regular: {
+//                 fontFamily: "Aldrich_Regular",
+//             }
+//         }
+//     }),
+//     colors: {
+//         primary: colors.main,
+//         placeholder: colors.secondary,
+//         text: colors.secondary,
+//     },
+// };
+
+
 export const theme = {
     fonts: configureFonts({
         default: {
@@ -69,4 +94,35 @@ export const theme = {
         placeholder: colors.secondary,
         text: colors.main,
     },
+};
+
+export const themeProfile = {
+    enable: {
+        fonts: configureFonts({
+            default: {
+                regular: {
+                    fontFamily: "Aldrich_Regular",
+                }
+            }
+        }),
+        colors: {
+            primary: colors.main,
+            placeholder: colors.secondary,
+            text: colors.main,
+        },
+    },
+    disable: {
+        fonts: configureFonts({
+            default: {
+                regular: {
+                    fontFamily: "Aldrich_Regular",
+                }
+            }
+        }),
+        colors: {
+            primary: colors.main,
+            placeholder: colors.secondary,
+            text: colors.secondary,
+        },
+    }
 };
