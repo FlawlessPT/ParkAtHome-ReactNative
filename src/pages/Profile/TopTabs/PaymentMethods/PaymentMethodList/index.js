@@ -58,14 +58,20 @@ export default function PaymentMethodList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    getAsyncUser();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", e => {
+      getAsyncUser();
+      loadPaymentMethods();
+    })
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.background}>
       <StatusBar style="auto" />
       <FlatList
         data={paymentMethods}
+        extraData={loadPaymentMethods()}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
           <PaymentMethodsList
@@ -76,7 +82,6 @@ export default function PaymentMethodList({ navigation }) {
             navigation={navigation}
           />
         )}
-        extraData={loadPaymentMethods()}
       />
       <FAB
         style={generalStyles.fab}

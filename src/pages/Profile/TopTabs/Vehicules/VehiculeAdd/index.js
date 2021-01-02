@@ -14,6 +14,7 @@ export default function AddVehicule({ navigation }) {
   const [plate, setPlate] = useState("");
   const [name, setName] = useState("");
 
+  const [vehicule, setVehicule] = useState("");
   const [user, setUser] = useState("");
 
   const url = connection.url + connection.directory;
@@ -48,7 +49,6 @@ export default function AddVehicule({ navigation }) {
         .then((response) => response.json())
         .then((json) => {
           if (json.message === "success") {
-            //set data on async storage
             navigation.goBack();
           }
         })

@@ -60,14 +60,20 @@ export default function VehiculeList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    getAsyncUser();
-  }, []);
+    const unsubscribe = navigation.addListener("focus", e => {
+      getAsyncUser();
+      loadVehicules();
+    })
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.background}>
       <StatusBar style="auto" />
       <FlatList
         data={vehicules}
+        extraData={vehicules}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
           <VehiculesList id={item.id} name={item.name}
@@ -76,7 +82,6 @@ export default function VehiculeList({ navigation }) {
             navigation={navigation}
           />
         )}
-        extraData={loadVehicules()}
       />
       <FAB
         style={generalStyles.fab}

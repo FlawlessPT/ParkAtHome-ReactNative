@@ -34,6 +34,7 @@ import { tabBarTitles } from "../constant/text";
 import { storage } from "../constant/storage";
 
 import { Text } from "react-native";
+import { connection } from "../constant/database";
 
 const ParkListStack = createStackNavigator();
 const HistoryListStack = createStackNavigator();
@@ -178,6 +179,8 @@ export default function MainBottomTab() {
   const [vehicule, setVehicule] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
 
+  const url = connection.url + connection.directory;
+
   async function getPark() {
     try {
       let id = await AsyncStorage.getItem(storage.park);
@@ -232,9 +235,54 @@ export default function MainBottomTab() {
     return <Text style={{ fontFamily: fonts.main }}>{paymentMethod.name}</Text>;
   }
 
-  async function deleteVehicule() {
+  function deleteVehicule(navigation) {
     getVehicule();
-    alert(vehicule.id);
+    fetch(url + "/Vehicules/DeleteVehicule.php", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: vehicule.id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        if (json.message === "success")
+          navigation.goBack();
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
+  function deletePaymentMethod(navigation) {
+    getPaymentMethod();
+    fetch(url + "/PaymentMethods/DeletePaymentMethod.php", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: paymentMethod.id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        switch (json.message) {
+          case "success":
+            navigation.goBack();
+            break;
+          case "is_last_result":
+            alert("O último registo não pode ser eliminado. Opte por editá-lo.")
+            break;
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
   }
 
   return (
@@ -294,14 +342,14 @@ export default function MainBottomTab() {
       <RootStack.Screen
         name="Vehicule"
         component={Vehicule}
-        options={({ route }) => ({
+        options={({ route, navigation }) => ({
           headerTitle: setVehiculeTitle(),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
           },
           headerRight: () => (
-            <Button onPress={() => deleteVehicule()}>
+            <Button onPress={() => deleteVehicule(navigation)}>
               <IconsFA
                 name="trash"
                 size={iconSize.delete}
@@ -314,14 +362,14 @@ export default function MainBottomTab() {
       <RootStack.Screen
         name="PaymentMethod"
         component={PaymentMethod}
-        options={({ route }) => ({
+        options={({ route, navigation }) => ({
           headerTitle: setPaymentMethodTitle(),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
           },
           headerRight: () => (
-            <Button onPress={() => alert("Delete")}>
+            <Button onPress={() => deletePaymentMethod(navigation)}>
               <IconsFA
                 name="trash"
                 size={iconSize.delete}
@@ -331,7 +379,7 @@ export default function MainBottomTab() {
           ),
         })}
       />
-      <RootStack.Screen
+      < RootStack.Screen
         name="History"
         component={History}
         options={({ route }) => ({
@@ -352,7 +400,7 @@ export default function MainBottomTab() {
           ),
         })}
       />
-      <RootStack.Screen
+      < RootStack.Screen
         name="AddVehicule"
         component={AddVehicule}
         options={({ route }) => ({
@@ -363,7 +411,7 @@ export default function MainBottomTab() {
           },
         })}
       />
-      <RootStack.Screen
+      < RootStack.Screen
         name="AddPaymentMethod"
         component={AddPaymentMethod}
         options={({ route }) => ({
@@ -374,6 +422,6 @@ export default function MainBottomTab() {
           },
         })}
       />
-    </RootStack.Navigator>
+    </RootStack.Navigator >
   );
 }
