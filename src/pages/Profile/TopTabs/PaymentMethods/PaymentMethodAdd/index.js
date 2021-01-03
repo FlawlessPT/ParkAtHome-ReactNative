@@ -42,13 +42,12 @@ export default function AddPaymentMethod({ navigation }) {
         body: JSON.stringify({
           name: name,
           description: description,
-          userId: user[0].id,
+          userId: user.id,
         }),
       })
         .then((response) => response.json())
         .then((json) => {
           if (json.message === "success") {
-            //set data on async storage
             navigation.goBack();
           }
         })

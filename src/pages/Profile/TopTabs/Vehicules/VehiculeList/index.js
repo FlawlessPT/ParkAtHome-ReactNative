@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, FlatList, BackHandler } from "react-native";
 import { FAB } from "react-native-paper";
 
@@ -13,8 +13,6 @@ import { generalStyles } from "../../../../../constant/styles";
 export default function VehiculeList({ navigation }) {
   const [userId, setUserId] = useState("");
   const [vehicules, setVehicules] = useState([]);
-
-  const [reRender, setReRender] = useState(false);
 
   const url = connection.url + connection.directory;
 
@@ -59,24 +57,41 @@ export default function VehiculeList({ navigation }) {
       BackHandler.removeEventListener("hardwareBackPress", () => true);
   }, []);
 
+  let isRendered = useRef(false);
+
   useEffect(() => {
+    isRendered = true;
     const unsubscribe = navigation.addListener("focus", e => {
       getAsyncUser();
       loadVehicules();
     })
+    return () => {
+      isRendered = false;
+      unsubscribe;
+    };
+  }, []);
 
-    return unsubscribe;
-  }, [navigation]);
+  // useEffect(() => {
+
+  //   const unsubscribe = navigation.addListener("focus", e => {
+  //     getAsyncUser();
+  //     loadVehicules();
+  //   })
+
+  //   return unsubscribe;
+  // }, [navigation]);
 
   return (
     <View style={styles.background}>
       <StatusBar style="auto" />
       <FlatList
         data={vehicules}
-        extraData={vehicules}
+        extraData={loadVehicules()}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <VehiculesList id={item.id} name={item.name}
+          <VehiculesList
+            id={item.id}
+            name={item.name}
             plate={item.plate}
             vehicule={item}
             navigation={navigation}

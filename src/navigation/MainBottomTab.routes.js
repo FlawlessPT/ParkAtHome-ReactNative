@@ -179,7 +179,22 @@ export default function MainBottomTab() {
   const [vehicule, setVehicule] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
 
+  const [user, setUser] = useState("");
+
   const url = connection.url + connection.directory;
+
+  async function getUser() {
+    try {
+      let value = await AsyncStorage.getItem(storage.user);
+      value = JSON.parse(value);
+
+      if (value != null) {
+        setUser(value);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }
 
   async function getPark() {
     try {
@@ -227,15 +242,16 @@ export default function MainBottomTab() {
 
   function setVehiculeTitle() {
     getVehicule();
-    return <Text style={{ fontFamily: fonts.main }}>{vehicule.plate}</Text>;
+    return <Text style={{ fontFamily: fonts.main }}>{vehicule.plate || "---"}</Text>;
   }
 
   function setPaymentMethodTitle() {
     getPaymentMethod();
-    return <Text style={{ fontFamily: fonts.main }}>{paymentMethod.name}</Text>;
+    return <Text style={{ fontFamily: fonts.main }}>{paymentMethod.name || "---"}</Text>;
   }
 
   function deleteVehicule(navigation) {
+    getUser();
     getVehicule();
     fetch(url + "/Vehicules/DeleteVehicule.php", {
       method: "POST",
@@ -245,12 +261,23 @@ export default function MainBottomTab() {
       },
       body: JSON.stringify({
         id: vehicule.id,
+        userId: user.id,
       }),
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.message === "success")
-          navigation.goBack();
+        switch (json.message) {
+          case "success":
+            alert("Registo eliminado com sucesso.")
+            navigation.goBack();
+            break;
+          case "delete_failed":
+            alert("Não foi possível eliminar. Este registo já não deve existir.")
+            break;
+          case "is_last_result":
+            alert("O último registo não pode ser eliminado. Opte por editá-lo.")
+            break;
+        }
       })
       .catch((error) => {
         alert(error);
@@ -258,6 +285,7 @@ export default function MainBottomTab() {
   }
 
   function deletePaymentMethod(navigation) {
+    getUser();
     getPaymentMethod();
     fetch(url + "/PaymentMethods/DeletePaymentMethod.php", {
       method: "POST",
@@ -267,13 +295,18 @@ export default function MainBottomTab() {
       },
       body: JSON.stringify({
         id: paymentMethod.id,
+        userId: user.id,
       }),
     })
       .then((response) => response.json())
       .then((json) => {
         switch (json.message) {
           case "success":
+            alert("Registo eliminado com sucesso.")
             navigation.goBack();
+            break;
+          case "delete_failed":
+            alert("Não foi possível eliminar. Este registo já não deve existir.")
             break;
           case "is_last_result":
             alert("O último registo não pode ser eliminado. Opte por editá-lo.")

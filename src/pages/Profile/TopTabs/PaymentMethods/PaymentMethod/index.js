@@ -19,6 +19,8 @@ export default function PaymentMethod({ route, navigation }) {
 
     const { paymentMethod } = route.params;
 
+    const url = connection.url + connection.directory;
+
     function enable() {
         setEditable(true);
         setInputStyle(themeProfile.enable);
@@ -56,7 +58,32 @@ export default function PaymentMethod({ route, navigation }) {
     }
 
     function updatePaymentMethod() {
-
+        if (name != "" && description != "") {
+            fetch(url + "/PaymentMethods/Update.php", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: paymentMethod.id,
+                    name: name,
+                    description: description,
+                }),
+            })
+                .then((response) => response.json())
+                .then((json) => {
+                    if (json.message === "success") {
+                        alert("Atualizado com sucesso!")
+                        navigation.goBack()
+                    }
+                })
+                .catch((error) => {
+                    alert(error);
+                });
+        } else {
+            alert("Preencha todos os campos!");
+        }
     }
 
     useEffect(() => {

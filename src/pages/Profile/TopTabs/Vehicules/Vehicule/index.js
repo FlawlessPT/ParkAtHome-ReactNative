@@ -19,6 +19,8 @@ export default function Vehicule({ route, navigation }) {
 
     const { vehicule } = route.params;
 
+    const url = connection.url + connection.directory;
+
     function enable() {
         setEditable(true);
         setInputStyle(themeProfile.enable);
@@ -67,7 +69,7 @@ export default function Vehicule({ route, navigation }) {
     function updateButton() {
         if (editable) {
             return (
-                <Button disabled={editable} mode="contained" style={generalStyles.mainButton} title="Login" onPress={() => updateVehicule()}>
+                <Button disabled={!editable} mode="contained" style={generalStyles.mainButton} onPress={() => updateVehicule()}>
                     <Text style={generalStyles.mainButtonText}>Atualizar Veículo</Text>
                 </Button>
             )
@@ -78,7 +80,32 @@ export default function Vehicule({ route, navigation }) {
     }
 
     function updateVehicule() {
-
+        if (name != "" && plate != "") {
+            fetch(url + "/Vehicules/Update.php", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: vehicule.id,
+                    name: name,
+                    plate: plate,
+                }),
+            })
+                .then((response) => response.json())
+                .then((json) => {
+                    if (json.message === "success") {
+                        alert("Atualizado com sucesso!")
+                        navigation.goBack()
+                    }
+                })
+                .catch((error) => {
+                    alert(error);
+                });
+        } else {
+            alert("Preencha todos os campos!");
+        }
     }
 
     useEffect(() => {

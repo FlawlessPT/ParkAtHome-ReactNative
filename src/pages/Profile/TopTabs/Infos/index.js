@@ -1,12 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Text, View, KeyboardAvoidingView, Image, ScrollView } from "react-native";
 import { FAB, TextInput, Button, Divider } from "react-native-paper";
 import { styles } from "./styles";
 
 import { colors } from "../../../../constant/color";
+import { connection } from "../../../../constant/database";
 import { generalStyles } from "../../../../constant/styles";
 import { themeProfile } from "../../../../constant/styles";
 import { storage } from "../../../../constant/storage";
@@ -23,6 +24,8 @@ export default function Infos({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const url = connection.url + connection.directory;
+
   function enable() {
     setEditable(true);
     setInputStyle(themeProfile.enable);
@@ -38,7 +41,7 @@ export default function Infos({ navigation }) {
       let value = await AsyncStorage.getItem(storage.user);
       value = JSON.parse(value);
       if (value != null) {
-        setName(value[0].name);
+        setName(value.name);
       }
     }
     catch (error) {
@@ -51,7 +54,7 @@ export default function Infos({ navigation }) {
       let value = await AsyncStorage.getItem(storage.user);
       value = JSON.parse(value);
       if (value != null) {
-        setContact(value[0].contact);
+        setContact(value.contact);
       }
     }
     catch (error) {
@@ -64,7 +67,7 @@ export default function Infos({ navigation }) {
       let value = await AsyncStorage.getItem(storage.user);
       value = JSON.parse(value);
       if (value != null) {
-        setEmail(value[0].email);
+        setEmail(value.email);
       }
     }
     catch (error) {
@@ -77,7 +80,7 @@ export default function Infos({ navigation }) {
       let value = await AsyncStorage.getItem(storage.user);
       value = JSON.parse(value);
       if (value != null) {
-        setPassword(value[0].password);
+        setPassword(value.password);
       }
     }
     catch (error) {
@@ -108,13 +111,13 @@ export default function Infos({ navigation }) {
 
   async function updateStorage() {
     // console.log(user || "oi");
-    // alert(user[0].name);
-    // console.log(user[0].isAdmin);
+    // alert(user.name);
+    // console.log(user.isAdmin);
     try {
-      user[0].name = name;
-      user[0].contact = contact;
-      user[0].email = email;
-      user[0].password = password;
+      user.name = name;
+      user.contact = contact;
+      user.email = email;
+      user.password = password;
 
       let newUser = user;
 
@@ -131,17 +134,55 @@ export default function Infos({ navigation }) {
   }
 
   function updateData() {
-    updateStorage();
+    updateDatabase();
   }
 
+  function updateDatabase() {
+    // alert(user.id + name + contact + email + password);
+    if (name != "" && contact != "" && email != "" &&
+      password != "") {
+      fetch(url + "/Users/Update.php", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: user.id,
+          name: name,
+          contact: contact,
+          email: email,
+          password: password,
+        }),
+      })
+        .then((response) => response.json())
+        .then((json) => {
+          if (json.message === "success") {
+            updateStorage();
+            alert("Atualizado com sucesso!")
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    } else {
+      alert("Preencha todos os campos!");
+    }
+  }
+
+  let isRendered = useRef(false);
+
   useEffect(() => {
+    isRendered = true;
     const unsubscribe = navigation.addListener("focus", e => {
       disable();
       getData();
     })
-
-    return unsubscribe;
-  }, [navigation]);
+    return () => {
+      isRendered = false;
+      unsubscribe;
+    };
+  }, []);
 
   return (
     <View style={generalStyles.container}>

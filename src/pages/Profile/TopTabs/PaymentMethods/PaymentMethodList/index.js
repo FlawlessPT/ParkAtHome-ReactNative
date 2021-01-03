@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, FlatList, BackHandler } from "react-native";
 import { FAB } from "react-native-paper";
 
@@ -58,13 +58,24 @@ export default function PaymentMethodList({ navigation }) {
   }, []);
 
   useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", () => true);
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", () => true);
+  }, []);
+
+  let isRendered = useRef(false);
+
+  useEffect(() => {
+    isRendered = true;
     const unsubscribe = navigation.addListener("focus", e => {
       getAsyncUser();
       loadPaymentMethods();
     })
-
-    return unsubscribe;
-  }, [navigation]);
+    return () => {
+      isRendered = false;
+      unsubscribe;
+    };
+  }, []);
 
   return (
     <View style={styles.background}>

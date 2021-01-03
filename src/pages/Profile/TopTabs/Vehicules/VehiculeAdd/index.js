@@ -14,7 +14,6 @@ export default function AddVehicule({ navigation }) {
   const [plate, setPlate] = useState("");
   const [name, setName] = useState("");
 
-  const [vehicule, setVehicule] = useState("");
   const [user, setUser] = useState("");
 
   const url = connection.url + connection.directory;
@@ -43,7 +42,7 @@ export default function AddVehicule({ navigation }) {
         body: JSON.stringify({
           plate: plate,
           name: name,
-          userId: user[0].id,
+          userId: user.id,
         }),
       })
         .then((response) => response.json())

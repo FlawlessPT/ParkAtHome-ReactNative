@@ -16,7 +16,7 @@ export default function Login({ navigation }) {
 
   const url = connection.url + connection.directory;
 
-  const saveUserId = async (userId, user) => {
+  const saveUser = async (userId, user) => {
     try {
       // console.log("nada nada");
       // console.log("............")
@@ -38,7 +38,7 @@ export default function Login({ navigation }) {
         navigation.navigate("Main");
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
@@ -59,7 +59,7 @@ export default function Login({ navigation }) {
         .then((json) => {
           switch (json.message) {
             case "success":
-              saveUserId(json.user_id, json.user);
+              saveUser(json.user_id, json.user);
               break;
             case "login_failed":
               alert("Dados incorretos!")
@@ -70,7 +70,7 @@ export default function Login({ navigation }) {
           }
         })
         .catch((error) => {
-          alert(error);
+          console.log(error);
         });
     } else {
       alert("Preencha todos os campos!");
