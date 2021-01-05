@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "TestNavigations",
-    "slug": "TestNavigations",
+    "name": "Park@Home",
+    "slug": "Park@Home",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon/icon-solid.png",
@@ -9,7 +9,7 @@
       "image": "./assets/logo/logo-vertical.png",
       "width": "50%",
       "resizeMode": "contain",
-      "backgroundColor": "#68A9CA"
+      "backgroundColor": "#fff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
