@@ -17,7 +17,7 @@ export default function MainTabIcon({ focused, color, route }) {
       size = iconSize.bottomTabs;
       break;
     case "HistoryList":
-      iconName = `${focused ? "view-list" : "view-list"}`;
+      iconName = `${focused ? "history" : "history"}`;
       size = iconSize.bottomTabs;
       break;
     default:
