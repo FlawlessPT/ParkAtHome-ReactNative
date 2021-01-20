@@ -32,7 +32,7 @@ export default class App extends React.Component {
       return null;
     }
     return (
-      <View style={{ flex: 1, backgroundColor: "#2C2C2C" }}>
+      <View style={{ flex: 1, backgroundColor: "#fff" }}>
         <NavigationContainer>
           <Routes />
         </NavigationContainer>

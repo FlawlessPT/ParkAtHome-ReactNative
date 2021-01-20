@@ -59,7 +59,7 @@ export default function Login({ navigation }) {
         .then((json) => {
           switch (json.message) {
             case "success":
-              saveUser(json.user_id, json.user);
+              saveUser(json.user.id, json.user);
               break;
             case "login_failed":
               alert("Dados incorretos!")

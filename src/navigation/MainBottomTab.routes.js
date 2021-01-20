@@ -166,14 +166,6 @@ function getHeaderTitle(route) {
   }
 }
 
-async function clearAsyncStorage() {
-  try {
-    await AsyncStorage.clear();
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 export default function MainBottomTab() {
   const [park, setPark] = useState("");
   const [vehicule, setVehicule] = useState("");
@@ -182,6 +174,14 @@ export default function MainBottomTab() {
   const [user, setUser] = useState("");
 
   const url = connection.url + connection.directory;
+
+  async function clearAsyncStorage() {
+    try {
+      await AsyncStorage.clear();
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async function getUser() {
     try {

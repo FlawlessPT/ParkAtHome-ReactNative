@@ -17,15 +17,6 @@ export default function Register({ navigation }) {
 
   const url = connection.url + connection.directory;
 
-  const saveUserId = async (userId) => {
-    try {
-      const value = JSON.stringify(userId);
-      await AsyncStorage.setItem("user_id", value);
-    } catch (error) {
-      alert(error);
-    }
-  };
-
   function register() {
     if (name != "" && username != "" && password != ""
       && contact != "" && email != "") {
@@ -47,7 +38,6 @@ export default function Register({ navigation }) {
         .then((json) => {
           switch (json.message) {
             case "success":
-              saveUserId(json.user_id);
               navigation.navigate("Login");
               break;
             case "user_already_exists":

@@ -1,4 +1,6 @@
 export const connection = {
-  url: "http://192.168.1.13:80",
-  directory: "/ParkAtHome-Back_end-Tests",
+  url: "http://192.168.1.14:80",
+  directory: "/ParkAtHome-Back_end",
 };
+
+//ITA-PORTO: 172.31.110.209

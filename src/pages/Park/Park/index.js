@@ -1,13 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Text, View, Image, BackHandler } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Button, Divider } from "react-native-paper";
 import { add } from "react-native-reanimated";
 import { colors } from "../../../constant/color";
 import { connection } from "../../../constant/database";
+import { storage } from "../../../constant/storage";
 
 import { generalStyles } from "../../../constant/styles";
 
@@ -16,7 +17,6 @@ export default function Park({ route, navigation }) {
 
   const url = connection.url + connection.directory;
 
-  const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
@@ -25,45 +25,38 @@ export default function Park({ route, navigation }) {
   const [nrFloors, setNrFloors] = useState("");
   const [pricePerHour, setPricePerHour] = useState("");
 
-  const [vehiculeName, setVehiculeName] = useState("");
+  const [vehicules, setVehicules] = useState([]);
 
-  const [userId, setUserId] = useState("");
+  const [plate, setPlate] = useState("");
 
-  async function getAsyncUser() {
-    try {
-      let id = await AsyncStorage.getItem("user_id");
-      id = JSON.parse(id);
-
-      if (id != null) {
-        setUserId(id);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  }
+  const [user, setUser] = useState("");
 
   function loadParkInfo() {
-    fetch(url + "/Parks/GetParkById.php", {
+    setAddress(park.address);
+    setContact(park.contact);
+    setEmail(park.email);
+    setTotalSpaces(park.totalSpaces);
+    setLocalization(park.localization);
+    setNrFloors(park.nrFloors);
+    setPricePerHour(park.pricePerHour);
+  }
+
+  function getPlatesByUser() {
+    fetch(url + "/Vehicules/GetVehiculesUser.php", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: park.id,
+        userId: user.id,
       }),
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.message == "success") {
-          setName(json.park[0].name);
-          setAddress(json.park[0].address);
-          setContact(json.park[0].contact);
-          setEmail(json.park[0].email);
-          setTotalSpaces(json.park[0].totalSpaces);
-          setLocalization(json.park[0].localization);
-          setNrFloors(json.park[0].nrFloors);
-          setPricePerHour(json.park[0].pricePerHour);
+        if (json.message === "success") {
+          setVehicules(json.vehicules);
+          // console.log(json.vehicules);
         }
       })
       .catch((error) => {
@@ -72,29 +65,23 @@ export default function Park({ route, navigation }) {
   }
 
   function saveSpace() {
-    fetch(url + "/Users/SaveSpace.php", {
+    // console.log(`Vehicules: \n${vehicules[0].plate}`);
+    fetch(url + "/Spaces/SaveSpace.php", {
       method: "POST",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
-        userId: userId,
-        vehicule: vehiculeName,
+        userId: user.id,
+        plate: "11-22-AA",
+        parkId: park.id,
       }),
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.message == "success") {
-          setName(json.park[0].name);
-          setAddress(json.park[0].address);
-          setContact(json.park[0].contact);
-          setEmail(json.park[0].email);
-          setTotalSpaces(json.park[0].totalSpaces);
-          setLocalization(json.park[0].localization);
-          setNrFloors(json.park[0].nrFloors);
-          setPricePerHour(json.park[0].pricePerHour);
+        if (json.message === "success") {
+          alert("Vaga reservada com sucesso");
         }
       })
       .catch((error) => {
@@ -109,12 +96,42 @@ export default function Park({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    getAsyncUser();
+    async function getAsyncUser() {
+      try {
+        let id = await AsyncStorage.getItem(storage.user);
+        id = JSON.parse(id);
+
+        if (id != null) {
+          setUser(id);
+        }
+      } catch (error) {
+        alert(error);
+      }
+    }
+
+    getAsyncUser().then();
   }, []);
 
   useEffect(() => {
-    loadParkInfo();
-  }, []);
+    if (user && vehicules) {
+      loadParkInfo();
+      getPlatesByUser();
+    }
+  }, [user])
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     let isActive = true;
+
+  //     getAsyncUser();
+  //     loadParkInfo();
+  //     saveSpace();
+
+  //     return () => {
+  //       isActive = false;
+  //     };
+  //   }, [])
+  // );
 
   return (
     <View style={generalStyles.background}>
@@ -196,9 +213,9 @@ export default function Park({ route, navigation }) {
             color: colors.main,
             marginBottom: 5,
           }}>
-            Preço: <Text style={{ color: colors.secondary }}>{pricePerHour}</Text> €
+            Preço: <Text style={{ color: colors.secondary }}>{pricePerHour}</Text> €/hora
           </Text>
-          <Button style={generalStyles.mainButton} onPress={() => alert("oi")}>
+          <Button style={generalStyles.mainButton} onPress={() => saveSpace()}>
             <Text style={generalStyles.mainButtonText}>Reservar</Text>
           </Button>
         </View>
