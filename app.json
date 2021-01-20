@@ -23,6 +23,6 @@
     "web": {
       "favicon": "./assets/icon/icon-solid.png"
     },
-    "description": ""
+    "description": "Multiplatform parking lot application."
   }
 }
