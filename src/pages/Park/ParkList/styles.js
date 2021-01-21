@@ -6,4 +6,10 @@ export const styles = StyleSheet.create({
         width: 90,
         borderRadius: 20,
     },
+    parkImageDisabled: {
+        height: 90,
+        width: 90,
+        borderRadius: 20,
+        opacity: 0.5,
+    },
 })
