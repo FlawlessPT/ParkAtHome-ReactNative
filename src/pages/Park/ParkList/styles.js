@@ -10,6 +10,6 @@ export const styles = StyleSheet.create({
         height: 90,
         width: 90,
         borderRadius: 20,
-        opacity: 0.5,
+        opacity: 1,
     },
 })

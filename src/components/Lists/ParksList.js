@@ -11,7 +11,7 @@ import { colors } from "../../constant/color";
 
 export default (props) => {
     // const fullColor = "#FF8484";
-    const fullColor = "#FF8484";
+    const fullColor = "#a8a8a8";
     const freeColor = "white";
 
     const fullOpacity = 0.4;

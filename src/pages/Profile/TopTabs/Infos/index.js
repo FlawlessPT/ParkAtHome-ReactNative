@@ -187,69 +187,69 @@ export default function Infos({ navigation }) {
   return (
     <View style={generalStyles.container}>
       <KeyboardAvoidingView>
-        <ScrollView>
-          <Image
-            style={styles.logo}
-            source={require('../../../../../assets/profile-icon.png')}
-          />
-          <Divider style={{
-            height: 3,
-            backgroundColor: "black",
-            marginVertical: 20,
-          }} />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(name) => setName(name)}
-            label="Nome"
-            value={name}
-            editable={editable}
-            style={generalStyles.input}
-            theme={inputStyle}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(contact) => setContact(contact)}
-            label="Contacto"
-            value={contact}
-            editable={editable}
-            style={generalStyles.input}
-            theme={inputStyle}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}//TODO: FIX INPUT STYLES
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(email) => setEmail(email)}
-            label="Email"
-            value={email}
-            editable={editable}
-            style={generalStyles.input}
-            theme={inputStyle}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(password) => setPassword(password)}
-            secureTextEntry={true}
-            label="Password"
-            value={password}
-            editable={editable}
-            style={generalStyles.input}
-            theme={inputStyle}
-          />
-          <Button mode="contained" style={generalStyles.mainButton} title="Login" onPress={() => updateData()}>
-            <Text style={generalStyles.mainButtonText}>Atualizar Dados</Text>
-          </Button>
-        </ScrollView>
+        {/* <ScrollView style={{ paddingHorizontal: "10%" }}> */}
+        <Image
+          style={styles.logo}
+          source={require('../../../../../assets/profile-icon.png')}
+        />
+        <Divider style={{
+          height: 3,
+          backgroundColor: "black",
+          marginVertical: 20,
+        }} />
+        <TextInput
+          mode="flat"
+          underlineColor={colors.main}
+          selectionColor={colors.secondary}
+          dense={true}
+          onChangeText={(name) => setName(name)}
+          label="Nome"
+          value={name}
+          editable={editable}
+          style={generalStyles.input}
+          theme={inputStyle}
+        />
+        <TextInput
+          mode="flat"
+          underlineColor={colors.main}
+          selectionColor={colors.secondary}
+          dense={true}
+          onChangeText={(contact) => setContact(contact)}
+          label="Contacto"
+          value={contact}
+          editable={editable}
+          style={generalStyles.input}
+          theme={inputStyle}
+        />
+        <TextInput
+          mode="flat"
+          underlineColor={colors.main}//TODO: FIX INPUT STYLES
+          selectionColor={colors.secondary}
+          dense={true}
+          onChangeText={(email) => setEmail(email)}
+          label="Email"
+          value={email}
+          editable={editable}
+          style={generalStyles.input}
+          theme={inputStyle}
+        />
+        <TextInput
+          mode="flat"
+          underlineColor={colors.main}
+          selectionColor={colors.secondary}
+          dense={true}
+          onChangeText={(password) => setPassword(password)}
+          secureTextEntry={true}
+          label="Password"
+          value={password}
+          editable={editable}
+          style={generalStyles.input}
+          theme={inputStyle}
+        />
+        <Button mode="contained" style={generalStyles.mainButton} title="Login" onPress={() => updateData()}>
+          <Text style={generalStyles.mainButtonText}>Atualizar Dados</Text>
+        </Button>
+        {/* </ScrollView> */}
       </KeyboardAvoidingView>
       <FAB
         style={generalStyles.fab}

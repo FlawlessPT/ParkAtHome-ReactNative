@@ -46,7 +46,7 @@ export default function ParkList({ navigation }) {
           <ParksList id={item.id} name={item.name}
             totalSpaces={item.totalSpaces}
             pricePerHour={item.pricePerHour}
-            totalSavedSpaces={item.totalSavedSpaces}
+            totalSavedSpaces={30}
             park={item}
             navigation={navigation}
           />
