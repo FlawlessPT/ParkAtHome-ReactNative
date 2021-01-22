@@ -29,6 +29,11 @@ export const generalStyles = StyleSheet.create({
         marginVertical: 10,
         backgroundColor: colors.main
     },
+    mainButtonDisabled: {
+        borderRadius: 2,
+        marginVertical: 10,
+        backgroundColor: colors.buttonDisabled
+    },
     mainButtonText: {
         padding: 5,
         fontSize: 20,

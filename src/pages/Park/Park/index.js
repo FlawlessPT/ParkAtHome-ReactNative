@@ -13,7 +13,7 @@ import { storage } from "../../../constant/storage";
 import { generalStyles } from "../../../constant/styles";
 
 export default function Park({ route, navigation }) {
-  const { park } = route.params;
+  const { park, totalSavedSpaces } = route.params;
 
   const url = connection.url + connection.directory;
 
@@ -21,6 +21,7 @@ export default function Park({ route, navigation }) {
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
   const [totalSpaces, setTotalSpaces] = useState("");
+  const [totalSavedSpace, setTotalSavedSpaces] = useState(0);
   const [localization, setLocalization] = useState("");
   const [nrFloors, setNrFloors] = useState("");
   const [pricePerHour, setPricePerHour] = useState("");
@@ -36,6 +37,7 @@ export default function Park({ route, navigation }) {
     setContact(park.contact);
     setEmail(park.email);
     setTotalSpaces(park.totalSpaces);
+    setTotalSavedSpaces(totalSavedSpaces)
     setLocalization(park.localization);
     setNrFloors(park.nrFloors);
     setPricePerHour(park.pricePerHour);
@@ -87,6 +89,26 @@ export default function Park({ route, navigation }) {
       .catch((error) => {
         alert(error);
       });
+  }
+
+  function buttonSaveSpace() {
+    // alert(`${park.totalSpaces} ${park.totalSavedSpaces}`)
+    if (totalSavedSpace == park.totalSpaces) {
+      // alert("oi")
+      return (
+        <Button style={generalStyles.mainButtonDisabled} disabled={true}>
+          <Text style={generalStyles.mainButtonText}>Reservar</Text>
+        </Button>
+      )
+    }
+    else {
+      // alert("oi")
+      return (
+        <Button style={generalStyles.mainButton} onPress={() => saveSpace()}>
+          <Text style={generalStyles.mainButtonText}>Reservar</Text>
+        </Button>
+      )
+    }
   }
 
   useEffect(() => {
@@ -181,7 +203,7 @@ export default function Park({ route, navigation }) {
             color: colors.main,
             marginBottom: 5,
           }}>
-            Lotação: <Text style={{ color: colors.secondary }}>{totalSpaces}</Text> veiculos
+            Lotação: <Text style={{ color: colors.secondary }}>{totalSavedSpace} / {totalSpaces}</Text> veiculos
         </Text>
           <Text style={{
             fontFamily: "Aldrich_Regular",
@@ -215,9 +237,7 @@ export default function Park({ route, navigation }) {
           }}>
             Preço: <Text style={{ color: colors.secondary }}>{pricePerHour}</Text> €/hora
           </Text>
-          <Button style={generalStyles.mainButton} onPress={() => saveSpace()}>
-            <Text style={generalStyles.mainButtonText}>Reservar</Text>
-          </Button>
+          {buttonSaveSpace()}
         </View>
       </ScrollView>
     </View>

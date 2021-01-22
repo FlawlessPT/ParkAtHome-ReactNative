@@ -28,7 +28,7 @@ export default (props) => {
 
     function sendTempPark() {
         savePark();
-        props.navigation.navigate("Park", { park: props.park });
+        props.navigation.navigate("Park", { park: props.park, totalSavedSpaces: 30 });
     }
 
     function parkIsFull() {
@@ -52,7 +52,7 @@ export default (props) => {
     function setIsEnabled() {
         if (props.totalSavedSpaces == props.totalSpaces) {
             return (
-                <View
+                <TouchableOpacity onPress={() => sendTempPark()}
                     style={{ paddingHorizontal: 35, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                     <View style={{ width: "80%" }}>
                         <View style={{ flexDirection: "row" }}>
@@ -67,7 +67,7 @@ export default (props) => {
                         style={styles.parkImageDisabled}
                         source={require('../../../assets/parque_01.jpg')}
                     />
-                </View>
+                </TouchableOpacity>
             )
         }
 
