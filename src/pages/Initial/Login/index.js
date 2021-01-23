@@ -43,6 +43,9 @@ export default function Login({ navigation }) {
   };
 
   function login() {
+    setUsername("joao")
+    setPassword("123")
+    // alert(`${username} ${password}`)
     if (username != "" && password != "") {
       fetch(url + "/Login.php", {
         method: "POST",

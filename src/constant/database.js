@@ -1,5 +1,5 @@
 export const connection = {
-  url: "http://192.168.1.15:80",
+  url: "http://192.168.1.6:80",
   directory: "/ParkAtHome-Back_end",
 };
 

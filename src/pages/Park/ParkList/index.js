@@ -42,11 +42,12 @@ export default function ParkList({ navigation }) {
       <FlatList
         data={parks}
         keyExtractor={({ id }, index) => id}
+        extraData={loadParks()}
         renderItem={({ item }) => (
           <ParksList id={item.id} name={item.name}
             totalSpaces={item.totalSpaces}
             pricePerHour={item.pricePerHour}
-            totalSavedSpaces={30}
+            totalSavedSpaces={item.totalSavedSpaces}
             park={item}
             navigation={navigation}
           />

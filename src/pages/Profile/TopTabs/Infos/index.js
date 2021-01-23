@@ -223,7 +223,7 @@ export default function Infos({ navigation }) {
         />
         <TextInput
           mode="flat"
-          underlineColor={colors.main}//TODO: FIX INPUT STYLES
+          underlineColor={colors.main}
           selectionColor={colors.secondary}
           dense={true}
           onChangeText={(email) => setEmail(email)}
