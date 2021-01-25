@@ -7,7 +7,8 @@ export const headerTitles = {
 };
 
 export const tabBarTitles = {
-  infos: "INFORMAÇÕES",
+  infos: "CONTA",
   vehicules: "VEÍCULOS",
   methods: "MÉTODOS",
+  savedSpaces: "RESERVAS",
 };

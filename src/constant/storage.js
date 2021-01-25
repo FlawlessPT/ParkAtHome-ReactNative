@@ -4,4 +4,5 @@ export const storage = {
     vehicule: "vehicule",
     paymentMethod: "paymentMethod",
     history: "history",
+    savedSpace: "savedSpace",
 };

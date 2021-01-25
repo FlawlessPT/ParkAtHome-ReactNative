@@ -13,6 +13,7 @@ import ParkList from "../pages/Park/ParkList";
 import Infos from "../pages/Profile/TopTabs/Infos";
 import VehiculeList from "../pages/Profile/TopTabs/Vehicules/VehiculeList";
 import PaymentMethodList from "../pages/Profile/TopTabs/PaymentMethods/PaymentMethodList";
+import SavedSpacesList from "../pages/Profile/TopTabs/SavedSpaces/SavedSpaceList";
 import HistoryList from "../pages/History/HistoryList";
 
 import Park from "../pages/Park/Park";
@@ -65,7 +66,7 @@ function ProfileTopTabNavigatorScreen() {
           backgroundColor: colors.text,
           padding: 2,
         },
-        labelStyle: { fontFamily: "Aldrich_Regular", fontSize: 11 },
+        labelStyle: { fontFamily: "Aldrich_Regular", fontSize: 13 },
       }}
     >
       <TopTab.Screen
@@ -87,6 +88,13 @@ function ProfileTopTabNavigatorScreen() {
         component={PaymentMethodList}
         options={{
           title: tabBarTitles.methods,
+        }}
+      />
+      <TopTab.Screen
+        name="SavedSpacesList"
+        component={SavedSpacesList}
+        options={{
+          title: tabBarTitles.savedSpaces,
         }}
       />
     </TopTab.Navigator>
