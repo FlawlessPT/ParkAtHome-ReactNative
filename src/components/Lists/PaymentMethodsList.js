@@ -17,7 +17,7 @@ export default (props) => {
     };
 
     function sendTempPaymentMethod() {
-        savePaymentMethod();
+        savePaymentMethod().then();
         props.navigation.navigate("PaymentMethod", { paymentMethod: props.paymentMethod });
     }
 
@@ -25,10 +25,8 @@ export default (props) => {
         <View>
             <TouchableOpacity onPress={() => sendTempPaymentMethod()}
                 style={{ paddingHorizontal: 20 }}>
-                <View style={{ width: "70%" }}>
-                    <Text style={listStyles.itemTitle}>{props.name}</Text>
-                    <Text style={listStyles.itemSubtitle}>{props.description}</Text>
-                </View>
+                <Text style={listStyles.itemTitle}>{props.name}</Text>
+                <Text style={listStyles.itemSubtitle}>{props.description}</Text>
             </TouchableOpacity>
             <Divider style={{ height: 2, backgroundColor: "black" }} />
         </View>

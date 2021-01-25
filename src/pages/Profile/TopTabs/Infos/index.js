@@ -88,25 +88,24 @@ export default function Infos({ navigation }) {
     }
   }
 
-  async function getUser() {
-    try {
-      let value = await AsyncStorage.getItem(storage.user);
-      value = JSON.parse(value);
-      if (value != null) {
-        setUser(value);
-      }
-    }
-    catch (error) {
-      alert(error);
-    }
-  }
+  // async function getUser() {
+  //   try {
+  //     let value = await AsyncStorage.getItem(storage.user);
+  //     value = JSON.parse(value);
+  //     if (value != null) {
+  //       setUser(value);
+  //     }
+  //   }
+  //   catch (error) {
+  //     alert(error);
+  //   }
+  // }
 
   function getData() {
     getName();
     getContact();
     getEmail();
     getPassword();
-    getUser();
   }
 
   async function updateStorage() {
@@ -173,16 +172,40 @@ export default function Infos({ navigation }) {
   let isRendered = useRef(false);
 
   useEffect(() => {
-    isRendered = true;
-    const unsubscribe = navigation.addListener("focus", e => {
+    async function getAsyncUser() {
+      try {
+        let id = await AsyncStorage.getItem(storage.user);
+        id = JSON.parse(id);
+
+        if (id != null) {
+          setUser(id);
+        }
+      } catch (error) {
+        alert(error);
+      }
+    }
+
+    getAsyncUser().then();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
       disable();
       getData();
-    })
-    return () => {
-      isRendered = false;
-      unsubscribe;
-    };
-  }, []);
+    }
+  }, [user]);
+
+  // useEffect(() => {
+  //   isRendered = true;
+  //   const unsubscribe = navigation.addListener("focus", e => {
+  //     disable();
+  //     getData();
+  //   })
+  //   return () => {
+  //     isRendered = false;
+  //     unsubscribe;
+  //   };
+  // }, []);
 
   return (
     <View style={generalStyles.container}>

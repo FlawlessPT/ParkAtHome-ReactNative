@@ -33,8 +33,12 @@ export default function ParkList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    loadParks();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadParks();
+    })
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={generalStyles.background}>
@@ -42,7 +46,6 @@ export default function ParkList({ navigation }) {
       <FlatList
         data={parks}
         keyExtractor={({ id }, index) => id}
-        extraData={loadParks()}
         renderItem={({ item }) => (
           <ParksList id={item.id} name={item.name}
             totalSpaces={item.totalSpaces}

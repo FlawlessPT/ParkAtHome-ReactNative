@@ -16,36 +16,20 @@ export default function Login({ navigation }) {
 
   const url = connection.url + connection.directory;
 
-  const saveUser = async (userId, user) => {
+  const saveUser = async (user) => {
     try {
-      // console.log("nada nada");
-      // console.log("............")
       await AsyncStorage.clear();
-      // console.log(await AsyncStorage.getItem(storage.userId))
-      // console.log(await AsyncStorage.getItem(storage.user));
 
-      const value = JSON.stringify(userId);
       const userObject = JSON.stringify(user);
-
-      // console.log("-----------")
-      await AsyncStorage.setItem(storage.userId, value);
       await AsyncStorage.setItem(storage.user, userObject);
 
-      // console.log(await AsyncStorage.getItem(storage.userId))
-      // console.log(await AsyncStorage.getItem(storage.user));
-
-      if (value != null) {
-        navigation.navigate("Main");
-      }
+      navigation.navigate("Main");
     } catch (error) {
       console.log(error);
     }
   };
 
   function login() {
-    setUsername("joao")
-    setPassword("123")
-    // alert(`${username} ${password}`)
     if (username != "" && password != "") {
       fetch(url + "/Login.php", {
         method: "POST",
@@ -62,7 +46,7 @@ export default function Login({ navigation }) {
         .then((json) => {
           switch (json.message) {
             case "success":
-              saveUser(json.user.id, json.user);
+              saveUser(json.user);
               break;
             case "login_failed":
               alert("Dados incorretos!")

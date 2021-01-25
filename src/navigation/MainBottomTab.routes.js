@@ -170,6 +170,7 @@ export default function MainBottomTab() {
   const [park, setPark] = useState("");
   const [vehicule, setVehicule] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [historyItem, setHistoryItem] = useState("");
 
   const [user, setUser] = useState("");
 
@@ -235,6 +236,19 @@ export default function MainBottomTab() {
     }
   }
 
+  async function getHistoryItem() {
+    try {
+      let id = await AsyncStorage.getItem(storage.history);
+      id = JSON.parse(id);
+
+      if (id != null) {
+        setHistoryItem(id);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   function setParkTitle() {
     getPark();
     return <Text style={{ fontFamily: fonts.main }}>{park.name}</Text>;
@@ -248,6 +262,11 @@ export default function MainBottomTab() {
   function setPaymentMethodTitle() {
     getPaymentMethod();
     return <Text style={{ fontFamily: fonts.main }}>{paymentMethod.name || "---"}</Text>;
+  }
+
+  function setHistoryItemTitle() {
+    getHistoryItem();
+    return <Text style={{ fontFamily: fonts.main }}>Reserva {historyItem.id || 0}</Text>;
   }
 
   function deleteVehicule(navigation) {
@@ -295,6 +314,40 @@ export default function MainBottomTab() {
       },
       body: JSON.stringify({
         id: paymentMethod.id,
+        userId: user.id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        switch (json.message) {
+          case "success":
+            alert("Registo eliminado com sucesso.")
+            navigation.goBack();
+            break;
+          case "delete_failed":
+            alert("Não foi possível eliminar. Este registo já não deve existir.")
+            break;
+          case "is_last_result":
+            alert("O último registo não pode ser eliminado. Opte por editá-lo.")
+            break;
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
+  function deleteHistoryItem(navigation) {
+    getUser();
+    getHistoryItem();
+    fetch(url + "/History/DeleteHistoryItem.php", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: historyItem.id,
         userId: user.id,
       }),
     })
@@ -412,18 +465,17 @@ export default function MainBottomTab() {
           ),
         })}
       />
-      < RootStack.Screen
+      <RootStack.Screen
         name="History"
         component={History}
         options={({ route }) => ({
-          headerTitle: "Detalhes Histórico",
+          headerTitle: setHistoryItemTitle(),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
-            fontFamily: "Aldrich_Regular",
           },
-          headerRight: () => (
-            <Button onPress={() => alert("Delete")}>
+          headerRight: (navigation) => (
+            <Button onPress={() => deleteHistoryItem(navigation)}>
               <IconsFA
                 name="trash"
                 size={iconSize.delete}

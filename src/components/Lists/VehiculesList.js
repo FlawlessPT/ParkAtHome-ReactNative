@@ -17,7 +17,7 @@ export default (props) => {
     };
 
     function sendTempVehicule() {
-        saveVehicule();
+        saveVehicule().then();
         // alert(JSON.stringify(props.vehicules.name));
         props.navigation.navigate("Vehicule", { vehicule: props.vehicule });
     }
@@ -26,10 +26,8 @@ export default (props) => {
         <View>
             <TouchableOpacity onPress={() => sendTempVehicule()}
                 style={{ paddingHorizontal: 20 }}>
-                <View style={{ width: "70%" }}>
-                    <Text style={listStyles.itemTitle}>{props.plate}</Text>
-                    <Text style={listStyles.itemSubtitle}>{props.name}</Text>
-                </View>
+                <Text style={listStyles.itemTitle}>{props.plate}</Text>
+                <Text style={listStyles.itemSubtitle}>{props.name}</Text>
             </TouchableOpacity>
             <Divider style={{ height: 2, backgroundColor: "black" }} />
         </View>

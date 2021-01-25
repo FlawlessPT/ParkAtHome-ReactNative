@@ -53,7 +53,7 @@ export default (props) => {
         if (props.totalSavedSpaces == props.totalSpaces) {
             return (
                 <TouchableOpacity onPress={() => sendTempPark()}
-                    style={{ paddingHorizontal: 35, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                    style={{ paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                     <View style={{ width: "80%" }}>
                         <View style={{ flexDirection: "row" }}>
                             <Text style={listStyles.itemTitleDisabled}>
@@ -72,22 +72,24 @@ export default (props) => {
         }
 
         return (
-            <TouchableOpacity onPress={() => sendTempPark()}
-                style={{ paddingHorizontal: 35, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                <View style={{ width: "80%" }}>
-                    <View style={{ flexDirection: "row" }}>
-                        <Text style={listStyles.itemTitle}>
-                            {props.name}</Text>
-                        {parkIsFull()}
+            <View>
+                <TouchableOpacity onPress={() => sendTempPark()}
+                    style={{ paddingHorizontal: 30, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                    <View style={{ width: "80%" }}>
+                        <View style={{ flexDirection: "row" }}>
+                            <Text style={listStyles.itemTitle}>
+                                {props.name}</Text>
+                            {parkIsFull()}
+                        </View>
+                        <Text style={listStyles.itemSubtitle1}>Vagas: {props.totalSavedSpaces}/{props.totalSpaces}</Text>
+                        <Text style={listStyles.itemSubtitle2}>{props.pricePerHour} €/hora</Text>
                     </View>
-                    <Text style={listStyles.itemSubtitle1}>Vagas: {props.totalSavedSpaces}/{props.totalSpaces}</Text>
-                    <Text style={listStyles.itemSubtitle2}>{props.pricePerHour} €/hora</Text>
-                </View>
-                <Image
-                    style={styles.parkImage}
-                    source={require('../../../assets/parque_01.jpg')}
-                />
-            </TouchableOpacity>
+                    <Image
+                        style={styles.parkImage}
+                        source={require('../../../assets/parque_01.jpg')}
+                    />
+                </TouchableOpacity>
+            </View>
         )
     }
 

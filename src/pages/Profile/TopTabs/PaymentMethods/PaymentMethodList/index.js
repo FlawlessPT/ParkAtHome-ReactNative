@@ -9,25 +9,13 @@ import PaymentMethodsList from "../../../../../components/Lists/PaymentMethodsLi
 import { connection } from "../../../../../constant/database";
 import { styles } from "./styles";
 import { generalStyles } from "../../../../../constant/styles";
+import { storage } from "../../../../../constant/storage";
 
 export default function PaymentMethodList({ navigation }) {
-  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState("");
   const [paymentMethods, setPaymentMethods] = useState([]);
 
   const url = connection.url + connection.directory;
-
-  async function getAsyncUser() {
-    try {
-      let id = await AsyncStorage.getItem("user_id");
-      id = JSON.parse(id);
-
-      if (id != null) {
-        setUserId(id);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  }
 
   function loadPaymentMethods() {
     fetch(url + "/PaymentMethods/GetPaymentMethodsUser.php", {
@@ -37,7 +25,7 @@ export default function PaymentMethodList({ navigation }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: userId,
+        userId: user.id,
       }),
     })
       .then((response) => response.json())
@@ -58,31 +46,38 @@ export default function PaymentMethodList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    BackHandler.addEventListener("hardwareBackPress", () => true);
-    return () =>
-      BackHandler.removeEventListener("hardwareBackPress", () => true);
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      async function getAsyncUser() {
+        try {
+          let id = await AsyncStorage.getItem(storage.user);
+          id = JSON.parse(id);
 
-  let isRendered = useRef(false);
+          if (id != null) {
+            setUser(id);
+          }
+        } catch (error) {
+          alert(error);
+        }
+      }
+
+      getAsyncUser().then();
+    })
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
-    isRendered = true;
-    const unsubscribe = navigation.addListener("focus", e => {
-      getAsyncUser();
+    if (user) {
       loadPaymentMethods();
-    })
-    return () => {
-      isRendered = false;
-      unsubscribe;
-    };
-  }, []);
+    }
+  }, [user]);
 
   return (
     <View style={styles.background}>
       <StatusBar style="auto" />
       <FlatList
         data={paymentMethods}
-        extraData={loadPaymentMethods()}
+        // extraData={loadPaymentMethods()}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
           <PaymentMethodsList

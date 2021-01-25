@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, ScrollView, KeyboardAvoidingView } from "react-native";
 import { FAB, Button, TextInput, Text } from 'react-native-paper';
 

@@ -1,33 +1,31 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, FlatList, BackHandler } from "react-native";
+
+import HistoryItemsList from "../../../components/Lists/HistoryItemsList";
 
 import { connection } from "../../../constant/database";
 import { styles } from "./styles";
-import ParksList from "../../../components/Lists/ParksList";
+import { storage } from "../../../constant/storage";
 
 export default function HistoryList({ navigation }) {
-  const [userId, setUserId] = useState("");
+  const [user, setUser] = useState("");
   const [history, setHistory] = useState([]);
 
   const url = connection.url + connection.directory;
 
-  async function getAsyncUser() {
-    try {
-      let id = await AsyncStorage.getItem("user_id");
-      id = JSON.parse(id);
-
-      if (id != null) {
-        setUserId(id);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  }
-
-  function loadParks() {
-    fetch(url + "/History/GetHistoryUser.php")
+  function loadHistory() {
+    fetch(url + "/History/GetHistoryNames.php", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: user.id,
+      }),
+    })
       .then((response) => response.json())
       .then((json) => {
         if (json.message == "success") {
@@ -46,12 +44,31 @@ export default function HistoryList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    getAsyncUser();
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      async function getAsyncUser() {
+        try {
+          let id = await AsyncStorage.getItem(storage.user);
+          id = JSON.parse(id);
+
+          if (id != null) {
+            setUser(id);
+          }
+        } catch (error) {
+          alert(error);
+        }
+      }
+
+      getAsyncUser().then();
+    })
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
-    loadParks();
-  }, []);
+    if (user) {
+      loadHistory();
+    }
+  }, [user]);
 
   return (
     <View style={styles.background}>
@@ -60,9 +77,8 @@ export default function HistoryList({ navigation }) {
         data={history}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <ParksList name={item.name}
-            totalSpaces={item.totalSpaces}
-            pricePerHour={item.pricePerHour}
+          <HistoryItemsList
+            history={item}
             navigation={navigation}
           />
         )}
