@@ -10,7 +10,7 @@ import { styles } from "./styles";
 import { storage } from "../../../constant/storage";
 
 export default function HistoryList({ navigation }) {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState([]);
   const [history, setHistory] = useState([]);
 
   const url = connection.url + connection.directory;

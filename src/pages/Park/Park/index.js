@@ -10,7 +10,7 @@ import { connection } from "../../../constant/database";
 import { storage } from "../../../constant/storage";
 
 import { generalStyles } from "../../../constant/styles";
-import { add } from "react-native-reanimated";
+// import { add } from "react-native-reanimated";
 
 export default function Park({ route, navigation }) {
   const { park, totalSavedSpaces } = route.params;
@@ -160,21 +160,25 @@ export default function Park({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    async function getAsyncUser() {
-      try {
-        let id = await AsyncStorage.getItem(storage.user);
-        id = JSON.parse(id);
+    const unsubscribe = navigation.addListener('focus', () => {
+      async function getAsyncUser() {
+        try {
+          let id = await AsyncStorage.getItem(storage.user);
+          id = JSON.parse(id);
 
-        if (id != null) {
-          setUser(id);
+          if (id != null) {
+            setUser(id);
+          }
+        } catch (error) {
+          alert(error);
         }
-      } catch (error) {
-        alert(error);
       }
-    }
 
-    getAsyncUser().then();
-  }, []);
+      getAsyncUser().then();
+    })
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     if (user && vehicules) {
@@ -224,7 +228,7 @@ export default function Park({ route, navigation }) {
                   selectedValue={plate}
                   onValueChange={(value) => setPlate(value)}
                 >
-                  <Picker.Item label={"---"} value={"---"} key={0} />
+                  <Picker.Item label={"Selecionar Matricula..."} value={"Selecionar Matricula..."} key={0} />
                   {loadPlates}
                 </Picker>
                 <TouchableOpacity

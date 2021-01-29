@@ -30,38 +30,39 @@ export default function Login({ navigation }) {
   };
 
   function login() {
-    if (username != "" && password != "") {
-      fetch(url + "/Login.php", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username,
-          password: password,
-        }),
+    // navigation.navigate("Main");
+    // if (username != "" && password != "") {
+    fetch(url + "/Login.php", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: "joao",
+        password: "123",
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        switch (json.message) {
+          case "success":
+            saveUser(json.user);
+            break;
+          case "login_failed":
+            alert("Dados incorretos!")
+            break;
+          case "error":
+            alert("Erro de servidor!")
+            break;
+        }
       })
-        .then((response) => response.json())
-        .then((json) => {
-          switch (json.message) {
-            case "success":
-              saveUser(json.user);
-              break;
-            case "login_failed":
-              alert("Dados incorretos!")
-              break;
-            case "error":
-              alert("Erro de servidor!")
-              break;
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      alert("Preencha todos os campos!");
-    }
+      .catch((error) => {
+        console.log(error);
+      });
+    // } else {
+    //   alert("Preencha todos os campos!");
+    // }
   }
 
   return (

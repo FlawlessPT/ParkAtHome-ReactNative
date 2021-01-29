@@ -29,6 +29,12 @@ export const generalStyles = StyleSheet.create({
         marginVertical: 10,
         backgroundColor: colors.main
     },
+    finishButton: {
+        marginTop: 20,
+        borderRadius: 2,
+        marginVertical: 10,
+        backgroundColor: "red"
+    },
     mainButtonDisabled: {
         borderRadius: 2,
         marginVertical: 10,

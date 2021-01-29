@@ -51,24 +51,30 @@ CREATE TABLE space (
 
 CREATE TABLE liveSavedSpaces (
 	id int NOT NULL AUTO_INCREMENT,
-	saved_at DATE NOT NULL,
+	saved_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	idVehicule int UNIQUE NOT NULL,
 	idSpace int UNIQUE NOT NULL,
+	idUser int NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (idVehicule) REFERENCES vehicule(id),
-	FOREIGN KEY (idSpace) REFERENCES space(id)
+	FOREIGN KEY (idSpace) REFERENCES space(id),
+	FOREIGN KEY (idUser) REFERENCES user(id)
 );
 
 CREATE TABLE history (
 	id int NOT NULL AUTO_INCREMENT,
-	paid_at DATE NOT NULL,
+	paid_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	amount FLOAT NOT NULL,
 	duration INT NOT NULL,
 	idSpace int NOT NULL,
+	idVehicule INT NOT NULL,
 	idPaymentMethod INT NOT NULL,
+	idUser INT NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (idSpace) REFERENCES space(id),
-	FOREIGN KEY (idPaymentMethod) REFERENCES paymentMethod(id)
+	FOREIGN KEY (idPaymentMethod) REFERENCES paymentMethod(id),
+	FOREIGN KEY (idVehicule) REFERENCES vehicule(id)
+	FOREIGN KEY (idUser) REFERENCES user(id)
 );
 
 INSERT INTO `user` (`id`, `name`, `username`, `password`, `contact`, `email`, `isAdmin`) VALUES

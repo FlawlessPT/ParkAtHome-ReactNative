@@ -6,6 +6,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-paper";
 import IconsFA from "react-native-vector-icons/FontAwesome";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import TabBarIcon from "../components/TabBarIcon";
 
@@ -19,6 +20,7 @@ import HistoryList from "../pages/History/HistoryList";
 import Park from "../pages/Park/Park";
 import Vehicule from "../pages/Profile/TopTabs/Vehicules/Vehicule";
 import PaymentMethod from "../pages/Profile/TopTabs/PaymentMethods/PaymentMethod";
+import SavedSpace from "../pages/Profile/TopTabs/SavedSpaces/SavedSpace";
 import History from "../pages/History/History";
 
 import AddVehicule from "../pages/Profile/TopTabs/Vehicules/VehiculeAdd";
@@ -66,7 +68,7 @@ function ProfileTopTabNavigatorScreen() {
           backgroundColor: colors.text,
           padding: 2,
         },
-        labelStyle: { fontFamily: "Aldrich_Regular", fontSize: 13 },
+        labelStyle: { fontFamily: "Aldrich_Regular", fontSize: 11 },
       }}
     >
       <TopTab.Screen
@@ -178,6 +180,7 @@ export default function MainBottomTab() {
   const [park, setPark] = useState("");
   const [vehicule, setVehicule] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
+  const [savedSpace, setSavedSpace] = useState("");
   const [historyItem, setHistoryItem] = useState("");
 
   const [user, setUser] = useState("");
@@ -244,6 +247,19 @@ export default function MainBottomTab() {
     }
   }
 
+  async function getSavedSpace() {
+    try {
+      let id = await AsyncStorage.getItem(storage.savedSpace);
+      id = JSON.parse(id);
+
+      if (id != null) {
+        setSavedSpace(id);
+      }
+    } catch (error) {
+      alert(error);
+    }
+  }
+
   async function getHistoryItem() {
     try {
       let id = await AsyncStorage.getItem(storage.history);
@@ -276,6 +292,12 @@ export default function MainBottomTab() {
     getHistoryItem();
     return <Text style={{ fontFamily: fonts.main }}>Reserva {historyItem.id || 0}</Text>;
   }
+
+  function setSavedSpaceTitle() {
+    getSavedSpace();
+    return <Text style={{ fontFamily: fonts.main }}>Vaga A{savedSpace.idSpace || 0}</Text>;
+  }
+
 
   function deleteVehicule(navigation) {
     getUser();
@@ -413,8 +435,8 @@ export default function MainBottomTab() {
                 navigation.navigate("Login");
               }}
             >
-              <IconsFA
-                name="sign-out"
+              <MaterialCommunityIcons
+                name="logout"
                 size={iconSize.delete}
                 color={colors.text}
               />
@@ -471,6 +493,26 @@ export default function MainBottomTab() {
               />
             </Button>
           ),
+        })}
+      />
+      <RootStack.Screen
+        name="SavedSpace"
+        component={SavedSpace}
+        options={({ route, navigation }) => ({
+          headerTitle: setSavedSpaceTitle(),
+          headerTintColor: colors.text,
+          headerStyle: {
+            backgroundColor: colors.main,
+          },
+          // headerRight: () => (
+          //   <Button onPress={() => deletePaymentMethod(navigation)}>
+          //     <IconsFA
+          //       name="trash"
+          //       size={iconSize.delete}
+          //       color={colors.text}
+          //     />
+          //   </Button>
+          // ),
         })}
       />
       <RootStack.Screen

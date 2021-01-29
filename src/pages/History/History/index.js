@@ -9,7 +9,7 @@ import { colors } from "../../../constant/color";
 import { generalStyles, themeProfile } from '../../../constant/styles';
 import { styles } from "./styles";
 
-export default function PaymentMethod({ route, navigation }) {
+export default function History({ route, navigation }) {
   const [parkName, setParkName] = useState("");
   const [vehiculeName, setVehiculeName] = useState("");
   const [paymentMethodName, setPaymentMethodName] = useState("");
@@ -53,8 +53,12 @@ export default function PaymentMethod({ route, navigation }) {
   }
 
   useEffect(() => {
-    getData()
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getData();
+    })
+
+    return unsubscribe;
+  }, [navigation]);
 
   return (
     <View style={styles.background}>
