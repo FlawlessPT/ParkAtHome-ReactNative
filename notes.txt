@@ -30,7 +30,7 @@ exemplo flex-box:
      return unsubscribe;
    }, [navigation]);
 
-TODO: Screen to show if user has a savedSpace somewhere
+SOLVED: Screen to show if user has a savedSpace somewhere
 TODO: Add save login checkbox on login screen
 TODO: Develop History System 
 

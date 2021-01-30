@@ -10,5 +10,5 @@ export const tabBarTitles = {
   infos: "CONTA",
   vehicules: "VEÍCULOS",
   methods: "MÉTODOS",
-  savedSpaces: "RESERVAS",
+  savedSpaces: "VAGAS",
 };

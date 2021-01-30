@@ -89,7 +89,7 @@ export default function Park({ route, navigation }) {
         if (json.message === "success") {
           setVisible(false)
           setParkInfo();
-          alert("Vaga reservada com sucesso!")
+          alert("Vaga A" + json.savedSpace.idSpace + " reservada com sucesso!")
         }
       })
       .catch((error) => {

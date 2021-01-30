@@ -25,7 +25,7 @@ export default (props) => {
         <View>
             <TouchableOpacity onPress={() => sendTempSavedSpace()}
                 style={{ paddingHorizontal: 20 }}>
-                <Text style={listStyles.itemTitle}>{props.savedSpace.vehicule}</Text>
+                <Text style={listStyles.itemTitle}>{props.savedSpace.vehicule} ({props.savedSpace.pricePerHour})</Text>
                 <Text style={listStyles.itemSubtitle}>{props.savedSpace.saved_at}</Text>
             </TouchableOpacity>
             <Divider style={{ height: 2, backgroundColor: "black" }} />

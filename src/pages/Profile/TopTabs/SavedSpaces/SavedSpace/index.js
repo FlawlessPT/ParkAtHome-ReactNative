@@ -18,6 +18,7 @@ export default function SavedSpace({ route, navigation }) {
     const [idSpace, setIdSpace] = useState("");
     const [plate, setPlate] = useState("");
     const [vehiculeName, setVehiculeName] = useState("");
+    const [pricePerHour, setPricePerHour] = useState(0);
     const [date, setDate] = useState("");
     const [time, setTime] = useState("");
 
@@ -25,7 +26,11 @@ export default function SavedSpace({ route, navigation }) {
     const [paymentMethods, setPaymentMethods] = useState([]);
     const [paymentMethod, setPaymentMethod] = useState("");
 
+    var timer;
+
     const [realTime, setRealTime] = useState("00:00:00");
+    const [calculatedAmount, setCalculatedAmount] = useState(0);
+    const [calculatedTime, setCalculatedTime] = useState(0);
 
     const [visible, setVisible] = useState(false);
 
@@ -33,7 +38,11 @@ export default function SavedSpace({ route, navigation }) {
 
     const url = connection.url + connection.directory;
 
-    const showModal = () => setVisible(true);
+    const showModal = () => {
+        //stop timer
+        calculateAmount();
+        setVisible(true)
+    };
     const hideModal = () => {
         setPaymentMethod("Métodos Disponíveis: ")
         setVisible(false)
@@ -45,6 +54,49 @@ export default function SavedSpace({ route, navigation }) {
         return newDate[2] + "-" + newDate[1] + "-" + newDate[0];
     }
 
+    function calculateAmount() {
+        let totalHours = parseInt(realTime.substring(1, 2));
+        let totalMinutes = parseInt(realTime.substring(3, 5));
+
+        // alert(totalHours + " " + totalMinutes)
+
+        let finalPrice = 0
+        let finalTime = 0
+
+        if (totalHours < 1)
+            totalHours = 1
+
+        if (totalMinutes > 0) {
+            totalMinutes = parseFloat(((savedSpace.pricePerHour * totalMinutes) / 60).toFixed(2))
+        }
+
+        finalTime = parseFloat(totalHours + totalMinutes)
+        finalPrice = finalTime * savedSpace.pricePerHour
+
+        setCalculatedAmount(finalPrice.toFixed(2))
+        setCalculatedTime(finalTime.toFixed(2))
+    }
+
+    function updateAmount(time) {
+        let totalHours = parseInt(time.substring(1, 2));
+        let totalMinutes = parseInt(time.substring(3, 5));
+
+        // alert(totalHours + " " + totalMinutes)
+
+        let finalValue = 0;
+
+        if (totalHours < 1)
+            totalHours = 1
+
+        if (totalMinutes > 0) {
+            totalMinutes = parseFloat(((savedSpace.pricePerHour * totalMinutes) / 60).toFixed(2))
+        }
+
+        finalValue = (totalHours + totalMinutes) * savedSpace.pricePerHour;
+
+        setCalculatedAmount(finalValue.toFixed(2));
+    }
+
     function getSavedAt() {
         setDate(fixDate(savedSpace.saved_at.substring(0, 10)));
         setTime(savedSpace.saved_at.substring(11, 16));//without seconds
@@ -54,6 +106,7 @@ export default function SavedSpace({ route, navigation }) {
     function loadSavedSpaceInfo() {
         setParkName(savedSpace.park);
         setIdSpace(savedSpace.idSpace);
+        setPricePerHour(savedSpace.pricePerHour);
         setPlate(savedSpace.plate)
         setVehiculeName(savedSpace.vehicule);
         getSavedAt();
@@ -83,7 +136,6 @@ export default function SavedSpace({ route, navigation }) {
 
     function removeSavedSpace() {
         //calculate amount
-        //amount = totalDuration(IN HOURS) * pricePerHour
         fetch(url + "/Spaces/RemoveSavedSpace.php", {
             method: "POST",
             headers: {
@@ -92,8 +144,8 @@ export default function SavedSpace({ route, navigation }) {
             },
             body: JSON.stringify({
                 id: savedSpace.id,
-                amount: 12,
-                duration: 40,
+                amount: calculatedAmount,
+                duration: calculatedTime,
                 userId: savedSpace.idUser,
                 idSpace: savedSpace.idSpace,
                 paymentMethod: paymentMethod,
@@ -111,42 +163,6 @@ export default function SavedSpace({ route, navigation }) {
                 console.log(error);
             });
     }
-
-    let loadPaymentMethods = paymentMethods.map((item, index) => {
-        return (
-            <Picker.Item label={item.name} value={item.name} key={index + 1} />
-        );
-    });
-
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            async function getAsyncUser() {
-                try {
-                    let id = await AsyncStorage.getItem(storage.user);
-                    id = JSON.parse(id);
-
-                    if (id != null) {
-                        setUser(id);
-                    }
-                } catch (error) {
-                    alert(error);
-                }
-            }
-
-            getAsyncUser().then();
-        })
-
-        return unsubscribe;
-    }, [navigation]);
-
-    useEffect(() => {
-        if (user && paymentMethods) {
-            updateTime();
-            loadSavedSpaceInfo();
-            getPaymentMethodsByUser();
-        }
-    }, [user])
-
 
     function updateTime() {
 
@@ -184,8 +200,9 @@ export default function SavedSpace({ route, navigation }) {
             (finalMinutes < 10 ? "0" + finalMinutes : finalMinutes) + ":" +
             (finalSeconds < 10 && finalSeconds > -1 ? "0" + finalSeconds : finalSeconds);
         setRealTime(time);
+        updateAmount(time)
 
-        const timer = setInterval(() => {
+        timer = setInterval(() => {
             if (finalSeconds >= 59) {
                 finalSeconds = (finalSeconds - 60);
                 finalMinutes++;
@@ -205,8 +222,49 @@ export default function SavedSpace({ route, navigation }) {
                 (finalMinutes < 10 ? "0" + finalMinutes : finalMinutes) + ":" +
                 (finalSeconds < 10 && finalSeconds > -1 ? "0" + finalSeconds : finalSeconds);
             setRealTime(time);
+            updateAmount(time)
         }, 1000);
     }
+
+    let loadPaymentMethods = paymentMethods.map((item, index) => {
+        return (
+            <Picker.Item label={item.name} value={item.name} key={index + 1} />
+        );
+    });
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            async function getAsyncUser() {
+                try {
+                    let id = await AsyncStorage.getItem(storage.user);
+                    id = JSON.parse(id);
+
+                    if (id != null) {
+                        setUser(id);
+                    }
+                } catch (error) {
+                    alert(error);
+                }
+            }
+
+            getAsyncUser().then();
+        })
+
+        return unsubscribe;
+    }, [navigation]);
+
+    useEffect(() => {
+        if (user && paymentMethods) {
+            loadSavedSpaceInfo();
+            getPaymentMethodsByUser();
+        }
+    }, [user])
+
+    useEffect(() => {
+        if (user) {
+            updateTime();
+        }
+    }, [user])
 
     return (
         <Provider>
@@ -218,17 +276,20 @@ export default function SavedSpace({ route, navigation }) {
                             paddingHorizontal: "5%",
                         }}>
                             <Portal>
-                                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={{ borderRadius: 1, borderWidth: 2, backgroundColor: "white", height: 120, width: 300, alignSelf: "center" }}>
+                                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={{ borderRadius: 1, borderWidth: 2, backgroundColor: "white", width: 300, alignSelf: "center" }}>
                                     <View style={{ paddingVertical: 15, paddingHorizontal: 15 }}>
+                                        <Text style={{ color: colors.main, fontSize: 25, textAlign: "center", fontFamily: "Aldrich_Regular" }}>Terminar Reserva</Text>
+                                        <Divider style={{ height: 2, backgroundColor: "black", marginVertical: 15 }} />
+                                        <Text style={{ marginBottom: 5, color: colors.secondary, fontSize: 20, textAlign: "center", fontFamily: "Aldrich_Regular" }}>Total a pagar: <Text style={{ color: colors.main, fontSize: 20, textAlign: "center", fontFamily: "Aldrich_Regular" }}>{calculatedAmount} </Text>€</Text>
                                         <Picker
                                             itemStyle={{
                                                 color: "black",
-                                                fontSize: 16,
+                                                fontSize: 18,
                                                 height: 100,
                                                 textAlign: "right",
                                             }}
                                             prompt={"Métodos Disponíveis: "}
-                                            style={{ width: "100%", textAlign: "right" }}
+                                            style={{ textAlign: "right" }}
                                             mode="dialog"
                                             selectedValue={paymentMethod}
                                             onValueChange={(value) => setPaymentMethod(value)}
@@ -271,8 +332,17 @@ export default function SavedSpace({ route, navigation }) {
                                     <Text style={{ color: colors.secondary, fontSize: 20, fontFamily: "Aldrich_Regular" }}>{date}</Text>
                                 </View>
                             </View>
-                            <Text style={{ color: colors.secondary, fontSize: 25, textAlign: "center", marginTop: 20, fontFamily: "Aldrich_Regular" }}>DURAÇÃO</Text>
-                            <Text style={{ color: colors.main, fontSize: 35, textAlign: "center", fontFamily: "Aldrich_Regular" }}>{realTime}</Text>
+                            <Divider style={{ height: 2, backgroundColor: "black", marginVertical: 15 }} />
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <View style={{ width: "50%", borderRightWidth: 2, paddingRight: 10 }}>
+                                    <Text style={{ textAlign: "center", color: colors.secondary, fontSize: 20, fontFamily: "Aldrich_Regular" }}>Duração: </Text>
+                                    <Text style={{ textAlign: "center", color: colors.main, fontSize: 30, fontFamily: "Aldrich_Regular" }}>{realTime}</Text>
+                                </View>
+                                <View style={{ width: "50%" }}>
+                                    <Text style={{ textAlign: "center", color: colors.secondary, fontSize: 20, fontFamily: "Aldrich_Regular" }}>Total a pagar: </Text>
+                                    <Text style={{ textAlign: "center", color: colors.main, fontSize: 30, fontFamily: "Aldrich_Regular" }}>{calculatedAmount} €</Text>
+                                </View>
+                            </View>
                             <Button mode="contained" style={generalStyles.finishButton} onPress={showModal}>
                                 <Text style={generalStyles.mainButtonText}>Terminar</Text>
                             </Button>
@@ -280,6 +350,6 @@ export default function SavedSpace({ route, navigation }) {
                     </ScrollView>
                 </KeyboardAvoidingView>
             </View>
-        </Provider>
+        </Provider >
     );
 }
