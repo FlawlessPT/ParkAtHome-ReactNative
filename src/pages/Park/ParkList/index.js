@@ -33,9 +33,9 @@ export default function ParkList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       loadParks();
-    })
+    });
 
     return unsubscribe;
   }, [navigation]);
@@ -47,7 +47,9 @@ export default function ParkList({ navigation }) {
         data={parks}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <ParksList id={item.id} name={item.name}
+          <ParksList
+            id={item.id}
+            name={item.name}
             totalSpaces={item.totalSpaces}
             pricePerHour={item.pricePerHour}
             totalSavedSpaces={item.totalSavedSpaces}

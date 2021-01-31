@@ -1,8 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useRef } from "react";
-import { Text, View, KeyboardAvoidingView, Image, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Image,
+  ScrollView,
+} from "react-native";
 import { FAB, TextInput, Button, Divider } from "react-native-paper";
 import { styles } from "./styles";
 
@@ -11,7 +16,6 @@ import { connection } from "../../../../constant/database";
 import { generalStyles } from "../../../../constant/styles";
 import { themeProfile } from "../../../../constant/styles";
 import { storage } from "../../../../constant/storage";
-
 
 export default function Infos({ navigation }) {
   const [editable, setEditable] = useState(false);
@@ -23,6 +27,12 @@ export default function Infos({ navigation }) {
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const [state, setState] = React.useState({ open: false });
+
+  const onStateChange = ({ open }) => setState({ open });
+
+  const { open } = state;
 
   const url = connection.url + connection.directory;
 
@@ -43,8 +53,7 @@ export default function Infos({ navigation }) {
       if (value != null) {
         setName(value.name);
       }
-    }
-    catch (error) {
+    } catch (error) {
       alert(error);
     }
   }
@@ -56,8 +65,7 @@ export default function Infos({ navigation }) {
       if (value != null) {
         setContact(value.contact);
       }
-    }
-    catch (error) {
+    } catch (error) {
       alert(error);
     }
   }
@@ -69,8 +77,7 @@ export default function Infos({ navigation }) {
       if (value != null) {
         setEmail(value.email);
       }
-    }
-    catch (error) {
+    } catch (error) {
       alert(error);
     }
   }
@@ -82,24 +89,10 @@ export default function Infos({ navigation }) {
       if (value != null) {
         setPassword(value.password);
       }
-    }
-    catch (error) {
+    } catch (error) {
       alert(error);
     }
   }
-
-  // async function getUser() {
-  //   try {
-  //     let value = await AsyncStorage.getItem(storage.user);
-  //     value = JSON.parse(value);
-  //     if (value != null) {
-  //       setUser(value);
-  //     }
-  //   }
-  //   catch (error) {
-  //     alert(error);
-  //   }
-  // }
 
   function getData() {
     getName();
@@ -109,9 +102,6 @@ export default function Infos({ navigation }) {
   }
 
   async function updateStorage() {
-    // console.log(user || "oi");
-    // alert(user.name);
-    // console.log(user.isAdmin);
     try {
       user.name = name;
       user.contact = contact;
@@ -126,8 +116,7 @@ export default function Infos({ navigation }) {
       let value = await AsyncStorage.getItem(storage.user);
       value = JSON.parse(value);
       console.log(value);
-    }
-    catch (error) {
+    } catch (error) {
       alert(error);
     }
   }
@@ -138,8 +127,7 @@ export default function Infos({ navigation }) {
 
   function updateDatabase() {
     // alert(user.id + name + contact + email + password);
-    if (name != "" && contact != "" && email != "" &&
-      password != "") {
+    if (name != "" && contact != "" && email != "" && password != "") {
       fetch(url + "/Users/Update.php", {
         method: "POST",
         headers: {
@@ -158,7 +146,7 @@ export default function Infos({ navigation }) {
         .then((json) => {
           if (json.message === "success") {
             updateStorage();
-            alert("Atualizado com sucesso!")
+            alert("Atualizado com sucesso!");
           }
         })
         .catch((error) => {
@@ -169,24 +157,26 @@ export default function Infos({ navigation }) {
     }
   }
 
-  let isRendered = useRef(false);
-
   useEffect(() => {
-    async function getAsyncUser() {
-      try {
-        let id = await AsyncStorage.getItem(storage.user);
-        id = JSON.parse(id);
+    const unsubscribe = navigation.addListener("focus", () => {
+      async function getAsyncUser() {
+        try {
+          let id = await AsyncStorage.getItem(storage.user);
+          id = JSON.parse(id);
 
-        if (id != null) {
-          setUser(id);
+          if (id != null) {
+            setUser(id);
+          }
+        } catch (error) {
+          alert(error);
         }
-      } catch (error) {
-        alert(error);
       }
-    }
 
-    getAsyncUser().then();
-  }, []);
+      getAsyncUser().then();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   useEffect(() => {
     if (user) {
@@ -195,35 +185,27 @@ export default function Infos({ navigation }) {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   isRendered = true;
-  //   const unsubscribe = navigation.addListener("focus", e => {
-  //     disable();
-  //     getData();
-  //   })
-  //   return () => {
-  //     isRendered = false;
-  //     unsubscribe;
-  //   };
-  // }, []);
-
   return (
-    <View style={{
-      justifyContent: "center",
-      backgroundColor: "white",
-      flexGrow: 1
-    }}>
+    <View
+      style={{
+        justifyContent: "center",
+        backgroundColor: "white",
+        flexGrow: 1,
+      }}
+    >
       <KeyboardAvoidingView>
         <ScrollView style={{ paddingHorizontal: "10%" }}>
           <Image
             style={styles.logo}
-            source={require('../../../../../assets/profile-icon.png')}
+            source={require("../../../../../assets/profile-icon.png")}
           />
-          <Divider style={{
-            height: 3,
-            backgroundColor: "black",
-            marginVertical: 20,
-          }} />
+          <Divider
+            style={{
+              height: 3,
+              backgroundColor: "black",
+              marginVertical: 20,
+            }}
+          />
           <TextInput
             mode="flat"
             underlineColor={colors.main}
@@ -273,16 +255,55 @@ export default function Infos({ navigation }) {
             style={generalStyles.input}
             theme={inputStyle}
           />
-          <Button mode="contained" style={generalStyles.mainButton} title="Login" onPress={() => updateData()}>
+          <Button
+            mode="contained"
+            style={generalStyles.mainButton}
+            title="Login"
+            onPress={() => updateData()}
+          >
             <Text style={generalStyles.mainButtonText}>Atualizar Dados</Text>
           </Button>
         </ScrollView>
       </KeyboardAvoidingView>
-      <FAB
+      <FAB.Group
+        open={open}
+        icon={open ? "close" : "dots-horizontal"}
+        color={colors.text}
+        fabStyle={{ backgroundColor: colors.main }}
+        actions={[
+          {
+            icon: "logout",
+            label: "Terminar Sessão",
+            color: colors.text,
+            style: {
+              backgroundColor: colors.main,
+            },
+            onPress: async () => {
+              try {
+                await AsyncStorage.clear();
+                navigation.navigate("Login");
+              } catch (e) {
+                alert(e);
+              }
+            },
+          },
+          {
+            icon: "square-edit-outline",
+            label: "Editar Dados",
+            color: colors.text,
+            style: {
+              backgroundColor: colors.main,
+            },
+            onPress: () => enable(),
+          },
+        ]}
+        onStateChange={onStateChange}
+      />
+      {/* <FAB
         style={generalStyles.fab}
         icon="square-edit-outline"
         onPress={() => enable()}
-      />
+      /> */}
     </View>
   );
 }

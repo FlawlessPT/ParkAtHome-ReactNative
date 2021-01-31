@@ -1,10 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState, useRef } from "react";
-import { View, FlatList, BackHandler, Alert, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import {
+  View,
+  FlatList,
+  BackHandler,
+  Alert,
+  Text,
+  StyleSheet,
+  RefreshControl,
+} from "react-native";
 import { FAB } from "react-native-paper";
 import { Entypo } from "@expo/vector-icons";
-import ActionButton from 'react-native-action-button';
+import ActionButton from "react-native-action-button";
 
 import SavedSpacesList from "../../../../../components/Lists/SavedSpacesList";
 
@@ -13,10 +21,13 @@ import { styles } from "./styles";
 import { generalStyles } from "../../../../../constant/styles";
 import { storage } from "../../../../../constant/storage";
 import { colors } from "../../../../../constant/color";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function SavedSpaceList({ navigation }) {
   const [user, setUser] = useState("");
   const [savedSpaces, setSavedSpaces] = useState([]);
+
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const url = connection.url + connection.directory;
 
@@ -28,7 +39,7 @@ export default function SavedSpaceList({ navigation }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: user.id,
+        userId: 1,
       }),
     })
       .then((response) => response.json())
@@ -49,7 +60,7 @@ export default function SavedSpaceList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       async function getAsyncUser() {
         try {
           let id = await AsyncStorage.getItem(storage.user);
@@ -64,7 +75,7 @@ export default function SavedSpaceList({ navigation }) {
       }
 
       getAsyncUser().then();
-    })
+    });
 
     return unsubscribe;
   }, [navigation]);
@@ -75,28 +86,43 @@ export default function SavedSpaceList({ navigation }) {
     }
   }, [user]);
 
+  // async function onRefresh() {
+  //   setRefreshing(true);
+  //   await loadSavedSpaces2();
+  // }
+
   function hasSavedSpaces() {
     if (savedSpaces.length > 0) {
       return (
         <FlatList
           data={savedSpaces}
           keyExtractor={({ id }, index) => id}
+          onRefresh={() => onRefresh}
+          refreshing={refreshing}
+          // refreshControl={
+          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          // }
           renderItem={({ item }) => (
-            <SavedSpacesList
-              savedSpace={item}
-              navigation={navigation}
-            />
+            <SavedSpacesList savedSpace={item} navigation={navigation} />
           )}
         />
-      )
-    }
-    else {
+      );
+    } else {
       return (
-        <View style={{ alignItems: "center", justifyContent: "center", flexGrow: 1 }}>
+        <View style={styles.noPlatesContainer}>
           <Entypo name="emoji-sad" size={60} color={colors.main}></Entypo>
-          <Text style={{ textAlign: "center", color: colors.main, fontSize: 26, fontWeight: "700" }}>Não há reservas efetuadas.</Text>
+          <Text
+            style={{
+              textAlign: "center",
+              color: colors.main,
+              fontSize: 26,
+              fontWeight: "700",
+            }}
+          >
+            Não há reservas efetuadas.
+          </Text>
         </View>
-      )
+      );
     }
   }
 
@@ -114,50 +140,18 @@ export default function SavedSpaceList({ navigation }) {
           />
         )}
       /> */}
-      {/* <ActionButton buttonColor={colors.main} useNativeDriver={true}>
-        <ActionButton.Item
-          buttonColor={colors.main}
-          title="Add to Watch Later"
-          onPress={() => alert('Added to watch later')}>
-          <IconsFA name="warning" style={thisStyles.actionButtonIcon} />
-        </ActionButton.Item>
-        <ActionButton.Item
-          buttonColor="#3498db"
-          title="Add to Favourite"
-          onPress={() => alert('Added to favourite')}>
-          <IconsFA name="warning" style={thisStyles.actionButtonIcon} />
-        </ActionButton.Item>
-        <ActionButton.Item
-          buttonColor="#1abc9c"
-          title="Share"
-          onPress={() => alert('Share Post')}>
-          <IconsFA name="warning" style={thisStyles.actionButtonIcon} />
-        </ActionButton.Item>
-      </ActionButton> */}
+      {/* <FlatList
+        data={savedSpaces}
+        keyExtractor={({ id }, index) => id}
+        onRefresh={() => onRefresh()}
+        refreshing={refreshing}
+        // refreshControl={
+        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        // }
+        renderItem={({ item }) => (
+          <SavedSpacesList savedSpace={item} navigation={navigation} />
+        )}
+      /> */}
     </View>
   );
 }
-
-const thisStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-    padding: 10,
-  },
-  titleStyle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    padding: 10,
-  },
-  textStyle: {
-    fontSize: 16,
-    textAlign: 'center',
-    padding: 10,
-  },
-  actionButtonIcon: {
-    fontSize: 20,
-    height: 22,
-    color: 'white',
-  },
-});

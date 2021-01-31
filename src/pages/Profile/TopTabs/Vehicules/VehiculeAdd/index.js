@@ -2,12 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView } from "react-native";
-import { Button, TextInput, Text } from 'react-native-paper';
+import { Button, TextInput, Text } from "react-native-paper";
 
 import { colors } from "../../../../../constant/color";
 import { connection } from "../../../../../constant/database";
 import { storage } from "../../../../../constant/storage";
-import { generalStyles, theme } from '../../../../../constant/styles';
+import { generalStyles, theme } from "../../../../../constant/styles";
 import { styles } from "./styles";
 
 export default function AddVehicule({ navigation }) {
@@ -17,19 +17,6 @@ export default function AddVehicule({ navigation }) {
   const [user, setUser] = useState("");
 
   const url = connection.url + connection.directory;
-
-  async function getUser() {
-    try {
-      let value = await AsyncStorage.getItem(storage.user);
-      value = JSON.parse(value);
-      if (value != null) {
-        setUser(value);
-      }
-    }
-    catch (error) {
-      alert(error);
-    }
-  }
 
   function addVehicule() {
     if (plate != "" && name != "") {
@@ -60,9 +47,20 @@ export default function AddVehicule({ navigation }) {
   }
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", e => {
-      getUser();
-    })
+    const unsubscribe = navigation.addListener("focus", (e) => {
+      async function getAsyncUser() {
+        try {
+          let value = await AsyncStorage.getItem(storage.user);
+          value = JSON.parse(value);
+          if (value != null) {
+            setUser(value);
+          }
+        } catch (error) {
+          alert(error);
+        }
+      }
+      getAsyncUser().then();
+    });
 
     return unsubscribe;
   }, [navigation]);
@@ -71,10 +69,12 @@ export default function AddVehicule({ navigation }) {
     <View style={styles.background}>
       <KeyboardAvoidingView>
         <ScrollView>
-          <View style={{
-            marginTop: 10,
-            paddingHorizontal: "5%",
-          }}>
+          <View
+            style={{
+              marginTop: 10,
+              paddingHorizontal: "5%",
+            }}
+          >
             <StatusBar style="auto" />
             <TextInput
               mode="flat"
@@ -96,8 +96,15 @@ export default function AddVehicule({ navigation }) {
               style={generalStyles.input}
               theme={theme}
             />
-            <Button mode="contained" style={generalStyles.mainButton} title="Login" onPress={() => addVehicule()}>
-              <Text style={generalStyles.mainButtonText}>Adicionar Veículo</Text>
+            <Button
+              mode="contained"
+              style={generalStyles.mainButton}
+              title="Login"
+              onPress={() => addVehicule()}
+            >
+              <Text style={generalStyles.mainButtonText}>
+                Adicionar Veículo
+              </Text>
             </Button>
           </View>
         </ScrollView>

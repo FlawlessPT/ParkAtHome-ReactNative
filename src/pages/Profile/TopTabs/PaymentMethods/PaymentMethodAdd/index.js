@@ -2,12 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView } from "react-native";
-import { Button, TextInput, Text } from 'react-native-paper';
+import { Button, TextInput, Text } from "react-native-paper";
 
 import { colors } from "../../../../../constant/color";
 import { connection } from "../../../../../constant/database";
 import { storage } from "../../../../../constant/storage";
-import { generalStyles, theme } from '../../../../../constant/styles';
+import { generalStyles, theme } from "../../../../../constant/styles";
 import { styles } from "./styles";
 
 export default function AddPaymentMethod({ navigation }) {
@@ -17,19 +17,6 @@ export default function AddPaymentMethod({ navigation }) {
   const [user, setUser] = useState("");
 
   const url = connection.url + connection.directory;
-
-  async function getUser() {
-    try {
-      let value = await AsyncStorage.getItem(storage.user);
-      value = JSON.parse(value);
-      if (value != null) {
-        setUser(value);
-      }
-    }
-    catch (error) {
-      alert(error);
-    }
-  }
 
   function addPaymentMethod() {
     if (name != "" && description != "") {
@@ -60,21 +47,33 @@ export default function AddPaymentMethod({ navigation }) {
   }
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", e => {
-      getUser();
-    })
+    const unsubscribe = navigation.addListener("focus", (e) => {
+      async function getAsyncUser() {
+        try {
+          let value = await AsyncStorage.getItem(storage.user);
+          value = JSON.parse(value);
+          if (value != null) {
+            setUser(value);
+          }
+        } catch (error) {
+          alert(error);
+        }
+      }
+      getAsyncUser().then();
+    });
 
     return unsubscribe;
   }, [navigation]);
-
   return (
     <View style={styles.background}>
       <KeyboardAvoidingView>
         <ScrollView>
-          <View style={{
-            marginTop: 10,
-            paddingHorizontal: "5%",
-          }}>
+          <View
+            style={{
+              marginTop: 10,
+              paddingHorizontal: "5%",
+            }}
+          >
             <StatusBar style="auto" />
             <TextInput
               mode="flat"
@@ -96,7 +95,12 @@ export default function AddPaymentMethod({ navigation }) {
               style={styles.input}
               theme={theme}
             />
-            <Button mode="contained" style={generalStyles.mainButton} title="Login" onPress={() => addPaymentMethod()}>
+            <Button
+              mode="contained"
+              style={generalStyles.mainButton}
+              title="Login"
+              onPress={() => addPaymentMethod()}
+            >
               <Text style={generalStyles.mainButtonText}>Adicionar Método</Text>
             </Button>
           </View>

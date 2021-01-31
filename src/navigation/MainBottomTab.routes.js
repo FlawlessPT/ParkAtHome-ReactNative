@@ -6,7 +6,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "react-native-paper";
 import IconsFA from "react-native-vector-icons/FontAwesome";
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import TabBarIcon from "../components/TabBarIcon";
 
@@ -75,7 +75,7 @@ function ProfileTopTabNavigatorScreen() {
         name="Infos"
         component={Infos}
         options={{
-          title: tabBarTitles.infos
+          title: tabBarTitles.infos,
         }}
       />
       <TopTab.Screen
@@ -280,24 +280,37 @@ export default function MainBottomTab() {
 
   function setVehiculeTitle() {
     getVehicule();
-    return <Text style={{ fontFamily: fonts.main }}>{vehicule.plate || "---"}</Text>;
+    return (
+      <Text style={{ fontFamily: fonts.main }}>{vehicule.plate || "---"}</Text>
+    );
   }
 
   function setPaymentMethodTitle() {
     getPaymentMethod();
-    return <Text style={{ fontFamily: fonts.main }}>{paymentMethod.name || "---"}</Text>;
+    return (
+      <Text style={{ fontFamily: fonts.main }}>
+        {paymentMethod.name || "---"}
+      </Text>
+    );
   }
 
   function setHistoryItemTitle() {
     getHistoryItem();
-    return <Text style={{ fontFamily: fonts.main }}>Reserva {historyItem.id || 0}</Text>;
+    return (
+      <Text style={{ fontFamily: fonts.main }}>
+        Reserva {historyItem.id || 0}
+      </Text>
+    );
   }
 
   function setSavedSpaceTitle() {
     getSavedSpace();
-    return <Text style={{ fontFamily: fonts.main }}>Vaga A{savedSpace.idSpace || 0}</Text>;
+    return (
+      <Text style={{ fontFamily: fonts.main }}>
+        Vaga A{savedSpace.idSpace || 0}
+      </Text>
+    );
   }
-
 
   function deleteVehicule(navigation) {
     getUser();
@@ -317,14 +330,18 @@ export default function MainBottomTab() {
       .then((json) => {
         switch (json.message) {
           case "success":
-            alert("Registo eliminado com sucesso.")
+            alert("Registo eliminado com sucesso.");
             navigation.goBack();
             break;
           case "delete_failed":
-            alert("Não foi possível eliminar. Este registo já não deve existir.")
+            alert(
+              "Não foi possível eliminar. Este registo já não deve existir."
+            );
             break;
           case "is_last_result":
-            alert("O último registo não pode ser eliminado. Opte por editá-lo.")
+            alert(
+              "O último registo não pode ser eliminado. Opte por editá-lo."
+            );
             break;
         }
       })
@@ -351,14 +368,18 @@ export default function MainBottomTab() {
       .then((json) => {
         switch (json.message) {
           case "success":
-            alert("Registo eliminado com sucesso.")
+            alert("Registo eliminado com sucesso.");
             navigation.goBack();
             break;
           case "delete_failed":
-            alert("Não foi possível eliminar. Este registo já não deve existir.")
+            alert(
+              "Não foi possível eliminar. Este registo já não deve existir."
+            );
             break;
           case "is_last_result":
-            alert("O último registo não pode ser eliminado. Opte por editá-lo.")
+            alert(
+              "O último registo não pode ser eliminado. Opte por editá-lo."
+            );
             break;
         }
       })
@@ -385,14 +406,18 @@ export default function MainBottomTab() {
       .then((json) => {
         switch (json.message) {
           case "success":
-            alert("Registo eliminado com sucesso.")
+            alert("Registo eliminado com sucesso.");
             navigation.goBack();
             break;
           case "delete_failed":
-            alert("Não foi possível eliminar. Este registo já não deve existir.")
+            alert(
+              "Não foi possível eliminar. Este registo já não deve existir."
+            );
             break;
           case "is_last_result":
-            alert("O último registo não pode ser eliminado. Opte por editá-lo.")
+            alert(
+              "O último registo não pode ser eliminado. Opte por editá-lo."
+            );
             break;
         }
       })
@@ -421,27 +446,17 @@ export default function MainBottomTab() {
         name="Main"
         component={Tabs}
         options={({ route, navigation }) => ({
-          headerTitle: <Text style={{ fontFamily: fonts.main }}>{getHeaderTitle(route)}</Text>,
+          headerTitle: (
+            <Text style={{ fontFamily: fonts.main }}>
+              {getHeaderTitle(route)}
+            </Text>
+          ),
           // headerTitle: "Parques",
           headerLeft: null,
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
           },
-          headerRight: () => (
-            <Button
-              onPress={() => {
-                clearAsyncStorage();
-                navigation.navigate("Login");
-              }}
-            >
-              <MaterialCommunityIcons
-                name="logout"
-                size={iconSize.delete}
-                color={colors.text}
-              />
-            </Button>
-          ),
         })}
       />
       <RootStack.Screen
@@ -504,15 +519,6 @@ export default function MainBottomTab() {
           headerStyle: {
             backgroundColor: colors.main,
           },
-          // headerRight: () => (
-          //   <Button onPress={() => deletePaymentMethod(navigation)}>
-          //     <IconsFA
-          //       name="trash"
-          //       size={iconSize.delete}
-          //       color={colors.text}
-          //     />
-          //   </Button>
-          // ),
         })}
       />
       <RootStack.Screen
@@ -535,28 +541,36 @@ export default function MainBottomTab() {
           ),
         })}
       />
-      < RootStack.Screen
+      <RootStack.Screen
         name="AddVehicule"
         component={AddVehicule}
         options={({ route }) => ({
-          headerTitle: <Text style={{ fontFamily: fonts.main }}>{headerTitles.addVehicule}</Text>,
+          headerTitle: (
+            <Text style={{ fontFamily: fonts.main }}>
+              {headerTitles.addVehicule}
+            </Text>
+          ),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
           },
         })}
       />
-      < RootStack.Screen
+      <RootStack.Screen
         name="AddPaymentMethod"
         component={AddPaymentMethod}
         options={({ route }) => ({
-          headerTitle: <Text style={{ fontFamily: fonts.main }}>{headerTitles.addPaymentMethod}</Text>,
+          headerTitle: (
+            <Text style={{ fontFamily: fonts.main }}>
+              {headerTitles.addPaymentMethod}
+            </Text>
+          ),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
           },
         })}
       />
-    </RootStack.Navigator >
+    </RootStack.Navigator>
   );
 }
