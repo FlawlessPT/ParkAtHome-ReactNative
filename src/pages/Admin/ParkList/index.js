@@ -1,22 +1,23 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { View, FlatList, BackHandler } from "react-native";
-
-import HistoryItemsList from "../../../components/Lists/HistoryItemsList";
 
 import { connection } from "../../../constant/database";
 import { styles } from "./styles";
+import AdminParksList from "../../../components/Lists/AdminParksList";
+import { generalStyles } from "../../../constant/styles";
 import { storage } from "../../../constant/storage";
 
-export default function HistoryList({ navigation }) {
+export default function AdminParkList({ navigation }) {
+  const [parks, setParks] = useState([]);
+
   const [user, setUser] = useState("");
-  const [history, setHistory] = useState([]);
 
   const url = connection.url + connection.directory;
 
-  function loadHistory() {
-    fetch(url + "/History/GetHistoryNames.php", {
+  function loadParks() {
+    fetch(url + "/Parks/GetParksByUser.php", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -28,12 +29,12 @@ export default function HistoryList({ navigation }) {
     })
       .then((response) => response.json())
       .then((json) => {
-        if (json.message == "success") {
-          setHistory(json.history);
+        if (json.message === "success") {
+          setParks(json.parks);
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
       });
   }
 
@@ -66,19 +67,24 @@ export default function HistoryList({ navigation }) {
 
   useEffect(() => {
     if (user) {
-      loadHistory();
+      loadParks();
     }
   }, [user]);
 
   return (
-    <View style={styles.background}>
+    <View style={generalStyles.background}>
       <StatusBar style="auto" />
       <FlatList
-        data={history}
+        data={parks}
         keyExtractor={({ id }, index) => id}
         renderItem={({ item }) => (
-          <HistoryItemsList
-            history={item}
+          <AdminParksList
+            id={item.id}
+            name={item.name}
+            totalSpaces={item.totalSpaces}
+            pricePerHour={item.pricePerHour}
+            totalSavedSpaces={item.totalSavedSpaces}
+            park={item}
             user={user}
             navigation={navigation}
           />

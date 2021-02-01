@@ -1,12 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { View, StyleSheet, SafeAreaView, Image, ScrollView, KeyboardAvoidingView } from "react-native";
-import { Button, TextInput, Text, Divider } from 'react-native-paper';
+import {
+  View,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
+import { Button, TextInput, Text, Divider } from "react-native-paper";
 
 import { colors } from "../../../constant/color";
 import { connection } from "../../../constant/database";
-import { generalStyles, theme } from '../../../constant/styles';
+import { generalStyles, theme } from "../../../constant/styles";
 
 export default function Register({ navigation }) {
   const [name, setName] = useState("");
@@ -18,8 +25,13 @@ export default function Register({ navigation }) {
   const url = connection.url + connection.directory;
 
   function register() {
-    if (name != "" && username != "" && password != ""
-      && contact != "" && email != "") {
+    if (
+      name != "" &&
+      username != "" &&
+      password != "" &&
+      contact != "" &&
+      email != ""
+    ) {
       fetch(url + "/Register.php", {
         method: "POST",
         headers: {
@@ -38,13 +50,14 @@ export default function Register({ navigation }) {
         .then((json) => {
           switch (json.message) {
             case "success":
+              alert("Utilizador registado com sucesso!");
               navigation.navigate("Login");
               break;
             case "user_already_exists":
-              alert("Utilizador já existente!")
+              alert("Utilizador já existente!");
               break;
             case "error":
-              alert("Erro de servidor!")
+              alert("Erro de servidor!");
               break;
           }
         })
@@ -63,7 +76,7 @@ export default function Register({ navigation }) {
           <StatusBar style="auto" />
           <Image
             style={generalStyles.logo}
-            source={require('../../../../assets/logo/logo-vertical.png')}
+            source={require("../../../../assets/logo/logo-vertical.png")}
           />
           <TextInput
             mode="flat"
@@ -116,14 +129,18 @@ export default function Register({ navigation }) {
             style={generalStyles.input}
             theme={theme}
           />
-          <Button mode="contained" style={generalStyles.mainButton} title="Login" onPress={() => register()}>
+          <Button
+            mode="contained"
+            style={generalStyles.mainButton}
+            title="Login"
+            onPress={() => register()}
+          >
             <Text style={generalStyles.mainButtonText}>Criar Conta</Text>
           </Button>
-          <Button
-            mode="text"
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Text style={generalStyles.buttonRegisterOrLoginText}>Iniciar Sessão</Text>
+          <Button mode="text" onPress={() => navigation.navigate("Login")}>
+            <Text style={generalStyles.buttonRegisterOrLoginText}>
+              Iniciar Sessão
+            </Text>
           </Button>
         </ScrollView>
       </KeyboardAvoidingView>

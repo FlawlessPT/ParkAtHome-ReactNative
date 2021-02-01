@@ -46,7 +46,7 @@ export default function VehiculeList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       async function getAsyncUser() {
         try {
           let id = await AsyncStorage.getItem(storage.user);
@@ -61,7 +61,7 @@ export default function VehiculeList({ navigation }) {
       }
 
       getAsyncUser().then();
-    })
+    });
 
     return unsubscribe;
   }, [navigation]);
@@ -84,7 +84,9 @@ export default function VehiculeList({ navigation }) {
             id={item.id}
             name={item.name}
             plate={item.plate}
+            state={item.state}
             vehicule={item}
+            user={user}
             navigation={navigation}
           />
         )}

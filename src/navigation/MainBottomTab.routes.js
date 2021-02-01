@@ -10,6 +10,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 import TabBarIcon from "../components/TabBarIcon";
 
+import AdminPark from "../pages/Admin/Park";
+import AdminParkList from "../pages/Admin/ParkList";
+
 import ParkList from "../pages/Park/ParkList";
 import Infos from "../pages/Profile/TopTabs/Infos";
 import VehiculeList from "../pages/Profile/TopTabs/Vehicules/VehiculeList";
@@ -187,14 +190,6 @@ export default function MainBottomTab() {
 
   const url = connection.url + connection.directory;
 
-  async function clearAsyncStorage() {
-    try {
-      await AsyncStorage.clear();
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   async function getUser() {
     try {
       let value = await AsyncStorage.getItem(storage.user);
@@ -312,9 +307,8 @@ export default function MainBottomTab() {
     );
   }
 
-  function deleteVehicule(navigation) {
+  function deleteVehicule(navigation, vehicule, user) {
     getUser();
-    getVehicule();
     fetch(url + "/Vehicules/DeleteVehicule.php", {
       method: "POST",
       headers: {
@@ -338,6 +332,9 @@ export default function MainBottomTab() {
               "Não foi possível eliminar. Este registo já não deve existir."
             );
             break;
+          case "plate_is_used":
+            alert("Não pode eliminar um veículo que está a ser utilizado!");
+            break;
           case "is_last_result":
             alert(
               "O último registo não pode ser eliminado. Opte por editá-lo."
@@ -350,9 +347,8 @@ export default function MainBottomTab() {
       });
   }
 
-  function deletePaymentMethod(navigation) {
+  function deletePaymentMethod(navigation, paymentMethod, user) {
     getUser();
-    getPaymentMethod();
     fetch(url + "/PaymentMethods/DeletePaymentMethod.php", {
       method: "POST",
       headers: {
@@ -388,9 +384,8 @@ export default function MainBottomTab() {
       });
   }
 
-  function deleteHistoryItem(navigation) {
+  function deleteHistoryItem(navigation, historyItem, user) {
     getUser();
-    getHistoryItem();
     fetch(url + "/History/DeleteHistoryItem.php", {
       method: "POST",
       headers: {
@@ -399,6 +394,43 @@ export default function MainBottomTab() {
       },
       body: JSON.stringify({
         id: historyItem.id,
+        userId: user.id,
+      }),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        switch (json.message) {
+          case "success":
+            alert("Registo eliminado com sucesso.");
+            navigation.goBack();
+            break;
+          case "delete_failed":
+            alert(
+              "Não foi possível eliminar. Este registo já não deve existir."
+            );
+            break;
+          case "is_last_result":
+            alert(
+              "O último registo não pode ser eliminado. Opte por editá-lo."
+            );
+            break;
+        }
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  }
+
+  function deletePark(navigation, park, user) {
+    getUser();
+    fetch(url + "/Parks/DeletePark.php", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: park.id,
         userId: user.id,
       }),
     })
@@ -443,6 +475,62 @@ export default function MainBottomTab() {
         })}
       />
       <RootStack.Screen
+        name="AdminParkList"
+        component={AdminParkList}
+        options={({ route, navigation }) => ({
+          headerTitle: (
+            <Text style={{ fontFamily: fonts.main }}>Os seus Parques</Text>
+          ),
+          headerLeft: null,
+          headerTintColor: colors.text,
+          headerStyle: {
+            backgroundColor: colors.main,
+          },
+          headerRight: () => (
+            <Button
+              onPress={async () => {
+                try {
+                  await AsyncStorage.clear();
+                  navigation.navigate("Login");
+                } catch (e) {
+                  alert(e);
+                }
+              }}
+            >
+              <MaterialCommunityIcons
+                name="logout"
+                size={iconSize.delete}
+                color={colors.text}
+              />
+            </Button>
+          ),
+        })}
+      />
+      <RootStack.Screen
+        name="AdminPark"
+        component={AdminPark}
+        options={({ route, navigation }) => ({
+          headerTitle: setParkTitle(),
+          headerTintColor: colors.text,
+          headerStyle: {
+            backgroundColor: colors.main,
+          },
+          headerRight: () => (
+            <Button
+              onPress={() =>
+                deletePark(navigation, route.params.park, route.params.user)
+              }
+            >
+              <IconsFA
+                name="trash"
+                size={iconSize.delete}
+                color={colors.text}
+              />
+            </Button>
+          ),
+        })}
+      />
+      <RootStack.Screen
         name="Main"
         component={Tabs}
         options={({ route, navigation }) => ({
@@ -451,7 +539,6 @@ export default function MainBottomTab() {
               {getHeaderTitle(route)}
             </Text>
           ),
-          // headerTitle: "Parques",
           headerLeft: null,
           headerTintColor: colors.text,
           headerStyle: {
@@ -480,7 +567,15 @@ export default function MainBottomTab() {
             backgroundColor: colors.main,
           },
           headerRight: () => (
-            <Button onPress={() => deleteVehicule(navigation)}>
+            <Button
+              onPress={() =>
+                deleteVehicule(
+                  navigation,
+                  route.params.vehicule,
+                  route.params.user
+                )
+              }
+            >
               <IconsFA
                 name="trash"
                 size={iconSize.delete}
@@ -500,7 +595,15 @@ export default function MainBottomTab() {
             backgroundColor: colors.main,
           },
           headerRight: () => (
-            <Button onPress={() => deletePaymentMethod(navigation)}>
+            <Button
+              onPress={() =>
+                deletePaymentMethod(
+                  navigation,
+                  route.params.paymentMethod,
+                  route.params.user
+                )
+              }
+            >
               <IconsFA
                 name="trash"
                 size={iconSize.delete}
@@ -524,14 +627,22 @@ export default function MainBottomTab() {
       <RootStack.Screen
         name="History"
         component={History}
-        options={({ route }) => ({
+        options={({ route, navigation }) => ({
           headerTitle: setHistoryItemTitle(),
           headerTintColor: colors.text,
           headerStyle: {
             backgroundColor: colors.main,
           },
-          headerRight: (navigation) => (
-            <Button onPress={() => deleteHistoryItem(navigation)}>
+          headerRight: () => (
+            <Button
+              onPress={() =>
+                deleteHistoryItem(
+                  navigation,
+                  route.params.history,
+                  route.params.user
+                )
+              }
+            >
               <IconsFA
                 name="trash"
                 size={iconSize.delete}

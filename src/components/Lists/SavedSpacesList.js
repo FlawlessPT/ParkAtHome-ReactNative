@@ -7,28 +7,35 @@ import { listStyles } from "../../constant/listsStyles";
 import { storage } from "../../constant/storage";
 
 export default (props) => {
-    const saveSavedSpace = async () => {
-        try {
-            const value = JSON.stringify(props.savedSpace);
-            await AsyncStorage.setItem(storage.savedSpace, value);
-        } catch (error) {
-            alert(error);
-        }
-    };
-
-    function sendTempSavedSpace() {
-        saveSavedSpace().then();
-        props.navigation.navigate("SavedSpace", { savedSpace: props.savedSpace });
+  const saveSavedSpace = async () => {
+    try {
+      const value = JSON.stringify(props.savedSpace);
+      await AsyncStorage.setItem(storage.savedSpace, value);
+    } catch (error) {
+      alert(error);
     }
+  };
 
-    return (
-        <View>
-            <TouchableOpacity onPress={() => sendTempSavedSpace()}
-                style={{ paddingHorizontal: 20 }}>
-                <Text style={listStyles.itemTitle}>{props.savedSpace.vehicule} ({props.savedSpace.pricePerHour})</Text>
-                <Text style={listStyles.itemSubtitle}>{props.savedSpace.saved_at}</Text>
-            </TouchableOpacity>
-            <Divider style={{ height: 2, backgroundColor: "black" }} />
-        </View>
-    )
-}
+  function sendTempSavedSpace() {
+    saveSavedSpace().then();
+    props.navigation.navigate("SavedSpace", {
+      savedSpace: props.savedSpace,
+      user: props.user,
+    });
+  }
+
+  return (
+    <View>
+      <TouchableOpacity
+        onPress={() => sendTempSavedSpace()}
+        style={{ paddingHorizontal: 20 }}
+      >
+        <Text style={listStyles.itemTitle}>
+          {props.savedSpace.vehicule} ({props.savedSpace.pricePerHour})
+        </Text>
+        <Text style={listStyles.itemSubtitle}>{props.savedSpace.saved_at}</Text>
+      </TouchableOpacity>
+      <Divider style={{ height: 2, backgroundColor: "black" }} />
+    </View>
+  );
+};

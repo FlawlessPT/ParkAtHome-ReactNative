@@ -593,7 +593,9 @@ export default function SavedSpace({ route, navigation }) {
                 style={generalStyles.finishButton}
                 onPress={showModal}
               >
-                <Text style={generalStyles.mainButtonText}>Terminar</Text>
+                <Text style={generalStyles.mainButtonText}>
+                  Finalizar Reserva
+                </Text>
               </Button>
             </View>
           </ScrollView>

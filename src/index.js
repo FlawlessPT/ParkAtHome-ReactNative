@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import * as Font from "expo-font";
-import { BackHandler, View } from "react-native";
+import { View } from "react-native";
 
 import Routes from "./navigation/";
 

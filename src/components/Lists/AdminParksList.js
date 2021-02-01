@@ -28,9 +28,9 @@ export default (props) => {
 
   function sendTempPark() {
     savePark();
-    props.navigation.navigate("Park", {
+    props.navigation.navigate("AdminPark", {
       park: props.park,
-      totalSavedSpaces: 30,
+      user: props.user,
     });
   }
 
@@ -75,10 +75,10 @@ export default (props) => {
               {parkIsFull()}
             </View>
             <Text style={listStyles.itemSubtitle1Disabled}>
-              Vagas: {props.totalSavedSpaces}/{props.totalSpaces}
+              {props.park.address}
             </Text>
             <Text style={listStyles.itemSubtitle2Disabled}>
-              {props.pricePerHour} €/hora
+              {props.park.localization}
             </Text>
           </View>
           <Image
@@ -105,11 +105,9 @@ export default (props) => {
               <Text style={listStyles.itemTitle}>{props.name}</Text>
               {parkIsFull()}
             </View>
-            <Text style={listStyles.itemSubtitle1}>
-              Vagas: {props.totalSavedSpaces}/{props.totalSpaces}
-            </Text>
+            <Text style={listStyles.itemSubtitle1}>{props.park.address}</Text>
             <Text style={listStyles.itemSubtitle2}>
-              {props.pricePerHour} €/hora
+              {props.park.localization}
             </Text>
           </View>
           <Image
@@ -120,15 +118,6 @@ export default (props) => {
       </View>
     );
   }
-
-  // function setIsFullOpacity() {
-  //     if (props.totalSavedSpaces == props.totalSpaces) {
-  //         return fullOpacity;
-  //     }
-  //     else {
-  //         return freeOpacity;
-  //     }
-  // }
 
   return (
     // <View style={{ backgroundColor: setIsFullColor(), opacity: setIsFullOpacity() }}>

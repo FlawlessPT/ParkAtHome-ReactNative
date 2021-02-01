@@ -97,13 +97,17 @@ export default function SavedSpaceList({ navigation }) {
         <FlatList
           data={savedSpaces}
           keyExtractor={({ id }, index) => id}
-          onRefresh={() => onRefresh}
-          refreshing={refreshing}
+          // onRefresh={() => onRefresh}
+          // refreshing={refreshing}
           // refreshControl={
           //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           // }
           renderItem={({ item }) => (
-            <SavedSpacesList savedSpace={item} navigation={navigation} />
+            <SavedSpacesList
+              savedSpace={item}
+              user={user}
+              navigation={navigation}
+            />
           )}
         />
       );

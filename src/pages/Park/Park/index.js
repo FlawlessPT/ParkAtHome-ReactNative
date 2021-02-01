@@ -34,8 +34,8 @@ export default function Park({ route, navigation }) {
 
   const showModal = () => setVisible(true);
   const hideModal = () => {
-    setPlate("---")
-    setVisible(false)
+    setPlate("---");
+    setVisible(false);
   };
 
   function loadParkInfo() {
@@ -43,14 +43,14 @@ export default function Park({ route, navigation }) {
     setContact(park.contact);
     setEmail(park.email);
     setTotalSpaces(park.totalSpaces);
-    setTotalSavedSpaces(park.totalSavedSpaces)
+    setTotalSavedSpaces(park.totalSavedSpaces);
     setLocalization(park.localization);
     setNrFloors(park.nrFloors);
     setPricePerHour(park.pricePerHour);
   }
 
   function getPlatesByUser() {
-    fetch(url + "/Vehicules/GetVehiculesUser.php", {
+    fetch(url + "/Vehicules/GetVehiculesNotSaved.php", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -63,7 +63,7 @@ export default function Park({ route, navigation }) {
       .then((response) => response.json())
       .then((json) => {
         if (json.message === "success") {
-          setVehicules(json.vehicules)
+          setVehicules(json.vehicules);
         }
       })
       .catch((error) => {
@@ -72,29 +72,35 @@ export default function Park({ route, navigation }) {
   }
 
   function saveSpace() {
-    fetch(url + "/Spaces/SaveSpace.php", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: user.id,
-        plate: plate,
-        parkId: park.id,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.message === "success") {
-          setVisible(false)
-          setParkInfo();
-          alert("Vaga A" + json.savedSpace.idSpace + " reservada com sucesso!")
-        }
+    if (plate != "---") {
+      fetch(url + "/Spaces/SaveSpace.php", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          plate: plate,
+          parkId: park.id,
+        }),
       })
-      .catch((error) => {
-        alert(error);
-      });
+        .then((response) => response.json())
+        .then((json) => {
+          if (json.message === "success") {
+            setVisible(false);
+            setParkInfo();
+            alert(
+              "Vaga A" + json.savedSpace.idSpace + " reservada com sucesso!"
+            );
+          }
+        })
+        .catch((error) => {
+          alert(error);
+        });
+    } else {
+      alert("Selecione uma matrícula.");
+    }
   }
 
   function setParkInfo() {
@@ -111,7 +117,16 @@ export default function Park({ route, navigation }) {
       .then((response) => response.json())
       .then((json) => {
         if (json.message === "success") {
-          updateParkInfo(json.park.address, json.park.localization, json.park.totalSpaces, json.park.totalSavedSpaces, json.park.nrFloors, json.park.contact, json.park.email, json.park.pricePerHour)
+          updateParkInfo(
+            json.park.address,
+            json.park.localization,
+            json.park.totalSpaces,
+            json.park.totalSavedSpaces,
+            json.park.nrFloors,
+            json.park.contact,
+            json.park.email,
+            json.park.pricePerHour
+          );
         }
       })
       .catch((error) => {
@@ -119,15 +134,24 @@ export default function Park({ route, navigation }) {
       });
   }
 
-  function updateParkInfo(address, localization, totalSpaces, totalSavedSpaces, nrFloors, contact, email, pricePerHour) {
-    setAddress(address)
-    setLocalization(localization)
-    setTotalSpaces(totalSpaces)
-    setTotalSavedSpaces(totalSavedSpaces)
-    setNrFloors(nrFloors)
-    setContact(contact)
-    setEmail(email)
-    setPricePerHour(pricePerHour)
+  function updateParkInfo(
+    address,
+    localization,
+    totalSpaces,
+    totalSavedSpaces,
+    nrFloors,
+    contact,
+    email,
+    pricePerHour
+  ) {
+    setAddress(address);
+    setLocalization(localization);
+    setTotalSpaces(totalSpaces);
+    setTotalSavedSpaces(totalSavedSpaces);
+    setNrFloors(nrFloors);
+    setContact(contact);
+    setEmail(email);
+    setPricePerHour(pricePerHour);
   }
 
   function buttonSaveSpace() {
@@ -136,14 +160,13 @@ export default function Park({ route, navigation }) {
         <Button style={generalStyles.mainButtonDisabled} disabled={true}>
           <Text style={generalStyles.mainButtonText}>Reservar</Text>
         </Button>
-      )
-    }
-    else {
+      );
+    } else {
       return (
         <Button style={generalStyles.mainButton} onPress={showModal}>
           <Text style={generalStyles.mainButtonText}>Reservar</Text>
         </Button>
-      )
+      );
     }
   }
 
@@ -160,7 +183,7 @@ export default function Park({ route, navigation }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       async function getAsyncUser() {
         try {
           let id = await AsyncStorage.getItem(storage.user);
@@ -175,7 +198,7 @@ export default function Park({ route, navigation }) {
       }
 
       getAsyncUser().then();
-    })
+    });
 
     return unsubscribe;
   }, [navigation]);
@@ -185,7 +208,7 @@ export default function Park({ route, navigation }) {
       loadParkInfo();
       getPlatesByUser();
     }
-  }, [user])
+  }, [user]);
 
   // useFocusEffect(
   //   React.useCallback(() => {
@@ -206,7 +229,18 @@ export default function Park({ route, navigation }) {
       <View style={generalStyles.background}>
         <ScrollView>
           <Portal>
-            <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={{ borderRadius: 1, borderWidth: 2, backgroundColor: "white", height: 120, width: 300, alignSelf: "center" }}>
+            <Modal
+              visible={visible}
+              onDismiss={hideModal}
+              contentContainerStyle={{
+                borderRadius: 1,
+                borderWidth: 2,
+                backgroundColor: "white",
+                height: 120,
+                width: 300,
+                alignSelf: "center",
+              }}
+            >
               <View style={{ paddingVertical: 15, paddingHorizontal: 15 }}>
                 {/* <Text style={{
                   alignSelf: "flex-end",
@@ -228,7 +262,11 @@ export default function Park({ route, navigation }) {
                   selectedValue={plate}
                   onValueChange={(value) => setPlate(value)}
                 >
-                  <Picker.Item label={"Selecionar Matricula..."} value={"Selecionar Matricula..."} key={0} />
+                  <Picker.Item
+                    label={"Selecionar Matricula..."}
+                    value={"Selecionar Matricula..."}
+                    key={0}
+                  />
                   {loadPlates}
                 </Picker>
                 <TouchableOpacity
@@ -238,11 +276,15 @@ export default function Park({ route, navigation }) {
                   }}
                   onPress={() => saveSpace()}
                 >
-                  <Text style={{
-                    fontSize: 20,
-                    fontFamily: "Aldrich_Regular",
-                    color: colors.secondary
-                  }}>Reservar</Text>
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontFamily: "Aldrich_Regular",
+                      color: colors.secondary,
+                    }}
+                  >
+                    Reservar
+                  </Text>
                 </TouchableOpacity>
               </View>
             </Modal>
@@ -252,84 +294,113 @@ export default function Park({ route, navigation }) {
               width: "100%",
               height: 200,
             }}
-            source={require('../../../../assets/parque_01.jpg')}
+            source={require("../../../../assets/parque_01.jpg")}
           />
-          <View style={{
-            marginTop: 10,
-            paddingHorizontal: "5%",
-          }}>
-            <Text style={{
-              fontFamily: "Aldrich_Regular",
-              fontSize: 30,
-              color: colors.main,
-            }}>
+          <View
+            style={{
+              marginTop: 10,
+              paddingHorizontal: "5%",
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: "Aldrich_Regular",
+                fontSize: 30,
+                color: colors.main,
+              }}
+            >
               Detalhes Parque
-        </Text>
-            <Divider style={{
-              height: 3,
-              backgroundColor: "black",
-              marginVertical: 10,
-            }} />
-            <Text style={{
-              fontFamily: "Aldrich_Regular",
-              fontSize: 20,
-              color: colors.main,
-              marginBottom: 5,
-            }}>
+            </Text>
+            <Divider
+              style={{
+                height: 3,
+                backgroundColor: "black",
+                marginVertical: 10,
+              }}
+            />
+            <Text
+              style={{
+                fontFamily: "Aldrich_Regular",
+                fontSize: 20,
+                color: colors.main,
+                marginBottom: 5,
+              }}
+            >
               Morada: <Text style={{ color: colors.secondary }}>{address}</Text>
             </Text>
-            <Text style={{
-              fontFamily: "Aldrich_Regular",
-              fontSize: 20,
-              color: colors.main,
-              marginBottom: 5,
-            }}>
-              Localização: <Text style={{ color: colors.secondary }}>{localization}</Text>
+            <Text
+              style={{
+                fontFamily: "Aldrich_Regular",
+                fontSize: 20,
+                color: colors.main,
+                marginBottom: 5,
+              }}
+            >
+              Localização:{" "}
+              <Text style={{ color: colors.secondary }}>{localization}</Text>
             </Text>
-            <Text style={{
-              fontFamily: "Aldrich_Regular",
-              fontSize: 20,
-              color: colors.main,
-              marginBottom: 5,
-            }}>
-              Lotação: <Text style={{ color: colors.secondary }}>{totalSavedSpace} / {totalSpaces}</Text> veiculos
-        </Text>
-            <Text style={{
-              fontFamily: "Aldrich_Regular",
-              fontSize: 20,
-              color: colors.main,
-              marginBottom: 5,
-            }}>
-              Andares: <Text style={{ color: colors.secondary }}>{nrFloors}</Text>
+            <Text
+              style={{
+                fontFamily: "Aldrich_Regular",
+                fontSize: 20,
+                color: colors.main,
+                marginBottom: 5,
+              }}
+            >
+              Lotação:{" "}
+              <Text style={{ color: colors.secondary }}>
+                {totalSavedSpace} / {totalSpaces}
+              </Text>{" "}
+              veiculos
             </Text>
-            <Text style={{
-              fontFamily: "Aldrich_Regular",
-              fontSize: 20,
-              color: colors.main,
-              marginBottom: 5,
-            }}>
-              Contacto: <Text style={{ color: colors.secondary }}>{contact}</Text>
+            <Text
+              style={{
+                fontFamily: "Aldrich_Regular",
+                fontSize: 20,
+                color: colors.main,
+                marginBottom: 5,
+              }}
+            >
+              Andares:{" "}
+              <Text style={{ color: colors.secondary }}>{nrFloors}</Text>
             </Text>
-            <Text style={{
-              fontFamily: "Aldrich_Regular",
-              fontSize: 20,
-              color: colors.main,
-              marginBottom: 5,
-            }}>
+            <Text
+              style={{
+                fontFamily: "Aldrich_Regular",
+                fontSize: 20,
+                color: colors.main,
+                marginBottom: 5,
+              }}
+            >
+              Contacto:{" "}
+              <Text style={{ color: colors.secondary }}>{contact}</Text>
+            </Text>
+            <Text
+              style={{
+                fontFamily: "Aldrich_Regular",
+                fontSize: 20,
+                color: colors.main,
+                marginBottom: 5,
+              }}
+            >
               Email: <Text style={{ color: colors.secondary }}>{email}</Text>
             </Text>
-            <Text style={{
-              fontFamily: "Aldrich_Regular",
-              fontSize: 20,
-              color: colors.main,
-              marginBottom: 5,
-            }}>
-              Preço: <Text style={{ color: colors.secondary }}>{pricePerHour}</Text> €/hora
-          </Text>
+            <Text
+              style={{
+                fontFamily: "Aldrich_Regular",
+                fontSize: 20,
+                color: colors.main,
+                marginBottom: 5,
+              }}
+            >
+              Preço:{" "}
+              <Text style={{ color: colors.secondary }}>{pricePerHour}</Text>{" "}
+              €/hora
+            </Text>
             {buttonSaveSpace()}
           </View>
         </ScrollView>
       </View>
-    </Provider >
+    </Provider>
   );
 }

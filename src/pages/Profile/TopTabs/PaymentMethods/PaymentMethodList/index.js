@@ -46,7 +46,7 @@ export default function PaymentMethodList({ navigation }) {
   }, []);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       async function getAsyncUser() {
         try {
           let id = await AsyncStorage.getItem(storage.user);
@@ -61,7 +61,7 @@ export default function PaymentMethodList({ navigation }) {
       }
 
       getAsyncUser().then();
-    })
+    });
 
     return unsubscribe;
   }, [navigation]);
@@ -85,6 +85,7 @@ export default function PaymentMethodList({ navigation }) {
             name={item.name}
             description={item.description}
             paymentMethod={item}
+            user={user}
             navigation={navigation}
           />
         )}
