@@ -71,7 +71,7 @@ export default function SavedSpaceList({ navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 

@@ -164,7 +164,7 @@ export default function SavedSpace({ route, navigation }) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
@@ -287,7 +287,7 @@ export default function SavedSpace({ route, navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 

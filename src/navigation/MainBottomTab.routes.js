@@ -199,7 +199,7 @@ export default function MainBottomTab() {
         setUser(value);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -212,7 +212,7 @@ export default function MainBottomTab() {
         setPark(id);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -225,7 +225,7 @@ export default function MainBottomTab() {
         setVehicule(id);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -238,7 +238,7 @@ export default function MainBottomTab() {
         setPaymentMethod(id);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -251,7 +251,7 @@ export default function MainBottomTab() {
         setSavedSpace(id);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -264,7 +264,7 @@ export default function MainBottomTab() {
         setHistoryItem(id);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -338,7 +338,7 @@ export default function MainBottomTab() {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
@@ -370,7 +370,7 @@ export default function MainBottomTab() {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
@@ -402,7 +402,7 @@ export default function MainBottomTab() {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
@@ -434,7 +434,7 @@ export default function MainBottomTab() {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
@@ -473,7 +473,7 @@ export default function MainBottomTab() {
                   await AsyncStorage.clear();
                   navigation.navigate("Login");
                 } catch (e) {
-                  alert(e);
+                  console.log(e);
                 }
               }}
             >

@@ -1,8 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { View, ScrollView, KeyboardAvoidingView } from "react-native";
-import { Button, TextInput, Text } from "react-native-paper";
+import {
+  Button,
+  TextInput,
+  Text,
+  Modal,
+  Provider,
+  Portal,
+} from "react-native-paper";
+
+// import MyAlert from "../../../../../components/Alert/MyAlert";
 
 import { colors } from "../../../../../constant/color";
 import { connection } from "../../../../../constant/database";
@@ -15,6 +24,11 @@ export default function AddPaymentMethod({ navigation }) {
   const [description, setDescription] = useState("");
 
   const [user, setUser] = useState("");
+
+  const [visible, setVisible] = useState(false);
+
+  const showModal = () => setVisible(true);
+  const hideModal = () => setVisible(false);
 
   const url = connection.url + connection.directory;
 
@@ -39,7 +53,7 @@ export default function AddPaymentMethod({ navigation }) {
           }
         })
         .catch((error) => {
-          alert(error);
+          console.log(error);
         });
     } else {
       alert("Preencha todos os campos!");
@@ -56,7 +70,7 @@ export default function AddPaymentMethod({ navigation }) {
             setUser(value);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
       getAsyncUser().then();
@@ -64,48 +78,71 @@ export default function AddPaymentMethod({ navigation }) {
 
     return unsubscribe;
   }, [navigation]);
+
   return (
-    <View style={styles.background}>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <View
-            style={{
-              marginTop: 10,
-              paddingHorizontal: "5%",
-            }}
-          >
-            <StatusBar style="auto" />
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(name) => setName(name)}
-              label="Nome"
-              style={generalStyles.input}
-              theme={theme}
-            />
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(description) => setDescription(description)}
-              label="Descrição"
-              style={styles.input}
-              theme={theme}
-            />
-            <Button
-              mode="contained"
-              style={generalStyles.mainButton}
-              title="Login"
-              onPress={() => addPaymentMethod()}
+    <Provider>
+      <View style={styles.background}>
+        <KeyboardAvoidingView>
+          <ScrollView>
+            {/* <Portal>
+              <SuccessAlert
+                navigation={navigation}
+                visible={visible}
+                message="Oi oi eu sou linda"
+                onDismiss={hideModal}
+              />
+            </Portal> */}
+            <View
+              style={{
+                marginTop: 10,
+                paddingHorizontal: "5%",
+              }}
             >
-              <Text style={generalStyles.mainButtonText}>Adicionar Método</Text>
-            </Button>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+              <StatusBar style="auto" />
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(name) => setName(name)}
+                label="Nome"
+                style={generalStyles.input}
+                theme={theme}
+              />
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(description) => setDescription(description)}
+                label="Descrição"
+                style={styles.input}
+                theme={theme}
+              />
+              <Button
+                mode="contained"
+                style={generalStyles.mainButton}
+                title="Login"
+                onPress={() => addPaymentMethod()}
+              >
+                <Text style={generalStyles.mainButtonText}>
+                  Adicionar Método
+                </Text>
+              </Button>
+              <Button
+                mode="contained"
+                style={generalStyles.mainButton}
+                title="Login"
+                onPress={showModal}
+              >
+                <Text style={generalStyles.mainButtonText}>
+                  Adicionar Método
+                </Text>
+              </Button>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </Provider>
   );
 }

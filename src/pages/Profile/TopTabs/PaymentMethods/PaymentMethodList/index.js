@@ -60,7 +60,7 @@ export default function PaymentMethodList({ navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 

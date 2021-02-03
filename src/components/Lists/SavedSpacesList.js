@@ -12,7 +12,7 @@ export default (props) => {
       const value = JSON.stringify(props.savedSpace);
       await AsyncStorage.setItem(storage.savedSpace, value);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 

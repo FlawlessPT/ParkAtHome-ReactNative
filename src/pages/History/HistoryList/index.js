@@ -59,7 +59,7 @@ export default function HistoryList({ navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 

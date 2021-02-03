@@ -12,10 +12,4 @@ export const styles = StyleSheet.create({
     borderRadius: 20,
     opacity: 1,
   },
-  noPaymentMethodsContainer: {
-    paddingHorizontal: 20,
-    flexGrow: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
 });

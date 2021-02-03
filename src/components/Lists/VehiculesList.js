@@ -15,7 +15,7 @@ export default (props) => {
       const value = JSON.stringify(props.vehicule);
       await AsyncStorage.setItem(storage.vehicule, value);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 

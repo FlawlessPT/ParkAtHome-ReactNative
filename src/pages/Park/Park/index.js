@@ -69,7 +69,7 @@ export default function Park({ route, navigation }) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
@@ -95,10 +95,16 @@ export default function Park({ route, navigation }) {
             alert(
               "Vaga A" + json.savedSpace.idSpace + " reservada com sucesso!"
             );
+            navigation.navigate("Main", {
+              screen: "Profile",
+              params: {
+                screen: "SavedSpacesList",
+              },
+            });
           }
         })
         .catch((error) => {
-          alert(error);
+          console.log(error);
         });
     } else {
       alert("Selecione uma matrícula.");
@@ -132,7 +138,7 @@ export default function Park({ route, navigation }) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
@@ -195,7 +201,7 @@ export default function Park({ route, navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 

@@ -61,7 +61,7 @@ export default function VehiculeList({ navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 

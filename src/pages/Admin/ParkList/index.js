@@ -1,15 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { View, FlatList, BackHandler } from "react-native";
+import { View, FlatList, BackHandler, Text } from "react-native";
+import * as Animatable from "react-native-animatable";
+import { Entypo } from "@expo/vector-icons";
+import AdminParksList from "../../../components/Lists/AdminParksList";
 
 import { connection } from "../../../constant/database";
 import { styles } from "./styles";
-import AdminParksList from "../../../components/Lists/AdminParksList";
 import { generalStyles } from "../../../constant/styles";
 import { storage } from "../../../constant/storage";
-
-import * as Animatable from "react-native-animatable";
 import { colors } from "../../../constant/color";
 
 export default function AdminParkList({ navigation }) {
@@ -60,7 +60,7 @@ export default function AdminParkList({ navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 
@@ -76,51 +76,9 @@ export default function AdminParkList({ navigation }) {
     }
   }, [user]);
 
-  function hasPaymentMethodsSaved() {
-    if (paymentMethods.length > 0) {
+  function hasParksAssociated() {
+    if (parks.length > 0) {
       return (
-        <FlatList
-          data={paymentMethods}
-          keyExtractor={({ id }, index) => id}
-          renderItem={({ item }) => (
-            <PaymentMethodsList
-              id={item.id}
-              name={item.name}
-              description={item.description}
-              paymentMethod={item}
-              user={user}
-              navigation={navigation}
-            />
-          )}
-        />
-      );
-    } else {
-      return (
-        <View style={styles.noPaymentMethodsContainer}>
-          <Entypo name="emoji-sad" size={60} color={colors.main}></Entypo>
-          <Text
-            style={{
-              textAlign: "center",
-              color: colors.main,
-              fontSize: 26,
-              fontWeight: "700",
-            }}
-          >
-            Sem parques associados!
-          </Text>
-        </View>
-      );
-    }
-  }
-
-  return (
-    <View style={generalStyles.background}>
-      <StatusBar style="auto" />
-      <Animatable.View
-        animation="bounceInDown"
-        duration={1500}
-        useNativeDriver={true}
-      >
         <FlatList
           data={parks}
           keyExtractor={({ id }, index) => id}
@@ -137,7 +95,35 @@ export default function AdminParkList({ navigation }) {
             />
           )}
         />
-      </Animatable.View>
+      );
+    } else {
+      return (
+        <Animatable.View
+          animation="bounceInDown"
+          duration={1500}
+          useNativeDriver={true}
+          style={styles.noParksAssociatedContainer}
+        >
+          <Entypo name="emoji-sad" size={60} color={colors.main} />
+          <Text
+            style={{
+              textAlign: "center",
+              color: colors.main,
+              fontSize: 26,
+              fontWeight: "700",
+            }}
+          >
+            Sem parques associados!
+          </Text>
+        </Animatable.View>
+      );
+    }
+  }
+
+  return (
+    <View style={generalStyles.background}>
+      <StatusBar style="auto" />
+      {hasParksAssociated()}
     </View>
   );
 }

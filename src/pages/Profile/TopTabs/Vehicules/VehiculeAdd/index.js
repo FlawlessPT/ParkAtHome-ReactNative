@@ -39,7 +39,7 @@ export default function AddVehicule({ navigation }) {
           }
         })
         .catch((error) => {
-          alert(error);
+          console.log(error);
         });
     } else {
       alert("Preencha todos os campos!");
@@ -56,7 +56,7 @@ export default function AddVehicule({ navigation }) {
             setUser(value);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
       getAsyncUser().then();

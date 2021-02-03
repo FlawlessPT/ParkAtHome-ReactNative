@@ -56,7 +56,7 @@ export default function Infos({ navigation }) {
         setName(value.name);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -68,7 +68,7 @@ export default function Infos({ navigation }) {
         setContact(value.contact);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -80,7 +80,7 @@ export default function Infos({ navigation }) {
         setEmail(value.email);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -92,7 +92,7 @@ export default function Infos({ navigation }) {
         setPassword(value.password);
       }
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -119,7 +119,7 @@ export default function Infos({ navigation }) {
       value = JSON.parse(value);
       console.log(value);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   }
 
@@ -152,7 +152,7 @@ export default function Infos({ navigation }) {
           }
         })
         .catch((error) => {
-          alert(error);
+          console.log(error);
         });
     } else {
       alert("Preencha todos os campos!");
@@ -170,7 +170,7 @@ export default function Infos({ navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 
@@ -321,7 +321,7 @@ export default function Infos({ navigation }) {
                 await AsyncStorage.clear();
                 navigation.navigate("Login");
               } catch (e) {
-                alert(e);
+                console.log(e);
               }
             },
           },

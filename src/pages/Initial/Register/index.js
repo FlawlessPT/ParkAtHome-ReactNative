@@ -62,7 +62,7 @@ export default function Register({ navigation }) {
           }
         })
         .catch((error) => {
-          alert(error);
+          console.log(error);
         });
     } else {
       alert("Preencha todos os campos!");

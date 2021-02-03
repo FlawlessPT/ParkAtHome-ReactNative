@@ -84,7 +84,7 @@ export default function AdminPark({ route, navigation }) {
         }
       })
       .catch((error) => {
-        alert(error);
+        console.log(error);
       });
   }
 
@@ -105,7 +105,7 @@ export default function AdminPark({ route, navigation }) {
             setUser(id);
           }
         } catch (error) {
-          alert(error);
+          console.log(error);
         }
       }
 
