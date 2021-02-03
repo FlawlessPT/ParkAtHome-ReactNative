@@ -10,9 +10,7 @@ import {
   StyleSheet,
   RefreshControl,
 } from "react-native";
-import { FAB } from "react-native-paper";
 import { Entypo } from "@expo/vector-icons";
-import ActionButton from "react-native-action-button";
 
 import SavedSpacesList from "../../../../../components/Lists/SavedSpacesList";
 
@@ -21,13 +19,14 @@ import { styles } from "./styles";
 import { generalStyles } from "../../../../../constant/styles";
 import { storage } from "../../../../../constant/storage";
 import { colors } from "../../../../../constant/color";
-import { ScrollView } from "react-native-gesture-handler";
+
+import * as Animatable from "react-native-animatable";
 
 export default function SavedSpaceList({ navigation }) {
   const [user, setUser] = useState("");
   const [savedSpaces, setSavedSpaces] = useState([]);
 
-  const [refreshing, setRefreshing] = React.useState(false);
+  // const [refreshing, setRefreshing] = React.useState(false);
 
   const url = connection.url + connection.directory;
 
@@ -46,6 +45,8 @@ export default function SavedSpaceList({ navigation }) {
       .then((json) => {
         if (json.message == "success") {
           setSavedSpaces(json.savedSpaces);
+        } else {
+          setSavedSpaces([]);
         }
       })
       .catch((error) => {
@@ -85,11 +86,6 @@ export default function SavedSpaceList({ navigation }) {
       loadSavedSpaces();
     }
   }, [user]);
-
-  // async function onRefresh() {
-  //   setRefreshing(true);
-  //   await loadSavedSpaces2();
-  // }
 
   function hasSavedSpaces() {
     if (savedSpaces.length > 0) {
@@ -134,28 +130,6 @@ export default function SavedSpaceList({ navigation }) {
     <View style={styles.background}>
       <StatusBar style="auto" />
       {hasSavedSpaces()}
-      {/* <FlatList
-        data={savedSpaces}
-        keyExtractor={({ id }, index) => id}
-        renderItem={({ item }) => (
-          <SavedSpacesList
-            savedSpace={item}
-            navigation={navigation}
-          />
-        )}
-      /> */}
-      {/* <FlatList
-        data={savedSpaces}
-        keyExtractor={({ id }, index) => id}
-        onRefresh={() => onRefresh()}
-        refreshing={refreshing}
-        // refreshControl={
-        //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        // }
-        renderItem={({ item }) => (
-          <SavedSpacesList savedSpace={item} navigation={navigation} />
-        )}
-      /> */}
     </View>
   );
 }

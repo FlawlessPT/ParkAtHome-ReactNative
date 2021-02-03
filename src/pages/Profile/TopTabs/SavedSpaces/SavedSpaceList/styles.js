@@ -6,6 +6,7 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
   },
   noPlatesContainer: {
+    paddingHorizontal: 20,
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",

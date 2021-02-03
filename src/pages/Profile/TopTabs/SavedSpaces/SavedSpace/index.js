@@ -159,6 +159,8 @@ export default function SavedSpace({ route, navigation }) {
       .then((json) => {
         if (json.message === "success") {
           setPaymentMethods(json.paymentMethods);
+        } else {
+          setPaymentMethods([]);
         }
       })
       .catch((error) => {

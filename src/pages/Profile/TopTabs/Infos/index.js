@@ -17,6 +17,8 @@ import { generalStyles } from "../../../../constant/styles";
 import { themeProfile } from "../../../../constant/styles";
 import { storage } from "../../../../constant/storage";
 
+import * as Animatable from "react-native-animatable";
+
 export default function Infos({ navigation }) {
   const [editable, setEditable] = useState(false);
   const [inputStyle, setInputStyle] = useState(themeProfile.disable);
@@ -195,74 +197,110 @@ export default function Infos({ navigation }) {
     >
       <KeyboardAvoidingView>
         <ScrollView style={{ paddingHorizontal: "10%" }}>
-          <Image
-            style={styles.logo}
-            source={require("../../../../../assets/profile-icon.png")}
-          />
-          <Divider
-            style={{
-              height: 3,
-              backgroundColor: "black",
-              marginVertical: 20,
-            }}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(name) => setName(name)}
-            label="Nome"
-            value={name}
-            editable={editable}
-            style={generalStyles.input}
-            theme={inputStyle}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(contact) => setContact(contact)}
-            label="Contacto"
-            value={contact}
-            editable={editable}
-            style={generalStyles.input}
-            theme={inputStyle}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(email) => setEmail(email)}
-            label="Email"
-            value={email}
-            editable={editable}
-            style={generalStyles.input}
-            theme={inputStyle}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(password) => setPassword(password)}
-            secureTextEntry={true}
-            label="Password"
-            value={password}
-            editable={editable}
-            style={generalStyles.input}
-            theme={inputStyle}
-          />
-          <Button
-            mode="contained"
-            style={generalStyles.mainButton}
-            title="Login"
-            onPress={() => updateData()}
+          <Animatable.View
+            animation="bounceInDown"
+            duration={3000}
+            useNativeDriver={true}
           >
-            <Text style={generalStyles.mainButtonText}>Atualizar Dados</Text>
-          </Button>
+            <Image
+              style={styles.logo}
+              source={require("../../../../../assets/profile-icon.png")}
+            />
+            <Divider
+              style={{
+                height: 3,
+                backgroundColor: "black",
+                marginVertical: 20,
+              }}
+            />
+          </Animatable.View>
+          <Animatable.View
+            animation="bounceInLeft"
+            duration={3000}
+            useNativeDriver={true}
+          >
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(name) => setName(name)}
+              label="Nome"
+              value={name}
+              editable={editable}
+              style={generalStyles.input}
+              theme={inputStyle}
+            />
+          </Animatable.View>
+          <Animatable.View
+            animation="bounceInRight"
+            duration={3000}
+            useNativeDriver={true}
+          >
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(contact) => setContact(contact)}
+              label="Contacto"
+              value={contact}
+              editable={editable}
+              style={generalStyles.input}
+              theme={inputStyle}
+            />
+          </Animatable.View>
+          <Animatable.View
+            animation="bounceInLeft"
+            duration={3000}
+            useNativeDriver={true}
+          >
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(email) => setEmail(email)}
+              label="Email"
+              value={email}
+              editable={editable}
+              style={generalStyles.input}
+              theme={inputStyle}
+            />
+          </Animatable.View>
+          <Animatable.View
+            animation="bounceInRight"
+            duration={3000}
+            useNativeDriver={true}
+          >
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(password) => setPassword(password)}
+              secureTextEntry={true}
+              label="Password"
+              value={password}
+              editable={editable}
+              style={generalStyles.input}
+              theme={inputStyle}
+            />
+          </Animatable.View>
+          <Animatable.View
+            animation="bounceInUp"
+            duration={3000}
+            useNativeDriver={true}
+          >
+            <Button
+              mode="contained"
+              style={generalStyles.mainButton}
+              title="Login"
+              onPress={() => updateData()}
+            >
+              <Text style={generalStyles.mainButtonText}>Atualizar Dados</Text>
+            </Button>
+          </Animatable.View>
         </ScrollView>
       </KeyboardAvoidingView>
       <FAB.Group

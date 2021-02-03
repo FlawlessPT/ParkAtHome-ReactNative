@@ -74,13 +74,11 @@ CREATE TABLE `history` (
 	amount FLOAT NOT NULL,
 	duration TEXT NOT NULL,
 	idSpace int NOT NULL,
-	idVehicule INT NOT NULL,
-	idPaymentMethod INT NOT NULL,
+	vehicule TEXT NOT NULL,
+	paymentMethod TEXT NOT NULL,
 	idUser INT NOT NULL,
 	PRIMARY KEY (id),
 	FOREIGN KEY (idSpace) REFERENCES space(id),
-	FOREIGN KEY (idPaymentMethod) REFERENCES paymentMethod(id),
-	FOREIGN KEY (idVehicule) REFERENCES vehicule(id),
 	FOREIGN KEY (idUser) REFERENCES user(id)
 );
 
@@ -99,9 +97,10 @@ INSERT INTO `vehicule` (`id`, `name`, `plate`, `idUser`) VALUES
 (7, '---', '----', 3);
 
 INSERT INTO `park` (`id`, `name`, `address`, `contact`, `email`,`totalSpaces`, `localization`, `nrFloors`, `pricePerHour`, `idUser`) VALUES
-(1, 'Parque do Porto', "Rua do Porto", "222333222", "porto@email.pt", 10, 'Gondomar', 2, 0.8, 2),
+(1, 'Parque do Porto', "Rua do Porto", "222333222", "porto@email.pt", 10, 'Gondomar', 1, 0.8, 2),
 (2, 'Parque de Braga', "Rua de Braga", "333111333", "braga@email.pt", 15, 'Porto', 1, 0.3, 2),
-(3, 'Parque de Guimarães', "Rua de Guimarães", "123000123", "guimaraes@email.pt", 10, 'Guimarães', 2, 2.1, 3);
+(3, 'Parque de Guimarães', "Rua de Guimarães", "123000123", "guimaraes@email.pt", 10, 'Guimarães', 1, 2.1, 3),
+(4, 'Test Park', 'Test Address', '222444000', 'testpark@email.pt', 10, 'Test Localization', 1, 0.7, 2);
 
 INSERT INTO `space` (`id`, `idPark`) VALUES
 (1, 1),

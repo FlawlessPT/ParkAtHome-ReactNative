@@ -64,6 +64,8 @@ export default function Park({ route, navigation }) {
       .then((json) => {
         if (json.message === "success") {
           setVehicules(json.vehicules);
+        } else {
+          setVehicules([]);
         }
       })
       .catch((error) => {

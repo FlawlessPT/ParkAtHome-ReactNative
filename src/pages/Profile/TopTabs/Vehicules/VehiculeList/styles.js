@@ -5,4 +5,10 @@ export const styles = StyleSheet.create({
     backgroundColor: "white",
     flexGrow: 1,
   },
+  noVehiculesContainer: {
+    paddingHorizontal: 20,
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

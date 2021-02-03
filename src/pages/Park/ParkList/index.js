@@ -8,6 +8,8 @@ import { styles } from "./styles";
 import ParksList from "../../../components/Lists/ParksList";
 import { generalStyles } from "../../../constant/styles";
 
+import * as Animatable from "react-native-animatable";
+
 export default function ParkList({ navigation }) {
   const [parks, setParks] = useState([]);
 
@@ -43,21 +45,27 @@ export default function ParkList({ navigation }) {
   return (
     <View style={generalStyles.background}>
       <StatusBar style="auto" />
-      <FlatList
-        data={parks}
-        keyExtractor={({ id }, index) => id}
-        renderItem={({ item }) => (
-          <ParksList
-            id={item.id}
-            name={item.name}
-            totalSpaces={item.totalSpaces}
-            pricePerHour={item.pricePerHour}
-            totalSavedSpaces={item.totalSavedSpaces}
-            park={item}
-            navigation={navigation}
-          />
-        )}
-      />
+      <Animatable.View
+        animation="bounceInDown"
+        duration={1500}
+        useNativeDriver={true}
+      >
+        <FlatList
+          data={parks}
+          keyExtractor={({ id }, index) => id}
+          renderItem={({ item }) => (
+            <ParksList
+              id={item.id}
+              name={item.name}
+              totalSpaces={item.totalSpaces}
+              pricePerHour={item.pricePerHour}
+              totalSavedSpaces={item.totalSavedSpaces}
+              park={item}
+              navigation={navigation}
+            />
+          )}
+        />
+      </Animatable.View>
     </View>
   );
 }

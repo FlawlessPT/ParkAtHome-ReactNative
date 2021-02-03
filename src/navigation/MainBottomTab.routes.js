@@ -335,11 +335,6 @@ export default function MainBottomTab() {
           case "plate_is_used":
             alert("Não pode eliminar um veículo que está a ser utilizado!");
             break;
-          case "is_last_result":
-            alert(
-              "O último registo não pode ser eliminado. Opte por editá-lo."
-            );
-            break;
         }
       })
       .catch((error) => {
@@ -370,11 +365,6 @@ export default function MainBottomTab() {
           case "delete_failed":
             alert(
               "Não foi possível eliminar. Este registo já não deve existir."
-            );
-            break;
-          case "is_last_result":
-            alert(
-              "O último registo não pode ser eliminado. Opte por editá-lo."
             );
             break;
         }
@@ -409,11 +399,6 @@ export default function MainBottomTab() {
               "Não foi possível eliminar. Este registo já não deve existir."
             );
             break;
-          case "is_last_result":
-            alert(
-              "O último registo não pode ser eliminado. Opte por editá-lo."
-            );
-            break;
         }
       })
       .catch((error) => {
@@ -444,11 +429,6 @@ export default function MainBottomTab() {
           case "delete_failed":
             alert(
               "Não foi possível eliminar. Este registo já não deve existir."
-            );
-            break;
-          case "is_last_result":
-            alert(
-              "O último registo não pode ser eliminado. Opte por editá-lo."
             );
             break;
         }
