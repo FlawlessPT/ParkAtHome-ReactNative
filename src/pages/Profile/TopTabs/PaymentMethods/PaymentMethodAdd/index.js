@@ -6,12 +6,12 @@ import {
   Button,
   TextInput,
   Text,
-  Modal,
   Provider,
   Portal,
+  Modal,
 } from "react-native-paper";
 
-// import MyAlert from "../../../../../components/Alert/MyAlert";
+import MyAlert from "../../../../../components/Alert/OkAlert";
 
 import { colors } from "../../../../../constant/color";
 import { connection } from "../../../../../constant/database";
@@ -26,8 +26,14 @@ export default function AddPaymentMethod({ navigation }) {
   const [user, setUser] = useState("");
 
   const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("Erro");
+  const [type, setType] = useState("error");
 
-  const showModal = () => setVisible(true);
+  const showModal = (message, type) => {
+    setMessage(message);
+    setType(type);
+    setVisible(true);
+  };
   const hideModal = () => setVisible(false);
 
   const url = connection.url + connection.directory;
@@ -49,6 +55,7 @@ export default function AddPaymentMethod({ navigation }) {
         .then((response) => response.json())
         .then((json) => {
           if (json.message === "success") {
+            // showModal("Método de pagamento registado com sucesso!", "success");
             navigation.goBack();
           }
         })
@@ -56,7 +63,7 @@ export default function AddPaymentMethod({ navigation }) {
           console.log(error);
         });
     } else {
-      alert("Preencha todos os campos!");
+      showModal("Preencha todos os campos!", "warning");
     }
   }
 
@@ -84,20 +91,21 @@ export default function AddPaymentMethod({ navigation }) {
       <View style={styles.background}>
         <KeyboardAvoidingView>
           <ScrollView>
-            {/* <Portal>
-              <SuccessAlert
-                navigation={navigation}
-                visible={visible}
-                message="Oi oi eu sou linda"
-                onDismiss={hideModal}
-              />
-            </Portal> */}
             <View
               style={{
                 marginTop: 10,
                 paddingHorizontal: "5%",
               }}
             >
+              <Portal>
+                <MyAlert
+                  visible={visible}
+                  type={type}
+                  message={message}
+                  onDismiss={hideModal}
+                  navigation={navigation}
+                />
+              </Portal>
               <StatusBar style="auto" />
               <TextInput
                 mode="flat"
@@ -124,16 +132,6 @@ export default function AddPaymentMethod({ navigation }) {
                 style={generalStyles.mainButton}
                 title="Login"
                 onPress={() => addPaymentMethod()}
-              >
-                <Text style={generalStyles.mainButtonText}>
-                  Adicionar Método
-                </Text>
-              </Button>
-              <Button
-                mode="contained"
-                style={generalStyles.mainButton}
-                title="Login"
-                onPress={showModal}
               >
                 <Text style={generalStyles.mainButtonText}>
                   Adicionar Método

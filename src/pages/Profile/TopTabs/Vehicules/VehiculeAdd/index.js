@@ -2,7 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView } from "react-native";
-import { Button, TextInput, Text } from "react-native-paper";
+import {
+  Button,
+  TextInput,
+  Text,
+  Provider,
+  Portal,
+  Modal,
+} from "react-native-paper";
+
+import MyAlert from "../../../../../components/Alert/OkAlert";
 
 import { colors } from "../../../../../constant/color";
 import { connection } from "../../../../../constant/database";
@@ -15,6 +24,17 @@ export default function AddVehicule({ navigation }) {
   const [name, setName] = useState("");
 
   const [user, setUser] = useState("");
+
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("Erro");
+  const [type, setType] = useState("error");
+
+  const showModal = (message, type) => {
+    setMessage(message);
+    setType(type);
+    setVisible(true);
+  };
+  const hideModal = () => setVisible(false);
 
   const url = connection.url + connection.directory;
 
@@ -35,14 +55,19 @@ export default function AddVehicule({ navigation }) {
         .then((response) => response.json())
         .then((json) => {
           if (json.message === "success") {
+            // showModal("Veículo registado com sucesso!", "success");
             navigation.goBack();
+          }
+
+          if (json.message === "plate_already_exists") {
+            showModal("Matrícula já registada!", "warning");
           }
         })
         .catch((error) => {
           console.log(error);
         });
     } else {
-      alert("Preencha todos os campos!");
+      showModal("Preencha todos os campos!", "warning");
     }
   }
 
@@ -66,49 +91,60 @@ export default function AddVehicule({ navigation }) {
   }, [navigation]);
 
   return (
-    <View style={styles.background}>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <View
-            style={{
-              marginTop: 10,
-              paddingHorizontal: "5%",
-            }}
-          >
-            <StatusBar style="auto" />
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(plate) => setPlate(plate)}
-              label="Matrícula"
-              style={generalStyles.input}
-              theme={theme}
-            />
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(name) => setName(name)}
-              label="Nome"
-              style={generalStyles.input}
-              theme={theme}
-            />
-            <Button
-              mode="contained"
-              style={generalStyles.mainButton}
-              title="Login"
-              onPress={() => addVehicule()}
+    <Provider>
+      <View style={styles.background}>
+        <KeyboardAvoidingView>
+          <ScrollView>
+            <View
+              style={{
+                marginTop: 10,
+                paddingHorizontal: "5%",
+              }}
             >
-              <Text style={generalStyles.mainButtonText}>
-                Adicionar Veículo
-              </Text>
-            </Button>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+              <Portal>
+                <MyAlert
+                  visible={visible}
+                  type={type}
+                  message={message}
+                  onDismiss={hideModal}
+                  navigation={navigation}
+                />
+              </Portal>
+              <StatusBar style="auto" />
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(plate) => setPlate(plate)}
+                label="Matrícula"
+                style={generalStyles.input}
+                theme={theme}
+              />
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(name) => setName(name)}
+                label="Nome"
+                style={generalStyles.input}
+                theme={theme}
+              />
+              <Button
+                mode="contained"
+                style={generalStyles.mainButton}
+                title="Login"
+                onPress={() => addVehicule()}
+              >
+                <Text style={generalStyles.mainButtonText}>
+                  Adicionar Veículo
+                </Text>
+              </Button>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </Provider>
   );
 }

@@ -22,7 +22,7 @@ export default (props) => {
       const value = JSON.stringify(props.park);
       await AsyncStorage.setItem(storage.park, value);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 

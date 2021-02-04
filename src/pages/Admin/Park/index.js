@@ -14,11 +14,12 @@ import {
   Button,
   Divider,
   Checkbox,
-  Modal,
-  Portal,
   Provider,
+  Portal,
+  Modal,
 } from "react-native-paper";
-import { Picker } from "@react-native-picker/picker";
+
+import MyAlert from "../../../components/Alert/OkAlert";
 
 import { colors } from "../../../constant/color";
 import { connection } from "../../../constant/database";
@@ -36,56 +37,78 @@ export default function AdminPark({ route, navigation }) {
   const [address, setAddress] = useState("");
   const [contact, setContact] = useState("");
   const [email, setEmail] = useState("");
-  const [totalSpaces, setTotalSpaces] = useState("");
-  const [totalSavedSpace, setTotalSavedSpaces] = useState(0);
+  // const [totalSpaces, setTotalSpaces] = useState("");
+  // const [totalSavedSpace, setTotalSavedSpaces] = useState(0);
   const [localization, setLocalization] = useState("");
   const [pricePerHour, setPricePerHour] = useState("");
 
-  const [vehicules, setVehicules] = useState([]);
   const [user, setUser] = useState("");
 
   // const [checked, setChecked] = React.useState(false);
+
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("Erro");
+  const [type, setType] = useState("error");
+
+  const showModal = (message, type) => {
+    setMessage(message);
+    setType(type);
+    setVisible(true);
+  };
+  const hideModal = () => setVisible(false);
 
   function loadParkInfo() {
     setName(park.name);
     setAddress(park.address);
     setContact(park.contact);
     setEmail(park.email);
-    setTotalSpaces(park.totalSpaces);
-    setTotalSavedSpaces(park.totalSavedSpaces);
+    // setTotalSpaces(park.totalSpaces);
+    // setTotalSavedSpaces(park.totalSavedSpaces);
     setLocalization(park.localization);
     // setNrFloors(park.nrFloors);
     setPricePerHour(park.pricePerHour);
   }
 
   function updatePark() {
-    fetch(url + "/Parks/Update.php", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: park.id,
-        name: name,
-        address: address,
-        localization: localization,
-        // totalSpaces: totalSpaces,
-        contact: contact,
-        email: email,
-        pricePerHour: pricePerHour,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.message === "success") {
-          alert("Parque atualizado com sucesso!");
-          navigation.goBack();
-        }
+    if (
+      name != "" &&
+      address != "" &&
+      localization != "" &&
+      contact != "" &&
+      email != "" &&
+      pricePerHour != "" &&
+      pricePerHour != 0
+    ) {
+      fetch(url + "/Parks/Update.php", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: park.id,
+          name: name,
+          address: address,
+          localization: localization,
+          // totalSpaces: totalSpaces,
+          contact: contact,
+          email: email,
+          pricePerHour: pricePerHour,
+        }),
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => response.json())
+        .then((json) => {
+          if (json.message === "success") {
+            // showModal("Parque atualizado com sucesso!", "success");
+            navigation.goBack();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      showModal("Preencha todos os campos", "warning");
+    }
   }
 
   // useEffect(() => {
@@ -116,70 +139,80 @@ export default function AdminPark({ route, navigation }) {
   }, [navigation]);
 
   useEffect(() => {
-    if (user && vehicules) {
+    if (user) {
       loadParkInfo();
     }
   }, [user]);
 
   return (
-    <View style={generalStyles.background}>
-      <KeyboardAvoidingView>
-        <ScrollView style={{ paddingHorizontal: "10%" }}>
-          {/* <Image
+    <Provider>
+      <View style={generalStyles.background}>
+        <KeyboardAvoidingView>
+          <ScrollView style={{ paddingHorizontal: "10%" }}>
+            {/* <Image
             style={styles.logo}
             source={require("../../../../../assets/profile-icon.png")}
           /> */}
-          <Text
-            style={{
-              fontSize: 20,
-              marginTop: 20,
-              fontFamily: "Aldrich_Regular",
-              color: colors.secondary,
-            }}
-          >
-            Configurações Gerais
-          </Text>
-          <Divider
-            style={{
-              height: 2,
-              backgroundColor: "black",
-              marginVertical: 15,
-            }}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(name) => setName(name)}
-            label="Nome Parque"
-            value={name}
-            style={generalStyles.input}
-            theme={themeProfile.enable}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(address) => setAddress(address)}
-            label="Morada"
-            value={address}
-            style={generalStyles.input}
-            theme={themeProfile.enable}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(localization) => setLocalization(localization)}
-            label="Localização"
-            value={localization}
-            style={generalStyles.input}
-            theme={themeProfile.enable}
-          />
-          {/* <TextInput
+            <Portal>
+              <MyAlert
+                visible={visible}
+                type={type}
+                message={message}
+                onDismiss={hideModal}
+                navigation={navigation}
+              />
+            </Portal>
+            <Text
+              style={{
+                fontSize: 20,
+                marginTop: 20,
+                fontFamily: "Aldrich_Regular",
+                color: colors.secondary,
+              }}
+            >
+              Configurações Gerais
+            </Text>
+            <Divider
+              style={{
+                height: 2,
+                backgroundColor: "black",
+                marginVertical: 15,
+              }}
+            />
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(name) => setName(name)}
+              label="Nome Parque"
+              value={name}
+              style={generalStyles.input}
+              theme={themeProfile.enable}
+            />
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(address) => setAddress(address)}
+              label="Morada"
+              value={address}
+              style={generalStyles.input}
+              theme={themeProfile.enable}
+            />
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(localization) => setLocalization(localization)}
+              label="Localização"
+              value={localization}
+              style={generalStyles.input}
+              theme={themeProfile.enable}
+            />
+            {/* <TextInput
             mode="flat"
             underlineColor={colors.main}
             selectionColor={colors.secondary}
@@ -190,74 +223,74 @@ export default function AdminPark({ route, navigation }) {
             style={generalStyles.input}
             theme={themeProfile.enable}
           /> */}
-          <Text
-            style={{
-              fontSize: 20,
-              marginTop: 30,
-              fontFamily: "Aldrich_Regular",
-              color: colors.secondary,
-            }}
-          >
-            Contactos
-          </Text>
-          <Divider
-            style={{
-              height: 2,
-              backgroundColor: "black",
-              marginVertical: 15,
-            }}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(contact) => setContact(contact)}
-            label="Contacto"
-            value={contact}
-            style={generalStyles.input}
-            theme={themeProfile.enable}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(email) => setEmail(email)}
-            label="Email"
-            value={email}
-            style={generalStyles.input}
-            theme={themeProfile.enable}
-          />
-          <Text
-            style={{
-              fontSize: 20,
-              marginTop: 30,
-              fontFamily: "Aldrich_Regular",
-              color: colors.secondary,
-            }}
-          >
-            Taxa (hora)
-          </Text>
-          <Divider
-            style={{
-              height: 2,
-              backgroundColor: "black",
-              marginVertical: 15,
-            }}
-          />
-          <TextInput
-            mode="flat"
-            underlineColor={colors.main}
-            selectionColor={colors.secondary}
-            dense={true}
-            onChangeText={(pricePerHour) => setPricePerHour(pricePerHour)}
-            label="Preço"
-            value={pricePerHour}
-            style={generalStyles.input}
-            theme={themeProfile.enable}
-          />
-          {/* <Text
+            <Text
+              style={{
+                fontSize: 20,
+                marginTop: 30,
+                fontFamily: "Aldrich_Regular",
+                color: colors.secondary,
+              }}
+            >
+              Contactos
+            </Text>
+            <Divider
+              style={{
+                height: 2,
+                backgroundColor: "black",
+                marginVertical: 15,
+              }}
+            />
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(contact) => setContact(contact)}
+              label="Contacto"
+              value={contact}
+              style={generalStyles.input}
+              theme={themeProfile.enable}
+            />
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(email) => setEmail(email)}
+              label="Email"
+              value={email}
+              style={generalStyles.input}
+              theme={themeProfile.enable}
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                marginTop: 30,
+                fontFamily: "Aldrich_Regular",
+                color: colors.secondary,
+              }}
+            >
+              Taxa (hora)
+            </Text>
+            <Divider
+              style={{
+                height: 2,
+                backgroundColor: "black",
+                marginVertical: 15,
+              }}
+            />
+            <TextInput
+              mode="flat"
+              underlineColor={colors.main}
+              selectionColor={colors.secondary}
+              dense={true}
+              onChangeText={(pricePerHour) => setPricePerHour(pricePerHour)}
+              label="Preço"
+              value={pricePerHour}
+              style={generalStyles.input}
+              theme={themeProfile.enable}
+            />
+            {/* <Text
             style={{
               fontSize: 20,
               marginTop: 30,
@@ -274,21 +307,21 @@ export default function AdminPark({ route, navigation }) {
               marginVertical: 15,
             }}
           /> */}
-          {/* <Checkbox
+            {/* <Checkbox
             status={checked ? "checked" : "unchecked"}
             onPress={() => {
               setChecked(!checked);
             }}
           /> */}
-          <Button
-            mode="contained"
-            style={generalStyles.mainButton}
-            title="Atualizar"
-            onPress={() => updatePark()}
-          >
-            <Text style={generalStyles.mainButtonText}>Atualizar</Text>
-          </Button>
-          {/* <Button
+            <Button
+              mode="contained"
+              style={generalStyles.mainButton}
+              title="Atualizar"
+              onPress={() => updatePark()}
+            >
+              <Text style={generalStyles.mainButtonText}>Atualizar</Text>
+            </Button>
+            {/* <Button
             mode="contained"
             style={generalStyles.finishButton}
             title="Atualizar"
@@ -296,8 +329,9 @@ export default function AdminPark({ route, navigation }) {
           >
             <Text style={generalStyles.mainButtonText}>Eliminar</Text>
           </Button> */}
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </View>
+    </Provider>
   );
 }

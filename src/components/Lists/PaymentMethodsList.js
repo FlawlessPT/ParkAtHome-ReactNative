@@ -12,7 +12,7 @@ export default (props) => {
       const value = JSON.stringify(props.paymentMethod);
       await AsyncStorage.setItem(storage.paymentMethod, value);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 

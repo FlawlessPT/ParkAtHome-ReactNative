@@ -2,7 +2,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { View, ScrollView, KeyboardAvoidingView, Text } from "react-native";
-import { FAB, TextInput, Button } from "react-native-paper";
+import {
+  FAB,
+  TextInput,
+  Button,
+  Provider,
+  Portal,
+  Modal,
+} from "react-native-paper";
+
+import MyAlert from "../../../../../components/Alert/OkAlert";
 
 import { colors } from "../../../../../constant/color";
 import { connection } from "../../../../../constant/database";
@@ -23,6 +32,17 @@ export default function Vehicule({ route, navigation }) {
 
   const { vehicule } = route.params;
 
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("Erro");
+  const [type, setType] = useState("error");
+
+  const showModal = (message, type) => {
+    setMessage(message);
+    setType(type);
+    setVisible(true);
+  };
+  const hideModal = () => setVisible(false);
+
   const url = connection.url + connection.directory;
 
   function enable() {
@@ -39,30 +59,10 @@ export default function Vehicule({ route, navigation }) {
 
   function getPlate() {
     setPlate(vehicule.plate);
-    // try {
-    //     let value = await AsyncStorage.getItem(storage.vehicule);
-    //     value = JSON.parse(value);
-    //     if (value != null) {
-    //         setPlate(value[0].plate);
-    //     }
-    // }
-    // catch (error) {
-    //     alert(error);
-    // }
   }
 
   function getName() {
     setName(vehicule.name);
-    // try {
-    //     let value = await AsyncStorage.getItem(storage.vehicule);
-    //     value = JSON.parse(value);
-    //     if (value != null) {
-    //         setName(value[0].name);
-    //     }
-    // }
-    // catch (error) {
-    //     alert(error);
-    // }
   }
 
   function getData() {
@@ -104,7 +104,7 @@ export default function Vehicule({ route, navigation }) {
         .then((response) => response.json())
         .then((json) => {
           if (json.message === "success") {
-            alert("Atualizado com sucesso!");
+            // showModal("Veículo atualizado com sucesso!", "success");
             navigation.goBack();
           }
         })
@@ -112,7 +112,7 @@ export default function Vehicule({ route, navigation }) {
           console.log(error);
         });
     } else {
-      console.log("Preencha todos os campos!");
+      showModal("Preencha todos os campos!", "warning");
     }
   }
 
@@ -126,49 +126,60 @@ export default function Vehicule({ route, navigation }) {
   }, [navigation]);
 
   return (
-    <View style={styles.background}>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <View
-            style={{
-              marginTop: 10,
-              paddingHorizontal: "5%",
-            }}
-          >
-            <StatusBar style="auto" />
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(plate) => setPlate(plate)}
-              label="Matrícula"
-              value={plate}
-              editable={editable}
-              style={generalStyles.input}
-              theme={inputStyle}
-            />
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(name) => setName(name)}
-              label="Nome"
-              value={name}
-              editable={editable}
-              style={generalStyles.input}
-              theme={inputStyle}
-            />
-            {updateButton()}
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-      <FAB
-        style={generalStyles.fab}
-        icon="square-edit-outline"
-        onPress={() => enable()}
-      />
-    </View>
+    <Provider>
+      <View style={styles.background}>
+        <KeyboardAvoidingView>
+          <ScrollView>
+            <View
+              style={{
+                marginTop: 10,
+                paddingHorizontal: "5%",
+              }}
+            >
+              <Portal>
+                <MyAlert
+                  visible={visible}
+                  type={type}
+                  message={message}
+                  onDismiss={hideModal}
+                  navigation={navigation}
+                />
+              </Portal>
+              <StatusBar style="auto" />
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(plate) => setPlate(plate)}
+                label="Matrícula"
+                value={plate}
+                editable={editable}
+                style={generalStyles.input}
+                theme={inputStyle}
+              />
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(name) => setName(name)}
+                label="Nome"
+                value={name}
+                editable={editable}
+                style={generalStyles.input}
+                theme={inputStyle}
+              />
+              {updateButton()}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+        <FAB
+          style={generalStyles.fab}
+          icon="square-edit-outline"
+          onPress={() => enable()}
+        />
+      </View>
+    </Provider>
   );
 }

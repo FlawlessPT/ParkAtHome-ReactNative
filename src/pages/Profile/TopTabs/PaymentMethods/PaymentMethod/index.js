@@ -2,7 +2,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState, useRef } from "react";
 import { View, ScrollView, KeyboardAvoidingView } from "react-native";
-import { FAB, Button, TextInput, Text } from "react-native-paper";
+import {
+  FAB,
+  Button,
+  TextInput,
+  Text,
+  Provider,
+  Portal,
+  Modal,
+} from "react-native-paper";
+
+import MyAlert from "../../../../../components/Alert/OkAlert";
 
 import { colors } from "../../../../../constant/color";
 import { connection } from "../../../../../constant/database";
@@ -22,6 +32,17 @@ export default function PaymentMethod({ route, navigation }) {
   const [description, setDescription] = useState("");
 
   const { paymentMethod } = route.params;
+
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("Erro");
+  const [type, setType] = useState("error");
+
+  const showModal = (message, type) => {
+    setMessage(message);
+    setType(type);
+    setVisible(true);
+  };
+  const hideModal = () => setVisible(false);
 
   const url = connection.url + connection.directory;
 
@@ -82,7 +103,7 @@ export default function PaymentMethod({ route, navigation }) {
         .then((response) => response.json())
         .then((json) => {
           if (json.message === "success") {
-            alert("Atualizado com sucesso!");
+            // showModal("Metódo de pagamento atualizado com sucesso!", "success");
             navigation.goBack();
           }
         })
@@ -90,7 +111,7 @@ export default function PaymentMethod({ route, navigation }) {
           console.log(error);
         });
     } else {
-      alert("Preencha todos os campos!");
+      showModal("Preencha todos os campos!", "warning");
     }
   }
 
@@ -104,49 +125,60 @@ export default function PaymentMethod({ route, navigation }) {
   }, [navigation]);
 
   return (
-    <View style={styles.background}>
-      <KeyboardAvoidingView>
-        <ScrollView>
-          <View
-            style={{
-              marginTop: 10,
-              paddingHorizontal: "5%",
-            }}
-          >
-            <StatusBar style="auto" />
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(name) => setName(name)}
-              label="Nome"
-              value={name}
-              editable={editable}
-              style={generalStyles.input}
-              theme={inputStyle}
-            />
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(description) => setDescription(description)}
-              label="Descrição"
-              value={description}
-              editable={editable}
-              style={generalStyles.input}
-              theme={inputStyle}
-            />
-            {updateButton()}
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-      <FAB
-        style={generalStyles.fab}
-        icon="square-edit-outline"
-        onPress={() => enable()}
-      />
-    </View>
+    <Provider>
+      <View style={styles.background}>
+        <KeyboardAvoidingView>
+          <ScrollView>
+            <View
+              style={{
+                marginTop: 10,
+                paddingHorizontal: "5%",
+              }}
+            >
+              <Portal>
+                <MyAlert
+                  visible={visible}
+                  type={type}
+                  message={message}
+                  onDismiss={hideModal}
+                  navigation={navigation}
+                />
+              </Portal>
+              <StatusBar style="auto" />
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(name) => setName(name)}
+                label="Nome"
+                value={name}
+                editable={editable}
+                style={generalStyles.input}
+                theme={inputStyle}
+              />
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(description) => setDescription(description)}
+                label="Descrição"
+                value={description}
+                editable={editable}
+                style={generalStyles.input}
+                theme={inputStyle}
+              />
+              {updateButton()}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+        <FAB
+          style={generalStyles.fab}
+          icon="square-edit-outline"
+          onPress={() => enable()}
+        />
+      </View>
+    </Provider>
   );
 }

@@ -4,10 +4,12 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Button } from "react-native-paper";
+import { Button, Provider, Portal } from "react-native-paper";
+
 import IconsFA from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+import MyAlert from "../components/Alert/OkAlert";
 import TabBarIcon from "../components/TabBarIcon";
 
 import AdminPark from "../pages/Admin/Park";
@@ -39,7 +41,7 @@ import { headerTitles } from "../constant/text";
 import { tabBarTitles } from "../constant/text";
 import { storage } from "../constant/storage";
 
-import { Text } from "react-native";
+import { Alert, Text } from "react-native";
 import { connection } from "../constant/database";
 
 const ParkListStack = createStackNavigator();
@@ -186,22 +188,18 @@ export default function MainBottomTab() {
   const [savedSpace, setSavedSpace] = useState("");
   const [historyItem, setHistoryItem] = useState("");
 
-  const [user, setUser] = useState("");
-
   const url = connection.url + connection.directory;
 
-  async function getUser() {
-    try {
-      let value = await AsyncStorage.getItem(storage.user);
-      value = JSON.parse(value);
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("Erro");
+  const [type, setType] = useState("error");
 
-      if (value != null) {
-        setUser(value);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const showModal = (message, type) => {
+    setMessage(message);
+    setType(type);
+    setVisible(true);
+  };
+  const hideModal = () => setVisible(false);
 
   async function getPark() {
     try {
@@ -308,7 +306,6 @@ export default function MainBottomTab() {
   }
 
   function deleteVehicule(navigation, vehicule, user) {
-    getUser();
     fetch(url + "/Vehicules/DeleteVehicule.php", {
       method: "POST",
       headers: {
@@ -324,16 +321,21 @@ export default function MainBottomTab() {
       .then((json) => {
         switch (json.message) {
           case "success":
-            alert("Registo eliminado com sucesso.");
             navigation.goBack();
             break;
           case "delete_failed":
-            alert(
-              "Não foi possível eliminar. Este registo já não deve existir."
+            Alert.alert(
+              "Erro",
+              "Não foi possível eliminar. Este registo já não deve existir.",
+              [{ text: "OK", onPress: () => navigation.goBack() }],
+              { cancelable: true }
             );
             break;
           case "plate_is_used":
-            alert("Não pode eliminar um veículo que está a ser utilizado!");
+            showModal(
+              "Não pode eliminar um veículo que está a ser utilizado!",
+              "warning"
+            );
             break;
         }
       })
@@ -343,7 +345,6 @@ export default function MainBottomTab() {
   }
 
   function deletePaymentMethod(navigation, paymentMethod, user) {
-    getUser();
     fetch(url + "/PaymentMethods/DeletePaymentMethod.php", {
       method: "POST",
       headers: {
@@ -359,12 +360,14 @@ export default function MainBottomTab() {
       .then((json) => {
         switch (json.message) {
           case "success":
-            alert("Registo eliminado com sucesso.");
             navigation.goBack();
             break;
           case "delete_failed":
-            alert(
-              "Não foi possível eliminar. Este registo já não deve existir."
+            Alert.alert(
+              "Erro",
+              "Não foi possível eliminar. Este registo já não deve existir.",
+              [{ text: "OK", onPress: () => navigation.goBack() }],
+              { cancelable: true }
             );
             break;
         }
@@ -375,7 +378,6 @@ export default function MainBottomTab() {
   }
 
   function deleteHistoryItem(navigation, historyItem, user) {
-    getUser();
     fetch(url + "/History/DeleteHistoryItem.php", {
       method: "POST",
       headers: {
@@ -391,12 +393,14 @@ export default function MainBottomTab() {
       .then((json) => {
         switch (json.message) {
           case "success":
-            alert("Registo eliminado com sucesso.");
             navigation.goBack();
             break;
           case "delete_failed":
-            alert(
-              "Não foi possível eliminar. Este registo já não deve existir."
+            Alert.alert(
+              "Erro",
+              "Não foi possível eliminar. Este registo já não deve existir.",
+              [{ text: "OK", onPress: () => navigation.goBack() }],
+              { cancelable: true }
             );
             break;
         }
@@ -407,7 +411,6 @@ export default function MainBottomTab() {
   }
 
   function deletePark(navigation, park, user) {
-    getUser();
     fetch(url + "/Parks/DeletePark.php", {
       method: "POST",
       headers: {
@@ -423,12 +426,14 @@ export default function MainBottomTab() {
       .then((json) => {
         switch (json.message) {
           case "success":
-            alert("Registo eliminado com sucesso.");
             navigation.goBack();
             break;
           case "delete_failed":
-            alert(
-              "Não foi possível eliminar. Este registo já não deve existir."
+            Alert.alert(
+              "Erro",
+              "Não foi possível eliminar. Este registo já não deve existir.",
+              [{ text: "OK", onPress: () => navigation.goBack() }],
+              { cancelable: true }
             );
             break;
         }
@@ -439,229 +444,240 @@ export default function MainBottomTab() {
   }
 
   return (
-    <RootStack.Navigator initialRouteName="Login">
-      <RootStack.Screen
-        name="Login"
-        component={Login}
-        options={({ route }) => ({
-          headerShown: false,
-        })}
-      />
-      <RootStack.Screen
-        name="Register"
-        component={Register}
-        options={({ route }) => ({
-          headerShown: false,
-        })}
-      />
-      <RootStack.Screen
-        name="AdminParkList"
-        component={AdminParkList}
-        options={({ route, navigation }) => ({
-          headerTitle: (
-            <Text style={{ fontFamily: fonts.main }}>Os seus Parques</Text>
-          ),
-          headerLeft: null,
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-          headerRight: () => (
-            <Button
-              onPress={async () => {
-                try {
-                  await AsyncStorage.clear();
-                  navigation.navigate("Login");
-                } catch (e) {
-                  console.log(e);
+    <Provider>
+      <Portal>
+        <MyAlert
+          visible={visible}
+          type={type}
+          message={message}
+          onDismiss={hideModal}
+          // navigation={navigation}
+        />
+      </Portal>
+      <RootStack.Navigator initialRouteName="Login">
+        <RootStack.Screen
+          name="Login"
+          component={Login}
+          options={({ route }) => ({
+            headerShown: false,
+          })}
+        />
+        <RootStack.Screen
+          name="Register"
+          component={Register}
+          options={({ route }) => ({
+            headerShown: false,
+          })}
+        />
+        <RootStack.Screen
+          name="AdminParkList"
+          component={AdminParkList}
+          options={({ route, navigation }) => ({
+            headerTitle: (
+              <Text style={{ fontFamily: fonts.main }}>Os seus Parques</Text>
+            ),
+            headerLeft: null,
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+            headerRight: () => (
+              <Button
+                onPress={async () => {
+                  try {
+                    await AsyncStorage.clear();
+                    navigation.navigate("Login");
+                  } catch (e) {
+                    console.log(e);
+                  }
+                }}
+              >
+                <MaterialCommunityIcons
+                  name="logout"
+                  size={iconSize.delete}
+                  color={colors.text}
+                />
+              </Button>
+            ),
+          })}
+        />
+        <RootStack.Screen
+          name="AdminPark"
+          component={AdminPark}
+          options={({ route, navigation }) => ({
+            headerTitle: setParkTitle(),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+            headerRight: () => (
+              <Button
+                onPress={() =>
+                  deletePark(navigation, route.params.park, route.params.user)
                 }
-              }}
-            >
-              <MaterialCommunityIcons
-                name="logout"
-                size={iconSize.delete}
-                color={colors.text}
-              />
-            </Button>
-          ),
-        })}
-      />
-      <RootStack.Screen
-        name="AdminPark"
-        component={AdminPark}
-        options={({ route, navigation }) => ({
-          headerTitle: setParkTitle(),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-          headerRight: () => (
-            <Button
-              onPress={() =>
-                deletePark(navigation, route.params.park, route.params.user)
-              }
-            >
-              <IconsFA
-                name="trash"
-                size={iconSize.delete}
-                color={colors.text}
-              />
-            </Button>
-          ),
-        })}
-      />
-      <RootStack.Screen
-        name="Main"
-        component={Tabs}
-        options={({ route, navigation }) => ({
-          headerTitle: (
-            <Text style={{ fontFamily: fonts.main }}>
-              {getHeaderTitle(route)}
-            </Text>
-          ),
-          headerLeft: null,
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-        })}
-      />
-      <RootStack.Screen
-        name="Park"
-        component={Park}
-        options={({ route }) => ({
-          headerTitle: setParkTitle(),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-        })}
-      />
-      <RootStack.Screen
-        name="Vehicule"
-        component={Vehicule}
-        options={({ route, navigation }) => ({
-          headerTitle: setVehiculeTitle(),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-          headerRight: () => (
-            <Button
-              onPress={() =>
-                deleteVehicule(
-                  navigation,
-                  route.params.vehicule,
-                  route.params.user
-                )
-              }
-            >
-              <IconsFA
-                name="trash"
-                size={iconSize.delete}
-                color={colors.text}
-              />
-            </Button>
-          ),
-        })}
-      />
-      <RootStack.Screen
-        name="PaymentMethod"
-        component={PaymentMethod}
-        options={({ route, navigation }) => ({
-          headerTitle: setPaymentMethodTitle(),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-          headerRight: () => (
-            <Button
-              onPress={() =>
-                deletePaymentMethod(
-                  navigation,
-                  route.params.paymentMethod,
-                  route.params.user
-                )
-              }
-            >
-              <IconsFA
-                name="trash"
-                size={iconSize.delete}
-                color={colors.text}
-              />
-            </Button>
-          ),
-        })}
-      />
-      <RootStack.Screen
-        name="SavedSpace"
-        component={SavedSpace}
-        options={({ route, navigation }) => ({
-          headerTitle: setSavedSpaceTitle(),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-        })}
-      />
-      <RootStack.Screen
-        name="History"
-        component={History}
-        options={({ route, navigation }) => ({
-          headerTitle: setHistoryItemTitle(),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-          headerRight: () => (
-            <Button
-              onPress={() =>
-                deleteHistoryItem(
-                  navigation,
-                  route.params.history,
-                  route.params.user
-                )
-              }
-            >
-              <IconsFA
-                name="trash"
-                size={iconSize.delete}
-                color={colors.text}
-              />
-            </Button>
-          ),
-        })}
-      />
-      <RootStack.Screen
-        name="AddVehicule"
-        component={AddVehicule}
-        options={({ route }) => ({
-          headerTitle: (
-            <Text style={{ fontFamily: fonts.main }}>
-              {headerTitles.addVehicule}
-            </Text>
-          ),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-        })}
-      />
-      <RootStack.Screen
-        name="AddPaymentMethod"
-        component={AddPaymentMethod}
-        options={({ route }) => ({
-          headerTitle: (
-            <Text style={{ fontFamily: fonts.main }}>
-              {headerTitles.addPaymentMethod}
-            </Text>
-          ),
-          headerTintColor: colors.text,
-          headerStyle: {
-            backgroundColor: colors.main,
-          },
-        })}
-      />
-    </RootStack.Navigator>
+              >
+                <IconsFA
+                  name="trash"
+                  size={iconSize.delete}
+                  color={colors.text}
+                />
+              </Button>
+            ),
+          })}
+        />
+        <RootStack.Screen
+          name="Main"
+          component={Tabs}
+          options={({ route, navigation }) => ({
+            headerTitle: (
+              <Text style={{ fontFamily: fonts.main }}>
+                {getHeaderTitle(route)}
+              </Text>
+            ),
+            headerLeft: null,
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+          })}
+        />
+        <RootStack.Screen
+          name="Park"
+          component={Park}
+          options={({ route }) => ({
+            headerTitle: setParkTitle(),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+          })}
+        />
+        <RootStack.Screen
+          name="Vehicule"
+          component={Vehicule}
+          options={({ route, navigation }) => ({
+            headerTitle: setVehiculeTitle(),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+            headerRight: () => (
+              <Button
+                onPress={() =>
+                  deleteVehicule(
+                    navigation,
+                    route.params.vehicule,
+                    route.params.user
+                  )
+                }
+              >
+                <IconsFA
+                  name="trash"
+                  size={iconSize.delete}
+                  color={colors.text}
+                />
+              </Button>
+            ),
+          })}
+        />
+        <RootStack.Screen
+          name="PaymentMethod"
+          component={PaymentMethod}
+          options={({ route, navigation }) => ({
+            headerTitle: setPaymentMethodTitle(),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+            headerRight: () => (
+              <Button
+                onPress={() =>
+                  deletePaymentMethod(
+                    navigation,
+                    route.params.paymentMethod,
+                    route.params.user
+                  )
+                }
+              >
+                <IconsFA
+                  name="trash"
+                  size={iconSize.delete}
+                  color={colors.text}
+                />
+              </Button>
+            ),
+          })}
+        />
+        <RootStack.Screen
+          name="SavedSpace"
+          component={SavedSpace}
+          options={({ route, navigation }) => ({
+            headerTitle: setSavedSpaceTitle(),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+          })}
+        />
+        <RootStack.Screen
+          name="History"
+          component={History}
+          options={({ route, navigation }) => ({
+            headerTitle: setHistoryItemTitle(),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+            headerRight: () => (
+              <Button
+                onPress={() =>
+                  deleteHistoryItem(
+                    navigation,
+                    route.params.history,
+                    route.params.user
+                  )
+                }
+              >
+                <IconsFA
+                  name="trash"
+                  size={iconSize.delete}
+                  color={colors.text}
+                />
+              </Button>
+            ),
+          })}
+        />
+        <RootStack.Screen
+          name="AddVehicule"
+          component={AddVehicule}
+          options={({ route }) => ({
+            headerTitle: (
+              <Text style={{ fontFamily: fonts.main }}>
+                {headerTitles.addVehicule}
+              </Text>
+            ),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+          })}
+        />
+        <RootStack.Screen
+          name="AddPaymentMethod"
+          component={AddPaymentMethod}
+          options={({ route }) => ({
+            headerTitle: (
+              <Text style={{ fontFamily: fonts.main }}>
+                {headerTitles.addPaymentMethod}
+              </Text>
+            ),
+            headerTintColor: colors.text,
+            headerStyle: {
+              backgroundColor: colors.main,
+            },
+          })}
+        />
+      </RootStack.Navigator>
+    </Provider>
   );
 }

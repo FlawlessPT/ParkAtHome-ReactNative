@@ -1,16 +1,23 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect, useRef } from "react";
-import { Text, View, Image, BackHandler, TouchableOpacity } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { Button, Divider, Modal, Portal, Provider } from "react-native-paper";
+import {
+  Text,
+  View,
+  Image,
+  BackHandler,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+} from "react-native";
+import { Button, Divider, Modal, Provider, Portal } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
+
+import MyAlert from "../../../components/Alert/OkAlert";
 
 import { colors } from "../../../constant/color";
 import { connection } from "../../../constant/database";
 import { storage } from "../../../constant/storage";
-
 import { generalStyles } from "../../../constant/styles";
-// import { add } from "react-native-reanimated";
 
 export default function Park({ route, navigation }) {
   const { park, totalSavedSpaces } = route.params;
@@ -37,6 +44,17 @@ export default function Park({ route, navigation }) {
     setPlate("---");
     setVisible(false);
   };
+
+  const [visibleAlert, setVisibleAlert] = useState(false);
+  const [message, setMessage] = useState("Erro");
+  const [type, setType] = useState("error");
+
+  const showAlert = (message, type) => {
+    setMessage(message);
+    setType(type);
+    setVisibleAlert(true);
+  };
+  const hideAlert = () => setVisibleAlert(false);
 
   function loadParkInfo() {
     setAddress(park.address);
@@ -92,22 +110,26 @@ export default function Park({ route, navigation }) {
           if (json.message === "success") {
             setVisible(false);
             setParkInfo();
-            alert(
-              "Vaga A" + json.savedSpace.idSpace + " reservada com sucesso!"
+            hideModal();
+            Alert.alert(
+              "Sucesso",
+              "Vaga A" + json.savedSpace.idSpace + " reservada com sucesso!",
+              [{ text: "OK", onPress: () => navigation.goBack() }],
+              { cancelable: true }
             );
-            navigation.navigate("Main", {
-              screen: "Profile",
-              params: {
-                screen: "SavedSpacesList",
-              },
-            });
+            // navigation.navigate("Main", {
+            //   screen: "Profile",
+            //   params: {
+            //     screen: "SavedSpacesList",
+            //   },
+            // });
           }
         })
         .catch((error) => {
           console.log(error);
         });
     } else {
-      alert("Selecione uma matrícula.");
+      showAlert("Selecione uma matrícula!", "warning");
     }
   }
 
@@ -272,7 +294,7 @@ export default function Park({ route, navigation }) {
                 >
                   <Picker.Item
                     label={"Selecionar Matricula..."}
-                    value={"Selecionar Matricula..."}
+                    value={"---"}
                     key={0}
                   />
                   {loadPlates}
@@ -296,6 +318,13 @@ export default function Park({ route, navigation }) {
                 </TouchableOpacity>
               </View>
             </Modal>
+            <MyAlert
+              visible={visibleAlert}
+              type={type}
+              message={message}
+              onDismiss={hideAlert}
+              navigation={navigation}
+            />
           </Portal>
           <Image
             style={{

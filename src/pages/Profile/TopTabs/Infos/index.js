@@ -8,14 +8,24 @@ import {
   Image,
   ScrollView,
 } from "react-native";
-import { FAB, TextInput, Button, Divider } from "react-native-paper";
-import { styles } from "./styles";
+import {
+  FAB,
+  TextInput,
+  Button,
+  Divider,
+  Provider,
+  Portal,
+  Modal,
+} from "react-native-paper";
+
+import MyAlert from "../../../../components/Alert/OkAlert";
 
 import { colors } from "../../../../constant/color";
 import { connection } from "../../../../constant/database";
 import { generalStyles } from "../../../../constant/styles";
 import { themeProfile } from "../../../../constant/styles";
 import { storage } from "../../../../constant/storage";
+import { styles } from "./styles";
 
 import * as Animatable from "react-native-animatable";
 
@@ -35,6 +45,17 @@ export default function Infos({ navigation }) {
   const onStateChange = ({ open }) => setState({ open });
 
   const { open } = state;
+
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("Erro");
+  const [type, setType] = useState("error");
+
+  const showModal = (message, type) => {
+    setMessage(message);
+    setType(type);
+    setVisible(true);
+  };
+  const hideModal = () => setVisible(false);
 
   const url = connection.url + connection.directory;
 
@@ -148,14 +169,15 @@ export default function Infos({ navigation }) {
         .then((json) => {
           if (json.message === "success") {
             updateStorage();
-            alert("Atualizado com sucesso!");
+            disable();
+            showModal("Dados atualizados com sucesso!", "success");
           }
         })
         .catch((error) => {
           console.log(error);
         });
     } else {
-      alert("Preencha todos os campos!");
+      showModal("Preencha todos os campos!", "warning");
     }
   }
 
@@ -188,160 +210,173 @@ export default function Infos({ navigation }) {
   }, [user]);
 
   return (
-    <View
-      style={{
-        justifyContent: "center",
-        backgroundColor: "white",
-        flexGrow: 1,
-      }}
-    >
-      <KeyboardAvoidingView>
-        <ScrollView style={{ paddingHorizontal: "10%" }}>
-          <Animatable.View
-            animation="bounceInDown"
-            duration={3000}
-            useNativeDriver={true}
-          >
-            <Image
-              style={styles.logo}
-              source={require("../../../../../assets/profile-icon.png")}
-            />
-            <Divider
-              style={{
-                height: 3,
-                backgroundColor: "black",
-                marginVertical: 20,
-              }}
-            />
-          </Animatable.View>
-          <Animatable.View
-            animation="bounceInLeft"
-            duration={3000}
-            useNativeDriver={true}
-          >
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(name) => setName(name)}
-              label="Nome"
-              value={name}
-              editable={editable}
-              style={generalStyles.input}
-              theme={inputStyle}
-            />
-          </Animatable.View>
-          <Animatable.View
-            animation="bounceInRight"
-            duration={3000}
-            useNativeDriver={true}
-          >
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(contact) => setContact(contact)}
-              label="Contacto"
-              value={contact}
-              editable={editable}
-              style={generalStyles.input}
-              theme={inputStyle}
-            />
-          </Animatable.View>
-          <Animatable.View
-            animation="bounceInLeft"
-            duration={3000}
-            useNativeDriver={true}
-          >
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(email) => setEmail(email)}
-              label="Email"
-              value={email}
-              editable={editable}
-              style={generalStyles.input}
-              theme={inputStyle}
-            />
-          </Animatable.View>
-          <Animatable.View
-            animation="bounceInRight"
-            duration={3000}
-            useNativeDriver={true}
-          >
-            <TextInput
-              mode="flat"
-              underlineColor={colors.main}
-              selectionColor={colors.secondary}
-              dense={true}
-              onChangeText={(password) => setPassword(password)}
-              secureTextEntry={true}
-              label="Password"
-              value={password}
-              editable={editable}
-              style={generalStyles.input}
-              theme={inputStyle}
-            />
-          </Animatable.View>
-          <Animatable.View
-            animation="bounceInUp"
-            duration={3000}
-            useNativeDriver={true}
-          >
-            <Button
-              mode="contained"
-              style={generalStyles.mainButton}
-              title="Login"
-              onPress={() => updateData()}
+    <Provider>
+      <View
+        style={{
+          justifyContent: "center",
+          backgroundColor: "white",
+          flexGrow: 1,
+        }}
+      >
+        <KeyboardAvoidingView>
+          <ScrollView style={{ paddingHorizontal: "10%" }}>
+            <Portal>
+              <MyAlert
+                visible={visible}
+                type={type}
+                message={message}
+                onDismiss={hideModal}
+                navigation={navigation}
+              />
+            </Portal>
+            <Animatable.View
+              animation="bounceInDown"
+              duration={3000}
+              useNativeDriver={true}
             >
-              <Text style={generalStyles.mainButtonText}>Atualizar Dados</Text>
-            </Button>
-          </Animatable.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-      <FAB.Group
-        open={open}
-        icon={open ? "close" : "dots-horizontal"}
-        color={colors.text}
-        fabStyle={{ backgroundColor: colors.main }}
-        actions={[
-          {
-            icon: "logout",
-            label: "Terminar Sessão",
-            color: colors.text,
-            style: {
-              backgroundColor: colors.main,
+              <Image
+                style={styles.logo}
+                source={require("../../../../../assets/profile-icon.png")}
+              />
+              <Divider
+                style={{
+                  height: 3,
+                  backgroundColor: "black",
+                  marginVertical: 20,
+                }}
+              />
+            </Animatable.View>
+            <Animatable.View
+              animation="bounceInLeft"
+              duration={3000}
+              useNativeDriver={true}
+            >
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(name) => setName(name)}
+                label="Nome"
+                value={name}
+                editable={editable}
+                style={generalStyles.input}
+                theme={inputStyle}
+              />
+            </Animatable.View>
+            <Animatable.View
+              animation="bounceInRight"
+              duration={3000}
+              useNativeDriver={true}
+            >
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(contact) => setContact(contact)}
+                label="Contacto"
+                value={contact}
+                editable={editable}
+                style={generalStyles.input}
+                theme={inputStyle}
+              />
+            </Animatable.View>
+            <Animatable.View
+              animation="bounceInLeft"
+              duration={3000}
+              useNativeDriver={true}
+            >
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(email) => setEmail(email)}
+                label="Email"
+                value={email}
+                editable={editable}
+                style={generalStyles.input}
+                theme={inputStyle}
+              />
+            </Animatable.View>
+            <Animatable.View
+              animation="bounceInRight"
+              duration={3000}
+              useNativeDriver={true}
+            >
+              <TextInput
+                mode="flat"
+                underlineColor={colors.main}
+                selectionColor={colors.secondary}
+                dense={true}
+                onChangeText={(password) => setPassword(password)}
+                secureTextEntry={true}
+                label="Password"
+                value={password}
+                editable={editable}
+                style={generalStyles.input}
+                theme={inputStyle}
+              />
+            </Animatable.View>
+            <Animatable.View
+              animation="bounceInUp"
+              duration={3000}
+              useNativeDriver={true}
+            >
+              <Button
+                mode="contained"
+                style={generalStyles.mainButton}
+                title="Login"
+                onPress={() => updateData()}
+              >
+                <Text style={generalStyles.mainButtonText}>
+                  Atualizar Dados
+                </Text>
+              </Button>
+            </Animatable.View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+        <FAB.Group
+          open={open}
+          icon={open ? "close" : "dots-horizontal"}
+          color={colors.text}
+          fabStyle={{ backgroundColor: colors.main }}
+          actions={[
+            {
+              icon: "logout",
+              label: "Terminar Sessão",
+              color: colors.text,
+              style: {
+                backgroundColor: colors.main,
+              },
+              onPress: async () => {
+                try {
+                  await AsyncStorage.clear();
+                  navigation.navigate("Login");
+                } catch (e) {
+                  console.log(e);
+                }
+              },
             },
-            onPress: async () => {
-              try {
-                await AsyncStorage.clear();
-                navigation.navigate("Login");
-              } catch (e) {
-                console.log(e);
-              }
+            {
+              icon: "square-edit-outline",
+              label: "Editar Dados",
+              color: colors.text,
+              style: {
+                backgroundColor: colors.main,
+              },
+              onPress: () => enable(),
             },
-          },
-          {
-            icon: "square-edit-outline",
-            label: "Editar Dados",
-            color: colors.text,
-            style: {
-              backgroundColor: colors.main,
-            },
-            onPress: () => enable(),
-          },
-        ]}
-        onStateChange={onStateChange}
-      />
-      {/* <FAB
+          ]}
+          onStateChange={onStateChange}
+        />
+        {/* <FAB
         style={generalStyles.fab}
         icon="square-edit-outline"
         onPress={() => enable()}
       /> */}
-    </View>
+      </View>
+    </Provider>
   );
 }

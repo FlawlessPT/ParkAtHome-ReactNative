@@ -5,7 +5,6 @@ import {
   View,
   FlatList,
   BackHandler,
-  Alert,
   Text,
   StyleSheet,
   RefreshControl,

@@ -6,6 +6,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import {
   Text,
@@ -189,10 +190,12 @@ export default function SavedSpace({ route, navigation }) {
       .then((response) => response.json())
       .then((json) => {
         if (json.message === "success") {
-          alert(
-            "Reserva terminada.\nObrigado pela preferência e volte sempre!"
+          Alert.alert(
+            "Sucesso",
+            "Reserva terminada.\nObrigado pela preferência e volte sempre!",
+            [{ text: "OK", onPress: () => navigation.goBack() }],
+            { cancelable: true }
           );
-          navigation.goBack();
         }
       })
       .catch((error) => {

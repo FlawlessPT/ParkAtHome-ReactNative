@@ -12,7 +12,7 @@ export default (props) => {
       const value = JSON.stringify(props.history);
       await AsyncStorage.setItem(storage.history, value);
     } catch (error) {
-      alert(error);
+      console.log(error);
     }
   };
 
