@@ -138,7 +138,7 @@ export default function Infos({ navigation }) {
       await AsyncStorage.setItem(storage.user, newUser);
       let value = await AsyncStorage.getItem(storage.user);
       value = JSON.parse(value);
-      console.log(value);
+      // console.log(value);
     } catch (error) {
       console.log(error);
     }
