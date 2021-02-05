@@ -23,6 +23,9 @@
     "web": {
       "favicon": "./assets/icon/icon-solid.png"
     },
-    "description": "Multiplatform parking lot application."
+    "description": "Multiplatform parking lot application.",
+    "android": {
+      "package": "pt.flawless.ParkAtHome"
+    }
   }
 }
