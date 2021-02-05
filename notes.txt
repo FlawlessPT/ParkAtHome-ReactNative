@@ -11,14 +11,14 @@ exemplo flex-box:
         width: "50%",
         backgroundColor: "red"
       }}>
-        <Text>Oláaa</Text>
+        <Text>asdasd</Text>
       </View>
       <View style={{
         width: "50%",
         backgroundColor: "blue",
         alignItems: "flex-end"
       }}>
-        <Text>Oleee</Text>
+        <Text>asdasda</Text>
       </View>
     </View>
 
@@ -31,8 +31,8 @@ exemplo flex-box:
    }, [navigation]);
 
 SOLVED: Screen to show if user has a savedSpace somewhere
-TODO: Add save login checkbox on login screen
-TODO: Develop History System 
+SOLVED: Add save login checkbox on login screen
+SOLVED: Develop History System 
 
-TODO: Check this link later
+SOLVED: Check this link later
 https://medium.com/javascript-in-plain-english/how-to-use-async-function-in-react-hook-useeffect-typescript-js-6204a788a435
