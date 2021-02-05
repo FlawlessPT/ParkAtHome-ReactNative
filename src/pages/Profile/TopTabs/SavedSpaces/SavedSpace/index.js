@@ -39,7 +39,7 @@ export default function SavedSpace({ route, navigation }) {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [paymentMethod, setPaymentMethod] = useState("");
 
-  var timer;
+  var timer = false;
 
   const [realTime, setRealTime] = useState("00:00:00");
   const [calculatedAmount, setCalculatedAmount] = useState(0);
@@ -170,40 +170,59 @@ export default function SavedSpace({ route, navigation }) {
   }
 
   function removeSavedSpace() {
-    //calculate amount
-    fetch(url + "/Spaces/RemoveSavedSpace.php", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: savedSpace.id,
-        amount: calculatedAmount,
-        duration: calculatedTime,
-        userId: savedSpace.idUser,
-        idSpace: savedSpace.idSpace,
-        paymentMethod: paymentMethod,
-        idVehicule: savedSpace.idVehicule,
-      }),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        if (json.message === "success") {
-          Alert.alert(
-            "Sucesso",
-            "Reserva terminada.\nObrigado pela preferência e volte sempre!",
-            [{ text: "OK", onPress: () => navigation.goBack() }],
-            { cancelable: true }
-          );
-        }
+    if (paymentMethod != "---" && paymentMethod != "") {
+      fetch(url + "/Spaces/RemoveSavedSpace.php", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: savedSpace.id,
+          amount: calculatedAmount,
+          duration: calculatedTime,
+          userId: savedSpace.idUser,
+          idSpace: savedSpace.idSpace,
+          paymentMethod: paymentMethod,
+          idVehicule: savedSpace.idVehicule,
+        }),
       })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => response.json())
+        .then((json) => {
+          if (json.message === "success") {
+            Alert.alert(
+              "Sucesso",
+              "Reserva terminada.\nObrigado pela preferência e volte sempre!",
+              [
+                {
+                  text: "OK",
+                  onPress: () => {
+                    clearInterval(timer);
+                    navigation.goBack();
+                  },
+                },
+              ],
+              { cancelable: true }
+            );
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      Alert.alert(
+        "Aviso",
+        "Selecione um método de pagamento!",
+        [{ text: "OK" }],
+        { cancelable: true }
+      );
+    }
   }
 
   function updateTime() {
+    timer = true;
+    // console.log("chamou2");
+
     let savedAtTime = savedSpace.saved_at.substring(11);
 
     let savedAtHours = savedAtTime.substring(0, 2);
@@ -246,33 +265,35 @@ export default function SavedSpace({ route, navigation }) {
     setRealTime(time);
     updateAmount(time);
 
-    timer = setInterval(() => {
-      if (finalSeconds >= 59) {
-        finalSeconds = finalSeconds - 60;
-        finalMinutes++;
-      }
-
-      if (finalMinutes >= 59) {
-        finalMinutes = finalMinutes - 60;
-        if (finalMinutes == -1) {
+    if (timer != false) {
+      timer = setInterval(() => {
+        if (finalSeconds >= 59) {
+          finalSeconds = finalSeconds - 60;
           finalMinutes++;
         }
-        finalHour++;
-      }
 
-      finalSeconds++;
+        if (finalMinutes >= 59) {
+          finalMinutes = finalMinutes - 60;
+          if (finalMinutes == -1) {
+            finalMinutes++;
+          }
+          finalHour++;
+        }
 
-      let time =
-        (finalHour < 10 ? "0" + finalHour : finalHour) +
-        ":" +
-        (finalMinutes < 10 ? "0" + finalMinutes : finalMinutes) +
-        ":" +
-        (finalSeconds < 10 && finalSeconds > -1
-          ? "0" + finalSeconds
-          : finalSeconds);
-      setRealTime(time);
-      updateAmount(time);
-    }, 1000);
+        finalSeconds++;
+
+        let time =
+          (finalHour < 10 ? "0" + finalHour : finalHour) +
+          ":" +
+          (finalMinutes < 10 ? "0" + finalMinutes : finalMinutes) +
+          ":" +
+          (finalSeconds < 10 && finalSeconds > -1
+            ? "0" + finalSeconds
+            : finalSeconds);
+        setRealTime(time);
+        updateAmount(time);
+      }, 1000);
+    }
   }
 
   let loadPaymentMethods = paymentMethods.map((item, index) => {
@@ -304,13 +325,10 @@ export default function SavedSpace({ route, navigation }) {
     if (user && paymentMethods) {
       loadSavedSpaceInfo();
       getPaymentMethodsByUser();
-    }
-  }, [user]);
-
-  useEffect(() => {
-    if (user) {
       updateTime();
     }
+
+    return () => clearInterval(timer);
   }, [user]);
 
   return (
@@ -391,7 +409,7 @@ export default function SavedSpace({ route, navigation }) {
                     >
                       <Picker.Item
                         label={"Selecionar Método..."}
-                        value={"Selecionar Método..."}
+                        value={"---"}
                         key={0}
                       />
                       {loadPaymentMethods}

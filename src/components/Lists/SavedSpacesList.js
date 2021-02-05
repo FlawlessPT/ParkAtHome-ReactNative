@@ -31,7 +31,7 @@ export default (props) => {
         style={{ paddingHorizontal: 20 }}
       >
         <Text style={listStyles.itemTitle}>
-          {props.savedSpace.vehicule} ({props.savedSpace.pricePerHour})
+          {props.savedSpace.vehicule} ({props.savedSpace.pricePerHour} €/hora)
         </Text>
         <Text style={listStyles.itemSubtitle}>{props.savedSpace.saved_at}</Text>
       </TouchableOpacity>

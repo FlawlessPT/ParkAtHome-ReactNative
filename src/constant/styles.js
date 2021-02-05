@@ -61,36 +61,6 @@ export const generalStyles = StyleSheet.create({
   },
 });
 
-// export const themeEnabled = {
-//     fonts: configureFonts({
-//         default: {
-//             regular: {
-//                 fontFamily: "Aldrich_Regular",
-//             }
-//         }
-//     }),
-//     colors: {
-//         primary: colors.main,
-//         placeholder: colors.secondary,
-//         text: colors.main,
-//     },
-// };
-
-// export const themeDisabled = {
-//     fonts: configureFonts({
-//         default: {
-//             regular: {
-//                 fontFamily: "Aldrich_Regular",
-//             }
-//         }
-//     }),
-//     colors: {
-//         primary: colors.main,
-//         placeholder: colors.secondary,
-//         text: colors.secondary,
-//     },
-// };
-
 export const theme = {
   fonts: configureFonts({
     default: {
