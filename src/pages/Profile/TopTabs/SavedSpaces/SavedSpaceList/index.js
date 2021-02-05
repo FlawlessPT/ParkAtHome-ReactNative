@@ -37,7 +37,7 @@ export default function SavedSpaceList({ navigation }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userId: 1,
+        userId: user.id,
       }),
     })
       .then((response) => response.json())

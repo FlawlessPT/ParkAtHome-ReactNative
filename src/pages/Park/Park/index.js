@@ -30,7 +30,6 @@ export default function Park({ route, navigation }) {
   const [totalSpaces, setTotalSpaces] = useState("");
   const [totalSavedSpace, setTotalSavedSpaces] = useState(0);
   const [localization, setLocalization] = useState("");
-  const [nrFloors, setNrFloors] = useState("");
   const [pricePerHour, setPricePerHour] = useState("");
 
   const [vehicules, setVehicules] = useState([]);
@@ -63,7 +62,6 @@ export default function Park({ route, navigation }) {
     setTotalSpaces(park.totalSpaces);
     setTotalSavedSpaces(park.totalSavedSpaces);
     setLocalization(park.localization);
-    setNrFloors(park.nrFloors);
     setPricePerHour(park.pricePerHour);
   }
 
@@ -152,7 +150,6 @@ export default function Park({ route, navigation }) {
             json.park.localization,
             json.park.totalSpaces,
             json.park.totalSavedSpaces,
-            json.park.nrFloors,
             json.park.contact,
             json.park.email,
             json.park.pricePerHour
@@ -169,7 +166,6 @@ export default function Park({ route, navigation }) {
     localization,
     totalSpaces,
     totalSavedSpaces,
-    nrFloors,
     contact,
     email,
     pricePerHour
@@ -178,7 +174,6 @@ export default function Park({ route, navigation }) {
     setLocalization(localization);
     setTotalSpaces(totalSpaces);
     setTotalSavedSpaces(totalSavedSpaces);
-    setNrFloors(nrFloors);
     setContact(contact);
     setEmail(email);
     setPricePerHour(pricePerHour);
@@ -389,17 +384,6 @@ export default function Park({ route, navigation }) {
                 {totalSavedSpace} / {totalSpaces}
               </Text>{" "}
               veiculos
-            </Text>
-            <Text
-              style={{
-                fontFamily: "Aldrich_Regular",
-                fontSize: 20,
-                color: colors.main,
-                marginBottom: 5,
-              }}
-            >
-              Andares:{" "}
-              <Text style={{ color: colors.secondary }}>{nrFloors}</Text>
             </Text>
             <Text
               style={{

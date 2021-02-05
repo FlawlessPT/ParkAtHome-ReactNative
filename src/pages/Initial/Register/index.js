@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import {
   Button,
@@ -70,8 +71,13 @@ export default function Register({ navigation }) {
         .then((json) => {
           switch (json.message) {
             case "success":
+              Alert.alert(
+                "Sucesso",
+                "Utilizador registado com sucesso!\n\nPara prosseguir, inicie sessão.",
+                [{ text: "OK" }],
+                { cancelable: true }
+              );
               navigation.navigate("Login");
-              // showModal("Utilizador registado com sucesso!", "success");
               break;
             case "user_already_exists":
               showModal("Utilizador já existente!", "warning");
