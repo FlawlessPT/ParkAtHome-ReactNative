@@ -1,4 +1,5 @@
 .expo
+.node-modules
 npm-debug.*
 *.jks
 *.p8
